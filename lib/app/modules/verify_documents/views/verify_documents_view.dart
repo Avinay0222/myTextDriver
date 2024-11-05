@@ -22,6 +22,7 @@ class VerifyDocumentsView extends GetView<VerifyDocumentsController> {
 
   @override
   Widget build(BuildContext context) {
+    ShowToastDialog.closeLoader();
     return GetBuilder(
         init: VerifyDocumentsController(),
         builder: (controller) {
