@@ -9,6 +9,7 @@ import 'package:driver/app/modules/home/views/home_view.dart';
 import 'package:driver/app/modules/permission/views/permission_view.dart';
 import 'package:driver/app/modules/signup/views/signup_view.dart';
 import 'package:driver/app/modules/verify_otp/views/verify_otp_view.dart';
+import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/api_constant.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
@@ -110,35 +111,25 @@ class LoginController extends GetxController {
   sendCode() async {
     try {
       ShowToastDialog.showLoader("please_wait".tr);
-      await FirebaseAuth.instance
-          .verifyPhoneNumber(
-        phoneNumber:
-            countryCodeController.value.text + phoneNumberController.value.text,
-        verificationCompleted: (PhoneAuthCredential credential) {},
-        verificationFailed: (FirebaseAuthException e) {
-          debugPrint("FirebaseAuthException--->${e.message}");
-          ShowToastDialog.closeLoader();
-          if (e.code == 'invalid-phone-number') {
-            ShowToastDialog.showToast("invalid_phone_number".tr);
-          } else {
-            ShowToastDialog.showToast(e.code);
-          }
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          ShowToastDialog.closeLoader();
-          Get.to(() => const VerifyOtpView(), arguments: {
-            "countryCode": countryCodeController.value.text,
-            "phoneNumber": phoneNumberController.value.text,
-            "verificationId": verificationId,
-          });
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {},
-      )
-          .catchError((error) {
-        debugPrint("catchError--->$error");
-        ShowToastDialog.closeLoader();
-        ShowToastDialog.showToast("multiple_time_request".tr);
-      });
+
+      final responseData = await sendOtp(
+        countryCodeController.value.text,
+        phoneNumberController.value.text,
+      );
+
+      ShowToastDialog.closeLoader();
+
+      if (responseData["status"] == true) {
+        Get.to(() => const VerifyOtpView(), arguments: {
+          "countryCode": countryCodeController.value.text,
+          "phoneNumber": phoneNumberController.value.text,
+          "verificationId": responseData['msg'].toString().split(",")[0],
+        });
+
+        ShowToastDialog.showToast(responseData['msg'].toString().split(",")[0]);
+      } else {
+        ShowToastDialog.showToast('Failed to send OTP: ${responseData["msg"]}');
+      }
     } catch (e) {
       log(e.toString());
       ShowToastDialog.closeLoader();

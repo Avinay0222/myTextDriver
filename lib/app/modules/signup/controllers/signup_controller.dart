@@ -3,6 +3,7 @@ import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/modules/home/views/home_view.dart';
 import 'package:driver/app/modules/permission/views/permission_view.dart';
 import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
+import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/extension/string_extensions.dart';
@@ -15,7 +16,8 @@ import 'package:get/get.dart';
 class SignupController extends GetxController {
   Rx<GlobalKey<FormState>> formKey = GlobalKey<FormState>().obs;
 
-  TextEditingController countryCodeController = TextEditingController(text: '+91');
+  TextEditingController countryCodeController =
+      TextEditingController(text: '+91');
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -61,11 +63,16 @@ class SignupController extends GetxController {
     userModelData.createdAt = Timestamp.now();
     userModelData.isActive = true;
 
-    await FireStoreUtils.updateDriverUser(userModelData).then((value) async {
-      DriverUserModel? userModel = await FireStoreUtils.getDriverUserProfile(userModelData.id ?? '');
-      if (userModel != null) {
-        if (userModel.isActive == true) {
-          if (userModel.isVerified ?? false) {
+    try {
+      ShowToastDialog.showLoader("please_wait".tr);
+
+      // final responseData = await createNewAccount(
+      //     userModelData.fullName!, userModelData.gender!, fcmToken);
+
+      if (true) {
+        if (userModelData.isActive == true) {
+          // if (userModelData.isVerified ?? false) {
+          if (true) {
             bool permissionGiven = await Constant.isPermissionApplied();
             if (permissionGiven) {
               Get.offAll(const HomeView());
@@ -73,14 +80,24 @@ class SignupController extends GetxController {
               Get.offAll(const PermissionView());
             }
           } else {
+            ShowToastDialog.closeLoader();
             Get.offAll(const VerifyDocumentsView(isFromDrawer: false));
           }
         } else {
-          await FirebaseAuth.instance.signOut();
+          // await FirebaseAuth.instance.signOut();
           ShowToastDialog.showToast("user_disable_admin_contact".tr);
         }
+
+        ShowToastDialog.closeLoader();
+
+        // ShowToastDialog.showToast(responseData['msg'].toString().split(",")[0]);
+      } else {
+        // ShowToastDialog.showToast('Failed to send OTP: ${responseData["msg"]}');
       }
+    } catch (e) {
+      // log(e.toString());
       ShowToastDialog.closeLoader();
-    });
+      ShowToastDialog.showToast("something went wrong!".tr);
+    }
   }
 }
