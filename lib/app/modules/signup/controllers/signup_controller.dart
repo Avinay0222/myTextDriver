@@ -77,7 +77,7 @@ class SignupController extends GetxController {
 
       userModelData.id = responseData["data"]["_id"];
 
-      Preferences.setUserModel(userModelData);
+      Preferences.setDriverUserModel(userModelData);
 
       if (userModelData.isActive == true) {
         if (userModelData.isVerified == false) {
