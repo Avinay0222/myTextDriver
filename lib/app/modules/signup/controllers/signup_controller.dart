@@ -62,6 +62,7 @@ class SignupController extends GetxController {
     userModelData.fcmToken = fcmToken;
     userModelData.createdAt = Timestamp.now();
     userModelData.isActive = true;
+    userModelData.isVerified = false;
 
     globalToken = token;
 
@@ -71,17 +72,17 @@ class SignupController extends GetxController {
       final responseData = await createNewAccount(
           userModelData.fullName!, userModelData.gender!, fcmToken);
 
-
       userModelData.id = responseData["data"]["_id"];
 
       if (userModelData.isActive == true) {
-        if (userModelData.isVerified ?? false) {
+        if (userModelData.isVerified == false) {
           bool permissionGiven = await Constant.isPermissionApplied();
           if (permissionGiven) {
-            Get.offAll(const HomeView());
+            Get.offAll(const VerifyDocumentsView(
+              isFromDrawer: false,
+            ));
           } else {
             Get.offAll(const PermissionView());
-
           }
         } else {
           ShowToastDialog.closeLoader();
@@ -90,7 +91,6 @@ class SignupController extends GetxController {
       } else {
         // await FirebaseAuth.instance.signOut();
         ShowToastDialog.showToast("user_disable_admin_contact".tr);
-
       }
 
       ShowToastDialog.closeLoader();
@@ -98,6 +98,7 @@ class SignupController extends GetxController {
       ShowToastDialog.showToast(responseData['msg'].toString().split(",")[0]);
     } catch (e) {
       // log(e.toString());
+      bool permissionGiven = await Constant.isPermissionApplied();
       ShowToastDialog.closeLoader();
       ShowToastDialog.showToast("something went wrong!".tr);
     }
