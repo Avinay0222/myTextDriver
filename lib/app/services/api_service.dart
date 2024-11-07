@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'package:driver/app/models/user_model.dart';
 import 'package:driver/constant/api_constant.dart';
 import 'package:http/http.dart' as http;
+
+String globalToken = "";
 
 Future<Map<String, dynamic>> sendOtp(
     String countryCode, String mobileNumber) async {
@@ -52,6 +55,35 @@ Future<Map<String, dynamic>> createNewAccount(
   final response = await http.post(
     Uri.parse(baseURL + complpeteSignUpEndpoint),
     headers: {"Content-Type": "application/json", "token": token},
+    body: jsonEncode(payload),
+  );
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw Exception('Failed to Create Account: ${response.reasonPhrase}');
+  }
+}
+
+Future<Map<String, dynamic>> getListOfUploadDocument() async {
+
+  final response = await http.get(
+    Uri.parse(baseURL + listOfUploadDocument),
+    headers: {"Content-Type": "application/json", "token": globalToken},
+  );
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw Exception('Failed to Create Account: ${response.reasonPhrase}');
+  }
+}
+
+Future<Map<String, dynamic>> uploadVehicleDetails(
+    Map<String, String> payload) async {
+  final response = await http.post(
+    Uri.parse(baseURL + addVehicleDetail),
+    headers: {"Content-Type": "application/json", "token": globalToken},
     body: jsonEncode(payload),
   );
 

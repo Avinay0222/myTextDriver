@@ -1,5 +1,6 @@
 // ignore_for_file: unnecessary_overrides
 
+import 'package:driver/app/services/api_service.dart';
 import 'package:get/get.dart';
 import 'package:driver/app/models/documents_model.dart';
 import 'package:driver/app/models/driver_user_model.dart';
@@ -30,9 +31,18 @@ class VerifyDocumentsController extends GetxController {
 
   getData() async {
     documentList.clear();
-    verifyDriverModel.value = await FireStoreUtils.getVerifyDriver(FireStoreUtils.getCurrentUid()) ?? VerifyDriverModel();
-    documentList.value = await FireStoreUtils.getDocumentList() ?? [];
-    userModel.value = await FireStoreUtils.getDriverUserProfile(FireStoreUtils.getCurrentUid())??DriverUserModel();
+    // verifyDriverModel.value = await FireStoreUtils.getVerifyDriver(FireStoreUtils.getCurrentUid()) ?? VerifyDriverModel();
+    final response = await getListOfUploadDocument();
+    List<DocumentsModel> documentListL = [];
+    for (var element in response["data"]) {
+        DocumentsModel vehicleTypeModel =
+            DocumentsModel.fromJson(element);
+        documentList.add(vehicleTypeModel);
+      }
+    documentList.value = documentListL;
+    userModel.value = await FireStoreUtils.getDriverUserProfile(
+            FireStoreUtils.getCurrentUid()) ??
+        DriverUserModel();
   }
 
   bool checkUploadedData(String documentId) {
@@ -41,12 +51,13 @@ class VerifyDocumentsController extends GetxController {
 
     return index != -1;
   }
+
   bool checkVerifiedData(String documentId) {
     List<VerifyDocument> doc = verifyDriverModel.value.verifyDocument ?? [];
     int index = doc.indexWhere((element) => element.documentId == documentId);
-    if(index!=-1){
-      return doc[index].isVerify??false;
-    }else{
+    if (index != -1) {
+      return doc[index].isVerify ?? false;
+    } else {
       return false;
     }
   }

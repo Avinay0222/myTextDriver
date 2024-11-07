@@ -102,8 +102,7 @@ class AppPages {
     GetPage(
       name: _Paths.UPLOAD_DOCUMENTS,
       page: () => UploadDocumentsView(
-        document: DocumentsModel(
-            id: '', isEnable: false, isTwoSide: false, title: ''),
+        document: DocumentsModel.empty(),
         isUploaded: false,
       ),
       binding: UploadDocumentsBinding(),

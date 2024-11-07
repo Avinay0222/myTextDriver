@@ -223,7 +223,7 @@ class VerifyOtpView extends StatelessWidget {
                                     "userModel": userModel,
                                   });
                                 } else {
-                                  /// handel already have account case
+                                  
                                 }
                               } else {
                                 ShowToastDialog.showToast(

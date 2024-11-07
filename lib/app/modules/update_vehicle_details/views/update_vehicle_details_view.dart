@@ -1,4 +1,6 @@
+import 'package:driver/app/models/user_model.dart';
 import 'package:driver/app/models/vehicle_type_model.dart';
+import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/custom_search_dialog.dart';
 import 'package:driver/constant_widgets/app_bar_with_border.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
@@ -212,13 +214,39 @@ class UpdateVehicleDetailsView extends StatelessWidget {
                           title: "Submit".tr,
                           buttonColor: AppThemData.primary500,
                           buttonTextColor: AppThemData.black,
-                          onTap: () {
+                          onTap: () async {
                             if (controller.vehicleBrandController.text.isNotEmpty &&
                                 controller
                                     .vehicleModelController.text.isNotEmpty &&
                                 controller
                                     .vehicleNumberController.text.isNotEmpty) {
-                              controller.saveVehicleDetails();
+                              ShowToastDialog.showLoader("Please wait...");
+
+                              try {
+                                Map<String, String> params = {
+                                  // "brand_name":controller.vehicleBrandController.text,
+                                  // "model_name":controller.vehicleModelController.text,
+                                  // "vehicle_number": controller.vehicleNumberController.text,
+                                  // "vehicle_type": controller.vehicleModelModel.value.title,
+                                  "brand_name": "mahindra",
+                                  "model_name": "xuv-300",
+                                  "vehicle_number": "HR78D1234",
+                                  "vehicle_color": "Black",
+                                  "vehicle_type": "suv"
+                                };
+
+                                final response =
+                                    await uploadVehicleDetails(params);
+
+                                ShowToastDialog.closeLoader();
+
+                                Navigator.pop(context);
+                              } catch (e) {
+                                ShowToastDialog.closeLoader();
+                                ShowToastDialog.showToast(e.toString());
+                              }
+
+                              // controller.saveVehicleDetails();
                             } else {
                               ShowToastDialog.showToast(
                                   "Please enter a valid details".tr);
