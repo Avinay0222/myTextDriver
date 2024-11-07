@@ -67,7 +67,7 @@ Future<Map<String, dynamic>> createNewAccount(
 
 Future<Map<String, dynamic>> getListOfUploadDocument() async {
 
-  final response = await http.get(
+  final response = await http.  get(
     Uri.parse(baseURL + listOfUploadDocument),
     headers: {"Content-Type": "application/json", "token": globalToken},
   );

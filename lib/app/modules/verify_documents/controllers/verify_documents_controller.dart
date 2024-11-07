@@ -33,16 +33,16 @@ class VerifyDocumentsController extends GetxController {
     documentList.clear();
     // verifyDriverModel.value = await FireStoreUtils.getVerifyDriver(FireStoreUtils.getCurrentUid()) ?? VerifyDriverModel();
     final response = await getListOfUploadDocument();
-    List<DocumentsModel> documentListL = [];
+    List<DocumentsModel> documentListL = List.from([]);
     for (var element in response["data"]) {
         DocumentsModel vehicleTypeModel =
             DocumentsModel.fromJson(element);
         documentListL.add(vehicleTypeModel);
       }
     documentList.value = documentListL;
-    userModel.value = await FireStoreUtils.getDriverUserProfile(
-            FireStoreUtils.getCurrentUid()) ??
-        DriverUserModel();
+    // userModel.value = await FireStoreUtils.getDriverUserProfile(
+    //         FireStoreUtils.getCurrentUid()) ??
+    //     DriverUserModel();
   }
 
   bool checkUploadedData(String documentId) {

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class DocumentsModel {
+class   DocumentsModel {
   final String id;
   final String title;
   final String slug;
@@ -10,7 +10,7 @@ class DocumentsModel {
   final String status;
   final int side;
   final int createdAt;
-  final int updateAt;
+  final int updatedAt;
 
   DocumentsModel({
     required this.id,
@@ -22,7 +22,7 @@ class DocumentsModel {
     required this.status,
     required this.side,
     required this.createdAt,
-    required this.updateAt,
+    required this.updatedAt,
   });
 
   factory DocumentsModel.fromRawJson(String str) =>
@@ -40,10 +40,10 @@ class DocumentsModel {
         status: json["status"],
         side: json["side"],
         createdAt: json["createdAt"],
-        updateAt: json["updateAt"],
+        updatedAt: json["updatedAt"],
       );
 
-      factory DocumentsModel.empty() => DocumentsModel(
+  factory DocumentsModel.empty() => DocumentsModel(
         id: "",
         title: "",
         slug: "",
@@ -53,7 +53,7 @@ class DocumentsModel {
         status: "",
         side: 1,
         createdAt: 0,
-        updateAt: 0,
+        updatedAt: 0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -66,8 +66,6 @@ class DocumentsModel {
         "status": status,
         "side": side,
         "createdAt": createdAt,
-        "updateAt": updateAt,
+        "updatedAt": updatedAt,
       };
-
-      
 }
