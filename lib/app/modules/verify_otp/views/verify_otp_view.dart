@@ -13,6 +13,7 @@ import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
 import 'package:driver/utils/fire_store_utils.dart';
 import 'package:driver/utils/notification_service.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -217,14 +218,11 @@ class VerifyOtpView extends StatelessWidget {
                                       controller.phoneNumber.value;
                                   userModel.loginType = Constant.phoneLoginType;
                                   userModel.fcmToken = responseData['token'];
-
                                   ShowToastDialog.closeLoader();
                                   Get.off(const SignupView(), arguments: {
                                     "userModel": userModel,
                                   });
-                                } else {
-                                  
-                                }
+                                } else {}
                               } else {
                                 ShowToastDialog.showToast(
                                     'Failed to send OTP: ${responseData["msg"]}');

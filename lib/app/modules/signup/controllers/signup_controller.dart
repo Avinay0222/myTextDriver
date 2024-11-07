@@ -9,6 +9,7 @@ import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/extension/string_extensions.dart';
 import 'package:driver/utils/fire_store_utils.dart';
 import 'package:driver/utils/notification_service.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -68,10 +69,14 @@ class SignupController extends GetxController {
     try {
       ShowToastDialog.showLoader("please_wait".tr);
 
+      Preferences.setUserLoginStatus(true);
+
       final responseData = await createNewAccount(
           userModelData.fullName!, userModelData.gender!, fcmToken);
 
       userModelData.id = responseData["data"]["_id"];
+
+      Preferences.setUserModel(userModelData);
 
       if (userModelData.isActive == true) {
         if (userModelData.isVerified ?? false) {

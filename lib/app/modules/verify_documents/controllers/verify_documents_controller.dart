@@ -37,7 +37,7 @@ class VerifyDocumentsController extends GetxController {
     for (var element in response["data"]) {
         DocumentsModel vehicleTypeModel =
             DocumentsModel.fromJson(element);
-        documentList.add(vehicleTypeModel);
+        documentListL.add(vehicleTypeModel);
       }
     documentList.value = documentListL;
     userModel.value = await FireStoreUtils.getDriverUserProfile(

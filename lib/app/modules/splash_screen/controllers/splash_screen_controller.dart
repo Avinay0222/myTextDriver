@@ -32,9 +32,9 @@ class SplashScreenController extends GetxController {
     if ((await Preferences.getBoolean(Preferences.isFinishOnBoardingKey)) == false) {
       Get.offAll(const IntroScreenView());
     } else {
-      bool isLogin = await FireStoreUtils.isLogin();
+      bool isLogin = await Preferences.getUserLoginStatus();
       if (isLogin == true) {
-        DriverUserModel? userModel = await FireStoreUtils.getDriverUserProfile(FireStoreUtils.getCurrentUid());
+        DriverUserModel? userModel = await Preferences.getUserModel();
         if (userModel != null && userModel.isVerified == true) {
           bool permissionGiven = await Constant.isPermissionApplied();
           if(permissionGiven){
