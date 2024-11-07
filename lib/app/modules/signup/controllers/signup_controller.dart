@@ -48,8 +48,8 @@ class SignupController extends GetxController {
     update();
   }
 
-  createAccount() async {
-    String fcmToken = await NotificationService.getToken();
+  createAccount(String token) async {
+    String fcmToken = token;
     ShowToastDialog.showLoader("please_wait".tr);
     DriverUserModel userModelData = userModel.value;
     userModelData.fullName = nameController.value.text;
@@ -63,37 +63,36 @@ class SignupController extends GetxController {
     userModelData.createdAt = Timestamp.now();
     userModelData.isActive = true;
 
+    globalToken = token;
+
     try {
       ShowToastDialog.showLoader("please_wait".tr);
 
-      // final responseData = await createNewAccount(
-      //     userModelData.fullName!, userModelData.gender!, fcmToken);
+      final responseData = await createNewAccount(
+          userModelData.fullName!, userModelData.gender!, fcmToken);
 
-      if (true) {
-        if (userModelData.isActive == true) {
-          // if (userModelData.isVerified ?? false) {
-          if (true) {
-            bool permissionGiven = await Constant.isPermissionApplied();
-            if (permissionGiven) {
-              Get.offAll(const HomeView());
-            } else {
-              Get.offAll(const PermissionView());
-            }
+      userModelData.id = responseData["data"]["_id"];
+
+      if (userModelData.isActive == true) {
+        if (userModelData.isVerified ?? false) {
+          bool permissionGiven = await Constant.isPermissionApplied();
+          if (permissionGiven) {
+            Get.offAll(const HomeView());
           } else {
-            ShowToastDialog.closeLoader();
-            Get.offAll(const VerifyDocumentsView(isFromDrawer: false));
+            Get.offAll(const PermissionView());
           }
         } else {
-          // await FirebaseAuth.instance.signOut();
-          ShowToastDialog.showToast("user_disable_admin_contact".tr);
+          ShowToastDialog.closeLoader();
+          Get.offAll(const HomeView());
         }
-
-        ShowToastDialog.closeLoader();
-
-        // ShowToastDialog.showToast(responseData['msg'].toString().split(",")[0]);
       } else {
-        // ShowToastDialog.showToast('Failed to send OTP: ${responseData["msg"]}');
+        // await FirebaseAuth.instance.signOut();
+        ShowToastDialog.showToast("user_disable_admin_contact".tr);
       }
+
+      ShowToastDialog.closeLoader();
+
+      ShowToastDialog.showToast(responseData['msg'].toString().split(",")[0]);
     } catch (e) {
       // log(e.toString());
       ShowToastDialog.closeLoader();

@@ -143,7 +143,7 @@ class UploadDocumentsView extends StatelessWidget {
                                                 CrossAxisAlignment.center,
                                             children: [
                                               Text(
-                                                document.isTwoSide
+                                                document.side==2
                                                     ? '${'Upload'.tr} ${document.title} ${'Front Side'.tr}'
                                                     : '${'Upload'.tr} ${document.title}',
                                                 textAlign: TextAlign.center,
@@ -179,7 +179,7 @@ class UploadDocumentsView extends StatelessWidget {
                                 ),
                               ),
                               Visibility(
-                                visible: document.isTwoSide,
+                                visible: document.side==2,
                                 child: InkWell(
                                   onTap: () {
                                     buildBottomSheet(context, controller, 1);
@@ -394,7 +394,7 @@ class UploadDocumentsView extends StatelessWidget {
                                 controller.numberController.text.isNotEmpty &&
                                 controller.dobController.text.isNotEmpty &&
                                 list.isNotEmpty &&
-                                (list.length == (document.isTwoSide ? 2 : 1))) {
+                                (list.length == (document.side))) {
                               controller.uploadDocument(document);
                             } else {
                               controller.verifyDocument.value.documentImage

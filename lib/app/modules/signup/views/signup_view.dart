@@ -209,7 +209,7 @@ class SignupView extends StatelessWidget {
                                 buttonTextColor: AppThemData.black,
                                 onTap: () {
                                   if (controller.formKey.value.currentState!.validate()) {
-                                    controller.createAccount();
+                                    controller.createAccount(controller.userModel.value.fcmToken??"");
                                   }
                                 }),
                           ),
