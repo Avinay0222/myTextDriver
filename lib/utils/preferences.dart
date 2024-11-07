@@ -59,17 +59,17 @@ class Preferences {
     return pref.getBool(userLoginStatus)?? false;
   }
 
-  static Future<void> setUserModel(DriverUserModel model) async {
+  static Future<void> setDriverUserModel(DriverUserModel userModel) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    String modelJson = jsonEncode(model.toJson());
-    await pref.setString('userModel', modelJson);
+    String jsonString = json.encode(userModel.toJson());
+    await pref.setString('driverUserModel', jsonString);
   }
 
-  static Future<DriverUserModel?> getUserModel() async {
+  static Future<DriverUserModel?> getDriverUserModel() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    String? modelJson = pref.getString('userModel');
-    if (modelJson != null) {
-      return DriverUserModel.fromJson(jsonDecode(modelJson));
+    String? jsonString = pref.getString('driverUserModel');
+    if (jsonString != null) {
+        return DriverUserModel.fromJson(json.decode(jsonString));
     }
     return null;
   }
