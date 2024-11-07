@@ -66,13 +66,12 @@ class SignupController extends GetxController {
     try {
       ShowToastDialog.showLoader("please_wait".tr);
 
-      // final responseData = await createNewAccount(
-      //     userModelData.fullName!, userModelData.gender!, fcmToken);
+      final responseData = await createNewAccount(
+          userModelData.fullName!, userModelData.gender!, fcmToken);
 
-      if (true) {
+      if (responseData["status"] == true) {
         if (userModelData.isActive == true) {
-          // if (userModelData.isVerified ?? false) {
-          if (true) {
+          if (userModelData.isVerified ?? false) {
             bool permissionGiven = await Constant.isPermissionApplied();
             if (permissionGiven) {
               Get.offAll(const HomeView());
@@ -80,7 +79,6 @@ class SignupController extends GetxController {
               Get.offAll(const PermissionView());
             }
           } else {
-            ShowToastDialog.closeLoader();
             Get.offAll(const VerifyDocumentsView(isFromDrawer: false));
           }
         } else {
@@ -90,9 +88,9 @@ class SignupController extends GetxController {
 
         ShowToastDialog.closeLoader();
 
-        // ShowToastDialog.showToast(responseData['msg'].toString().split(",")[0]);
+        ShowToastDialog.showToast(responseData['msg'].toString().split(",")[0]);
       } else {
-        // ShowToastDialog.showToast('Failed to send OTP: ${responseData["msg"]}');
+        ShowToastDialog.showToast('Failed to send OTP: ${responseData["msg"]}');
       }
     } catch (e) {
       // log(e.toString());
