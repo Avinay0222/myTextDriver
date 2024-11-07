@@ -71,6 +71,7 @@ class SignupController extends GetxController {
       final responseData = await createNewAccount(
           userModelData.fullName!, userModelData.gender!, fcmToken);
 
+
       userModelData.id = responseData["data"]["_id"];
 
       if (userModelData.isActive == true) {
@@ -80,6 +81,7 @@ class SignupController extends GetxController {
             Get.offAll(const HomeView());
           } else {
             Get.offAll(const PermissionView());
+
           }
         } else {
           ShowToastDialog.closeLoader();
@@ -88,6 +90,7 @@ class SignupController extends GetxController {
       } else {
         // await FirebaseAuth.instance.signOut();
         ShowToastDialog.showToast("user_disable_admin_contact".tr);
+
       }
 
       ShowToastDialog.closeLoader();
