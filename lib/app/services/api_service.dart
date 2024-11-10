@@ -79,6 +79,28 @@ Future<Map<String, dynamic>> getListOfUploadDocument() async {
   }
 }
 
+Future<Map<String, dynamic>> checkVerificationStatus(
+    String name, String gender, String token) async {
+  final Map<String, String> payload = {
+    "name": name,
+    "gender": gender,
+    "referral_code": "ABPSYTD",
+  };
+
+  final response = await http.post(
+    Uri.parse(baseURL + complpeteSignUpEndpoint),
+    headers: {"Content-Type": "application/json", "token": token},
+    body: jsonEncode(payload),
+  );
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw Exception('Failed to Create Account: ${response.reasonPhrase}');
+  }
+}
+
+
 Future<Map<String, dynamic>> uploadVehicleDetails(
     Map<String, String> payload) async {
   final response = await http.post(

@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -116,17 +117,11 @@ class UploadDocumentsController extends GetxController {
     if (verifyDocument.value.documentImage.isNotEmpty) {
       for (int i = 0; i < verifyDocument.value.documentImage.length; i++) {
         if (verifyDocument.value.documentImage[i].isNotEmpty) {
-          if (Constant.hasValidUrl(
-                  verifyDocument.value.documentImage[i].toString()) ==
-              false) {
-            // String image = await Constant.uploadDriverDocumentImageToFireStorage(
-            //   File(verifyDocument.value.documentImage[i].toString()),
-            //   "driver_documents/${document.id}/${FireStoreUtils.getCurrentUid()}",
-            //   verifyDocument.value.documentImage[i].split('/').last,
-            // );
+           String image = await Constant.uploadDriverDocumentImageToFireStorage(
+              File(verifyDocument.value.documentImage[i].toString()),
+            );
             verifyDocument.value.documentImage.removeAt(i);
-            // verifyDocument.value.documentImage.insert(i, image);
-          }
+            verifyDocument.value.documentImage.insert(i, image);
         }
       }
     }
@@ -137,8 +132,7 @@ class UploadDocumentsController extends GetxController {
     verifyDocument.value.isVerify = false;
     VerifyDocumentsController verifyDocumentsController =
         Get.find<VerifyDocumentsController>();
-    DriverUserModel? userModel = await FireStoreUtils.getDriverUserProfile(
-        FireStoreUtils.getCurrentUid());
+    DriverUserModel? userModel = await Preferences.getDriverUserModel();
     List<VerifyDocument> verifyDocumentList =
         verifyDocumentsController.verifyDriverModel.value.verifyDocument ?? [];
     verifyDocumentList.add(verifyDocument.value);

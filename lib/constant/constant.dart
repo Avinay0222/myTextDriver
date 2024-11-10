@@ -15,6 +15,8 @@ import 'package:driver/app/models/map_model.dart';
 import 'package:driver/app/models/payment_method_model.dart';
 import 'package:driver/app/models/tax_model.dart';
 import 'package:driver/app/models/vehicle_type_model.dart';
+import 'package:driver/app/services/api_service.dart';
+import 'package:driver/constant/api_constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/extension/string_extensions.dart';
 import 'package:driver/theme/app_them_data.dart';
@@ -31,6 +33,8 @@ import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 import '../utils/preferences.dart';
 
 class Constant {
@@ -287,14 +291,76 @@ class Constant {
     return true;
   }
 
-  // static Future<String> uploadDriverDocumentImageToFireStorage(File image, String filePath, String fileName) async {
-  //   print("Path : ${image.absolute.path}");
-  //   Reference upload = FirebaseStorage.instance.ref().child('$filePath/$fileName');
-  //   print("Path : ${upload.fullPath}");
-  //   UploadTask uploadTask = upload.putFile(image);
-  //   var downloadUrl = await (await uploadTask).ref.getDownloadURL();
-  //   return downloadUrl.toString();
-  // }
+  static Future<String> yuploadDriverDocumentImageToFireStorage(
+      File file) async {
+    // API endpoint URL
+    final url = Uri.parse(baseURL + updloadDocumentEndpoint);
+
+    // Determine the MIME type of the file
+    final mimeType = lookupMimeType(file.path);
+    final mimeTypeData =
+        mimeType?.split('/') ?? ['application', 'octet-stream'];
+
+    // Create a multipart request
+    final request = http.MultipartRequest('PUT', url)
+      ..headers.addAll({
+        "token": globalToken,
+      })
+      ..files.add(
+        await http.MultipartFile.fromPath(
+          'file', // The name of the field your API expects
+          file.path,
+          contentType: MediaType(mimeTypeData[0], mimeTypeData[1]),
+        ),
+      );
+
+    // Send the request
+    try {
+      final response = await request.send();
+      if (response.statusCode == 200) {
+        // Parse the response to get the image name
+        var responseData = await response.stream.bytesToString();
+        String imageName = jsonDecode(
+            responseData)['data']; // Adjust based on your API response
+        return imageName;
+      } else {
+        throw Exception('Failed to upload image');
+      }
+    } catch (e) {
+      throw Exception('Error uploading file: $e');
+    }
+  }
+
+  static Future<String> uploadDriverDocumentImageToFireStorage(
+      File image) async {
+    // Convert image to base64
+    List<int> imageBytes = await image.readAsBytes();
+    String base64Image = base64Encode(imageBytes);
+
+    final response = await http.put(
+      Uri.parse(baseURL + updloadDocumentEndpoint),
+      headers: {"Content-Type": "application/json", "token": globalToken},
+      body: jsonEncode(
+        {
+          "type": "driving-license",
+          "document": "data:image/png;base64,$base64Image",
+          "name": "Neeraj Kumar",
+          "document_number": "DR23672598123456",
+          "date_of_birth": "1992-09-05"
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      // Parse the response to get the image name
+      var responseData = jsonDecode(response.body);
+      String imageName =
+          responseData['data']; // Adjust based on your API response
+      return imageName;
+    } else {
+      throw Exception('Failed to upload image');
+    }
+  }
 
   // static Future<String> uploadUserImageToFireStorage(File image, String filePath, String fileName) async {
   //   Reference upload = FirebaseStorage.instance.ref().child('$filePath/$fileName');
