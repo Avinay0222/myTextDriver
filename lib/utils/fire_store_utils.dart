@@ -572,10 +572,10 @@ class FireStoreUtils {
         StreamController<List<BookingModel>>.broadcast();
     List<BookingModel> bookingsList = [];
     Query query = fireStore
-        .collection(CollectionName.bookings)
+     .collection(CollectionName.bookings)
         .where('bookingStatus', isEqualTo: BookingStatus.bookingPlaced)
         .where('vehicleType.id',
-            isEqualTo: Constant.userModel!.driverVehicleDetails!.vehicleTypeId);
+            isEqualTo: Constant.userModel!.driverVehicleDetails!.vehicleTypeId);   
     GeoFirePoint center = GeoFlutterFire()
         .point(latitude: latitude ?? 0.0, longitude: longLatitude ?? 0.0);
     Stream<List<DocumentSnapshot>> stream = GeoFlutterFire()

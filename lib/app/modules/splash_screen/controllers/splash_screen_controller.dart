@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:driver/app/services/api_service.dart';
 import 'package:get/get.dart';
 import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/modules/home/views/home_view.dart';
@@ -29,20 +30,25 @@ class SplashScreenController extends GetxController {
   void onClose() {}
 
   redirectScreen() async {
-    if ((await Preferences.getBoolean(Preferences.isFinishOnBoardingKey)) == false) {
+    if ((await Preferences.getBoolean(Preferences.isFinishOnBoardingKey)) ==
+        false) {
       Get.offAll(const IntroScreenView());
     } else {
-      bool isLogin = await FireStoreUtils.isLogin();
+      bool isLogin = await Preferences.getUserLoginStatus();
+
       if (isLogin == true) {
-        DriverUserModel? userModel = await FireStoreUtils.getDriverUserProfile(FireStoreUtils.getCurrentUid());
+        DriverUserModel? userModel = await Preferences.getDriverUserModel();
+
+        globalToken = userModel!.fcmToken ?? '';
+
         if (userModel != null && userModel.isVerified == true) {
           bool permissionGiven = await Constant.isPermissionApplied();
-          if(permissionGiven){
+          if (permissionGiven) {
             Get.offAll(const HomeView());
-          }else{
+          } else {
             Get.offAll(const PermissionView());
           }
-        }else{
+        } else {
           Get.offAll(const VerifyDocumentsView(isFromDrawer: false));
         }
       } else {

@@ -110,6 +110,7 @@ class LoginView extends StatelessWidget {
                                       : AppThemData.black,
                                   keyboardType: TextInputType.number,
                                   controller: controller.phoneNumberController,
+                                  maxLength: 10,
                                   validator: (value) => validateMobile(
                                       value,
                                       controller

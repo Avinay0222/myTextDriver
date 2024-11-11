@@ -143,7 +143,7 @@ class UploadDocumentsView extends StatelessWidget {
                                                 CrossAxisAlignment.center,
                                             children: [
                                               Text(
-                                                document.isTwoSide
+                                                document.side == 2
                                                     ? '${'Upload'.tr} ${document.title} ${'Front Side'.tr}'
                                                     : '${'Upload'.tr} ${document.title}',
                                                 textAlign: TextAlign.center,
@@ -179,7 +179,7 @@ class UploadDocumentsView extends StatelessWidget {
                                 ),
                               ),
                               Visibility(
-                                visible: document.isTwoSide,
+                                visible: document.side == 2,
                                 child: InkWell(
                                   onTap: () {
                                     buildBottomSheet(context, controller, 1);
@@ -279,7 +279,8 @@ class UploadDocumentsView extends StatelessWidget {
                           Container(
                             margin: const EdgeInsets.only(left: 10),
                             width: Responsive.width(80, context),
-                            child: Text(
+                            child: Expanded(
+                                child: Text(
                               "${"Upload clear pictures of both sides of ".tr} ${document.title}",
                               style: GoogleFonts.inter(
                                 color: themeChange.isDarkTheme()
@@ -288,11 +289,11 @@ class UploadDocumentsView extends StatelessWidget {
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
                               ),
-                            ),
+                            )),
                           )
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      SizedBox(height: 10),
                       Row(
                         children: [
                           const Icon(
@@ -301,8 +302,9 @@ class UploadDocumentsView extends StatelessWidget {
                           ),
                           Container(
                             margin: const EdgeInsets.only(left: 10),
-                            width: Responsive.width(80, context),
-                            child: Text(
+                            width: MediaQuery.of(context).size.width-20,
+                            child: Expanded(
+                                child: Text(
                               "${"Ensure that the photo is clear and all details on the ".tr}${document.title} ${"are visible.".tr}",
                               style: GoogleFonts.inter(
                                 color: themeChange.isDarkTheme()
@@ -311,7 +313,7 @@ class UploadDocumentsView extends StatelessWidget {
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
                               ),
-                            ),
+                            )),
                           ),
                         ],
                       ),
@@ -325,7 +327,8 @@ class UploadDocumentsView extends StatelessWidget {
                           Container(
                             margin: const EdgeInsets.only(left: 10),
                             width: Responsive.width(80, context),
-                            child: Text(
+                            child: Expanded(
+                                child: Text(
                               "The uploaded image should be in .jpg, .png, or .pdf format.",
                               style: GoogleFonts.inter(
                                 color: themeChange.isDarkTheme()
@@ -334,7 +337,7 @@ class UploadDocumentsView extends StatelessWidget {
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
                               ),
-                            ),
+                            )),
                           )
                         ],
                       ),
@@ -394,7 +397,7 @@ class UploadDocumentsView extends StatelessWidget {
                                 controller.numberController.text.isNotEmpty &&
                                 controller.dobController.text.isNotEmpty &&
                                 list.isNotEmpty &&
-                                (list.length == (document.isTwoSide ? 2 : 1))) {
+                                (list.length == (document.side))) {
                               controller.uploadDocument(document);
                             } else {
                               controller.verifyDocument.value.documentImage
