@@ -1,8 +1,12 @@
 // ignore_for_file: unnecessary_overrides
 
+import 'dart:convert';
+import 'dart:core';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:driver/app/models/docsModel.dart';
+import 'package:driver/app/services/api_service.dart';
 import 'package:driver/utils/preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -112,43 +116,39 @@ class UploadDocumentsController extends GetxController {
     }
   }
 
-  uploadDocument(DocumentsModel document) async {
+  uploadDocument(DocumentsModel document, List<dynamic> Listr) async {
     ShowToastDialog.showLoader("Please wait");
+
+    List<String> imageList = List.from([]);
+
     if (verifyDocument.value.documentImage.isNotEmpty) {
       for (int i = 0; i < verifyDocument.value.documentImage.length; i++) {
         if (verifyDocument.value.documentImage[i].isNotEmpty) {
-           String image = await Constant.uploadDriverDocumentImageToFireStorage(
-              File(verifyDocument.value.documentImage[i].toString()),
-            );
-            verifyDocument.value.documentImage.removeAt(i);
-            verifyDocument.value.documentImage.insert(i, image);
+          File image = File(verifyDocument.value.documentImage[i].toString());
+          List<int> imageBytes = await image.readAsBytes();
+          String base64Image = base64Encode(imageBytes);
+          imageList.add(base64Image);
         }
       }
     }
-    verifyDocument.value.documentId = document.id;
-    verifyDocument.value.name = nameController.text;
-    verifyDocument.value.number = numberController.text;
-    verifyDocument.value.dob = dobController.text;
-    verifyDocument.value.isVerify = false;
-    VerifyDocumentsController verifyDocumentsController =
-        Get.find<VerifyDocumentsController>();
+   
     DriverUserModel? userModel = await Preferences.getDriverUserModel();
-    List<VerifyDocument> verifyDocumentList =
-        verifyDocumentsController.verifyDriverModel.value.verifyDocument ?? [];
-    verifyDocumentList.add(verifyDocument.value);
-    VerifyDriverModel verifyDriverModel = VerifyDriverModel(
-      createAt: Timestamp.now(),
-      driverEmail: userModel!.email ?? '',
-      driverId: userModel.id ?? '',
-      driverName: userModel.fullName ?? '',
-      verifyDocument: verifyDocumentList,
-    );
-    bool isUpdated = await FireStoreUtils.addDocument(verifyDriverModel);
+
+
+
+    DocsModel docsModel = DocsModel(
+        type: document.type,
+        document_number: "document",
+        name: '',
+        date_of_birth: '',
+        image: imageList);
+
+    bool isUpdated = await uploadDriverDocumentImageToStorage(docsModel);
+
     ShowToastDialog.closeLoader();
     if (isUpdated) {
       ShowToastDialog.showToast(
           "${document.title} updated, Please wait for verification.");
-      verifyDocumentsController.getData();
       Get.back();
     } else {
       ShowToastDialog.showToast(

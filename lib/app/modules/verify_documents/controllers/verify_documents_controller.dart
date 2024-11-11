@@ -35,10 +35,9 @@ class VerifyDocumentsController extends GetxController {
     final response = await getListOfUploadDocument();
     List<DocumentsModel> documentListL = List.from([]);
     for (var element in response["data"]) {
-        DocumentsModel vehicleTypeModel =
-            DocumentsModel.fromJson(element);
-        documentListL.add(vehicleTypeModel);
-      }
+      DocumentsModel vehicleTypeModel = DocumentsModel.fromJson(element);
+      documentListL.add(vehicleTypeModel);
+    }
     documentList.value = documentListL;
     // userModel.value = await FireStoreUtils.getDriverUserProfile(
     //         FireStoreUtils.getCurrentUid()) ??
@@ -46,19 +45,21 @@ class VerifyDocumentsController extends GetxController {
   }
 
   bool checkUploadedData(String documentId) {
-    List<VerifyDocument> doc = verifyDriverModel.value.verifyDocument ?? [];
-    int index = doc.indexWhere((element) => element.documentId == documentId);
+    // List<VerifyDocument> doc = verifyDriverModel.value.verifyDocument ?? [];
+    // int index = doc.indexWhere((element) => element.documentId == documentId);
 
-    return index != -1;
+    // return index != -1;
+    return false;
   }
 
   bool checkVerifiedData(String documentId) {
-    List<VerifyDocument> doc = verifyDriverModel.value.verifyDocument ?? [];
-    int index = doc.indexWhere((element) => element.documentId == documentId);
-    if (index != -1) {
-      return doc[index].isVerify ?? false;
-    } else {
-      return false;
-    }
+    // List<VerifyDocument> doc = verifyDriverModel.value.verifyDocument ?? [];
+    // int index = doc.indexWhere((element) => element.documentId == documentId);
+    // if (index != -1) {
+    //   return doc[index].isVerify ?? false;
+    // } else {
+    //   return false;
+    // }
+    return false;
   }
 }

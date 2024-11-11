@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:driver/app/models/docsModel.dart';
 import 'package:driver/app/models/user_model.dart';
 import 'package:driver/constant/api_constant.dart';
 import 'package:http/http.dart' as http;
@@ -130,3 +132,25 @@ Future<Map<String, dynamic>> getVehicleDetial() async {
     throw Exception('Failed to Create Account: ${response.reasonPhrase}');
   }
 }
+
+Future<bool> uploadDriverDocumentImageToStorage(
+      DocsModel model) async {
+    // Convert image to base64
+    final response = await http.put(
+      Uri.parse(baseURL + updloadDocumentEndpoint),
+      headers: {"Content-Type": "application/json", "token": globalToken},
+      body: jsonEncode(
+        model.toJson(),
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      // Parse the response to get the image name
+      var responseData = jsonDecode(response.body);
+      String imageName =
+          responseData['data']; // Adjust based on your API response
+      return true;
+    } else {
+      throw Exception('Failed to upload image');
+    }
+  }

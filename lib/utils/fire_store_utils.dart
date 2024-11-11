@@ -376,7 +376,7 @@ class FireStoreUtils {
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {
-        verifyDriverModel = VerifyDriverModel.fromJson(value.docs.first.data());
+        // verifyDriverModel = VerifyDriverModel.fromJson(value.docs.first.data());
       } else {
         verifyDriverModel = null;
       }
