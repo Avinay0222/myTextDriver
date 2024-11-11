@@ -10,3 +10,4 @@ const String updloadProfileImageEndpoint = "/driver/profile/upload"; //PUT
 const String updloadDocumentEndpoint = "/driver/document/upload"; //PUT
 const String listOfUploadDocument = "/driver/list_of_upload_documents"; //GET
 const String addVehicleDetail = "/driver/vehicle/add"; //POST
+const String getVehicleList = "/driver/vehicles"; //GET

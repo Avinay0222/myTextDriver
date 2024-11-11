@@ -3,9 +3,11 @@ import 'package:driver/app/models/vehicle_brand_model.dart';
 import 'package:driver/app/models/vehicle_model_model.dart';
 import 'package:driver/app/models/vehicle_type_model.dart';
 import 'package:driver/app/modules/verify_documents/controllers/verify_documents_controller.dart';
+import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/utils/fire_store_utils.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -21,13 +23,11 @@ class UpdateVehicleDetailsController extends GetxController {
         farMinimumCharges: "0",
         farePerKm: "0",
       )).obs;
-  Rx<VehicleBrandModel> vehicleBrandModel =
-      VehicleBrandModel(id: "", title: "", isEnable: false).obs;
-  Rx<VehicleModelModel> vehicleModelModel =
-      VehicleModelModel(id: "", title: "", isEnable: false, brandId: '').obs;
+  Rx<VehicleBrandModel> vehicleBrandModel = VehicleBrandModel.empty().obs;
+  Rx<VehicleModel> vehicleModel = VehicleModel.empty().obs;
   List<VehicleTypeModel> vehicleTypeList = Constant.vehicleTypeList ?? [];
   RxList<VehicleBrandModel> vehicleBrandList = <VehicleBrandModel>[].obs;
-  RxList<VehicleModelModel> vehicleModelList = <VehicleModelModel>[].obs;
+  RxList<VehicleModel> vehicleModelList = <VehicleModel>[].obs;
   TextEditingController vehicleModelController = TextEditingController();
   TextEditingController vehicleBrandController = TextEditingController();
   TextEditingController vehicleNumberController = TextEditingController();
@@ -35,7 +35,10 @@ class UpdateVehicleDetailsController extends GetxController {
   @override
   Future<void> onReady() async {
     vehicleTypeModel.value = vehicleTypeList[0];
-    vehicleBrandList.value = await FireStoreUtils.getVehicleBrand() ?? [];
+    final response = await getVehicleDetial();
+    List<dynamic> list = (response)["data"] as List;
+    vehicleBrandList.value =
+        list.map((item) => VehicleBrandModel.fromJson(item)).toList();
     updateData();
     super.onReady();
   }
@@ -64,21 +67,26 @@ class UpdateVehicleDetailsController extends GetxController {
   }
 
   getVehicleModel(String id) async {
-    vehicleModelList.value = await FireStoreUtils.getVehicleModel(id) ?? [];
+    // Match the ID from vehicleBrandList and filter the models
+    vehicleModelList.value = vehicleBrandList
+        .where((brand) => brand.id == id)
+        .map((brand) => brand
+            .models) // Assuming 'models' is a property of VehicleBrandModel
+        .expand((modelList) => modelList) // Flatten the list of lists
+        .toList();
   }
 
   saveVehicleDetails() async {
     ShowToastDialog.showLoader("please_wait".tr);
     VerifyDocumentsController verifyDocumentsController =
         Get.find<VerifyDocumentsController>();
-    DriverUserModel? userModel = await FireStoreUtils.getDriverUserProfile(
-        FireStoreUtils.getCurrentUid());
+    DriverUserModel? userModel = await Preferences.getDriverUserModel();
     if (userModel == null) return;
     DriverVehicleDetails driverVehicleDetails = DriverVehicleDetails(
-      brandName: vehicleBrandModel.value.title,
-      brandId: vehicleBrandModel.value.id,
-      modelName: vehicleModelModel.value.title,
-      modelId: vehicleModelModel.value.id,
+      // brandName: vehicleBrandModel.value.title,
+      // brandId: vehicleBrandModel.value.id,
+      modelName: vehicleModel.value.name,
+      modelId: vehicleModel.value.id,
       vehicleNumber: vehicleNumberController.text,
       isVerified: false,
       vehicleTypeName: vehicleTypeModel.value.title,
