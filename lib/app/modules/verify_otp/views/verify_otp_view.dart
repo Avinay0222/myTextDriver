@@ -1,20 +1,13 @@
-import 'dart:math';
-
 import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/modules/home/views/home_view.dart';
 import 'package:driver/app/modules/permission/views/permission_view.dart';
 import 'package:driver/app/modules/signup/views/signup_view.dart';
-import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
-import 'package:driver/utils/fire_store_utils.dart';
-import 'package:driver/utils/notification_service.dart';
-import 'package:driver/utils/preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -107,87 +100,87 @@ class VerifyOtpView extends StatelessWidget {
                       ),
                       fieldStyle: FieldStyle.underline,
                       onCompleted: (pin) async {
-                        if (pin.length == 6) {
-                          ShowToastDialog.showLoader("verify_OTP".tr);
-                          PhoneAuthCredential credential =
-                              PhoneAuthProvider.credential(
-                                  verificationId:
-                                      controller.verificationId.value,
-                                  smsCode: pin);
-                          await FirebaseAuth.instance
-                              .signInWithCredential(credential)
-                              .then((value) async {
-                            if (value.additionalUserInfo!.isNewUser) {
-                              String fcmToken =
-                                  await NotificationService.getToken();
-                              DriverUserModel userModel = DriverUserModel();
-                              userModel.id = value.user!.uid;
-                              userModel.countryCode =
-                                  controller.countryCode.value;
-                              userModel.phoneNumber =
-                                  controller.phoneNumber.value;
-                              userModel.loginType = Constant.phoneLoginType;
-                              userModel.fcmToken = fcmToken;
+                        // if (pin.length == 6) {
+                        //   ShowToastDialog.showLoader("verify_OTP".tr);
+                        //   PhoneAuthCredential credential =
+                        //       PhoneAuthProvider.credential(
+                        //           verificationId:
+                        //               controller.verificationId.value,
+                        //           smsCode: pin);
+                        //   await FirebaseAuth.instance
+                        //       .signInWithCredential(credential)
+                        //       .then((value) async {
+                        //     if (value.additionalUserInfo!.isNewUser) {
+                        //       String fcmToken =
+                        //           await NotificationService.getToken();
+                        //       DriverUserModel userModel = DriverUserModel();
+                        //       userModel.id = value.user!.uid;
+                        //       userModel.countryCode =
+                        //           controller.countryCode.value;
+                        //       userModel.phoneNumber =
+                        //           controller.phoneNumber.value;
+                        //       userModel.loginType = Constant.phoneLoginType;
+                        //       userModel.fcmToken = fcmToken;
 
-                              ShowToastDialog.closeLoader();
-                              Get.off(const SignupView(), arguments: {
-                                "userModel": userModel,
-                              });
-                            } else {
-                              await FireStoreUtils.userExistOrNot(
-                                      value.user!.uid)
-                                  .then((userExit) async {
-                                ShowToastDialog.closeLoader();
-                                if (userExit == true) {
-                                  DriverUserModel? userModel =
-                                      await FireStoreUtils.getDriverUserProfile(
-                                          value.user!.uid);
-                                  if (userModel != null) {
-                                    if (userModel.isActive == true) {
-                                      if (userModel.isVerified ?? false) {
-                                        bool permissionGiven = await Constant
-                                            .isPermissionApplied();
-                                        if (permissionGiven) {
-                                          Get.offAll(const HomeView());
-                                        } else {
-                                          Get.offAll(const PermissionView());
-                                        }
-                                      } else {
-                                        Get.offAll(const VerifyDocumentsView(
-                                            isFromDrawer: false));
-                                      }
-                                    } else {
-                                      await FirebaseAuth.instance.signOut();
-                                      ShowToastDialog.showToast(
-                                          "user_disable_admin_contact".tr);
-                                    }
-                                  }
-                                } else {
-                                  String fcmToken =
-                                      await NotificationService.getToken();
-                                  DriverUserModel userModel = DriverUserModel();
-                                  userModel.id = value.user!.uid;
-                                  userModel.countryCode =
-                                      controller.countryCode.value;
-                                  userModel.phoneNumber =
-                                      controller.phoneNumber.value;
-                                  userModel.loginType = Constant.phoneLoginType;
-                                  userModel.fcmToken = fcmToken;
+                        //       ShowToastDialog.closeLoader();
+                        //       Get.off(const SignupView(), arguments: {
+                        //         "userModel": userModel,
+                        //       });
+                        //     } else {
+                        //       await FireStoreUtils.userExistOrNot(
+                        //               value.user!.uid)
+                        //           .then((userExit) async {
+                        //         ShowToastDialog.closeLoader();
+                        //         if (userExit == true) {
+                        //           DriverUserModel? userModel =
+                        //               await FireStoreUtils.getDriverUserProfile(
+                        //                   value.user!.uid);
+                        //           if (userModel != null) {
+                        //             if (userModel.isActive == true) {
+                        //               if (userModel.isVerified ?? false) {
+                        //                 bool permissionGiven = await Constant
+                        //                     .isPermissionApplied();
+                        //                 if (permissionGiven) {
+                        //                   Get.offAll(const HomeView());
+                        //                 } else {
+                        //                   Get.offAll(const PermissionView());
+                        //                 }
+                        //               } else {
+                        //                 Get.offAll(const VerifyDocumentsView(
+                        //                     isFromDrawer: false));
+                        //               }
+                        //             } else {
+                        //               await FirebaseAuth.instance.signOut();
+                        //               ShowToastDialog.showToast(
+                        //                   "user_disable_admin_contact".tr);
+                        //             }
+                        //           }
+                        //         } else {
+                        //           String fcmToken =
+                        //               await NotificationService.getToken();
+                        //           DriverUserModel userModel = DriverUserModel();
+                        //           userModel.id = value.user!.uid;
+                        //           userModel.countryCode =
+                        //               controller.countryCode.value;
+                        //           userModel.phoneNumber =
+                        //               controller.phoneNumber.value;
+                        //           userModel.loginType = Constant.phoneLoginType;
+                        //           userModel.fcmToken = fcmToken;
 
-                                  Get.off(const SignupView(), arguments: {
-                                    "userModel": userModel,
-                                  });
-                                }
-                              });
-                            }
-                          }).catchError((error) {
-                            print("Error : ${error.toString()}");
-                            ShowToastDialog.closeLoader();
-                            ShowToastDialog.showToast("invalid_code".tr);
-                          });
-                        } else {
+                        //           Get.off(const SignupView(), arguments: {
+                        //             "userModel": userModel,
+                        //           });
+                        //         }
+                        //       });
+                        //     }
+                        //   }).catchError((error) {
+                        //     print("Error : ${error.toString()}");
+                        //     ShowToastDialog.closeLoader();
+                        //     ShowToastDialog.showToast("invalid_code".tr);
+                        //   });
+                        // } else {
                           controller.otpCode.value = pin;
-                        }
+                        // }
                       },
                     ),
                     const SizedBox(height: 90),
@@ -222,7 +215,15 @@ class VerifyOtpView extends StatelessWidget {
                                   Get.off(const SignupView(), arguments: {
                                     "userModel": userModel,
                                   });
-                                } else {}
+                                } else {
+                                  bool permissionGiven =
+                                      await Constant.isPermissionApplied();
+                                  if (permissionGiven) {
+                                    Get.offAll(const HomeView());
+                                  } else {
+                                    Get.offAll(const PermissionView());
+                                  }
+                                }
                               } else {
                                 ShowToastDialog.showToast(
                                     'Failed to send OTP: ${responseData["msg"]}');

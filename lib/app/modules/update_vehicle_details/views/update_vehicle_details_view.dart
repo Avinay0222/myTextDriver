@@ -224,15 +224,16 @@ class UpdateVehicleDetailsView extends StatelessWidget {
 
                               try {
                                 Map<String, String> params = {
-                                  // "brand_name":controller.vehicleBrandController.text,
-                                  // "model_name":controller.vehicleModelController.text,
-                                  // "vehicle_number": controller.vehicleNumberController.text,
-                                  // "vehicle_type": controller.vehicleModelModel.value.title,
-                                  "brand_name": "mahindra",
-                                  "model_name": "xuv-300",
-                                  "vehicle_number": "HR78D1234",
+                                  "brand_name":
+                                      controller.vehicleBrandController.text,
+                                  "model_name":
+                                      controller.vehicleModelController.text,
+                                  "vehicle_number":
+                                      controller.vehicleNumberController.text,
+                                  "vehicle_type":
+                                      controller.vehicleTypeModel.value.title,
                                   "vehicle_color": "Black",
-                                  "vehicle_type": "suv"
+                                  "image": staticImage
                                 };
 
                                 final response =
@@ -246,7 +247,7 @@ class UpdateVehicleDetailsView extends StatelessWidget {
                                 ShowToastDialog.showToast(e.toString());
                               }
 
-                              // controller.saveVehicleDetails();
+                              controller.saveVehicleDetails();
                             } else {
                               ShowToastDialog.showToast(
                                   "Please enter a valid details".tr);
