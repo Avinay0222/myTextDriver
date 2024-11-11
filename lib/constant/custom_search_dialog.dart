@@ -10,9 +10,14 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomSearchDialog {
-  static Future vehicleBrandSearchDialog({required Color bgColor, required BuildContext context, required String title, required List<VehicleBrandModel> list}) {
+  static Future vehicleBrandSearchDialog(
+      {required Color bgColor,
+      required BuildContext context,
+      required String title,
+      required List<VehicleBrandModel> list}) {
     RxList<VehicleBrandModel> localList = list.obs;
-    UpdateVehicleDetailsController controller = Get.put(UpdateVehicleDetailsController());
+    UpdateVehicleDetailsController controller =
+        Get.put(UpdateVehicleDetailsController());
     return showDialog(
         context: context,
         builder: (context) {
@@ -47,7 +52,11 @@ class CustomSearchDialog {
                     CupertinoSearchTextField(
                       onChanged: (value) {
                         List<VehicleBrandModel> tempList = [];
-                        tempList = list.where((element) => element.title.toLowerCase().contains(value.toLowerCase())).toList();
+                        tempList = list
+                            .where((element) => element.name
+                                .toLowerCase()
+                                .contains(value.toLowerCase()))
+                            .toList();
                         localList.clear();
                         localList.addAll(tempList);
                       },
@@ -58,12 +67,13 @@ class CustomSearchDialog {
                               .map((e) => InkWell(
                                     onTap: () async {
                                       controller.vehicleBrandModel.value = e;
-                                      controller.vehicleBrandController.text = e.title;
+                                      controller.vehicleBrandController.text =
+                                          e.name;
                                       await controller.getVehicleModel(e.id);
                                       Navigator.pop(context);
                                     },
                                     child: ListTile(
-                                      title: Text(e.title),
+                                      title: Text(e.name),
                                     ),
                                   ))
                               .toList()),
@@ -76,9 +86,14 @@ class CustomSearchDialog {
         });
   }
 
-  static Future vehicleModelSearchDialog({required Color bgColor, required BuildContext context, required String title, required List<VehicleModelModel> list}) {
-    RxList<VehicleModelModel> localList = list.obs;
-    UpdateVehicleDetailsController controller = Get.put(UpdateVehicleDetailsController());
+  static Future vehicleModelSearchDialog(
+      {required Color bgColor,
+      required BuildContext context,
+      required String title,
+      required List<VehicleModel> list}) {
+    RxList<VehicleModel> localList = list.obs;
+    UpdateVehicleDetailsController controller =
+        Get.put(UpdateVehicleDetailsController());
     return showDialog(
         context: context,
         builder: (context) {
@@ -112,8 +127,12 @@ class CustomSearchDialog {
                   children: [
                     CupertinoSearchTextField(
                       onChanged: (value) {
-                        List<VehicleModelModel> tempList = [];
-                        tempList = list.where((element) => element.title.toLowerCase().contains(value.toLowerCase())).toList();
+                        List<VehicleModel> tempList = [];
+                        tempList = list
+                            .where((element) => element.name
+                                .toLowerCase()
+                                .contains(value.toLowerCase()))
+                            .toList();
                         localList.clear();
                         localList.addAll(tempList);
                       },
@@ -123,12 +142,13 @@ class CustomSearchDialog {
                           children: localList
                               .map((e) => InkWell(
                                     onTap: () async {
-                                      controller.vehicleModelModel.value = e;
-                                      controller.vehicleModelController.text = e.title;
+                                      controller.vehicleModel.value = e;
+                                      controller.vehicleModelController.text =
+                                          e.name;
                                       Navigator.pop(context);
                                     },
                                     child: ListTile(
-                                      title: Text(e.title),
+                                      title: Text(e.name),
                                     ),
                                   ))
                               .toList()),
