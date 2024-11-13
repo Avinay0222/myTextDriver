@@ -1,6 +1,8 @@
 // ignore_for_file: unnecessary_overrides
 
+import 'package:driver/app/models/docsModel.dart';
 import 'package:driver/app/services/api_service.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:get/get.dart';
 import 'package:driver/app/models/documents_model.dart';
 import 'package:driver/app/models/driver_user_model.dart';
@@ -49,6 +51,15 @@ class VerifyDocumentsController extends GetxController {
     // int index = doc.indexWhere((element) => element.documentId == documentId);
 
     // return index != -1;
+    DriverUserModel? userModel = Preferences.userModel;
+
+    List<DocsModel> list = List.from(userModel?.driverdDocs ?? []);
+
+    for (int i = 0; i <= list.length - 1; i++) {
+      DocsModel model = list[i];
+      if (model.id == documentId) return true;
+    }
+
     return false;
   }
 
@@ -60,6 +71,16 @@ class VerifyDocumentsController extends GetxController {
     // } else {
     //   return false;
     // }
+
+    DriverUserModel? userModel = Preferences.userModel;
+
+    List<DocsModel> list = List.from(userModel?.driverdDocs ?? []);
+
+    for (int i = 0; i <= list.length - 1; i++) {
+      DocsModel model = list[i];
+      if (model.id == documentId) return true;
+    }
+
     return false;
   }
 }

@@ -398,7 +398,7 @@ class UploadDocumentsView extends StatelessWidget {
                                 controller.dobController.text.isNotEmpty &&
                                 list.isNotEmpty &&
                                 (list.length == (document.side))) {
-                              controller.uploadDocument(document,list);
+                              controller.uploadDocument(document,list,controller);
                             } else {
                               controller.verifyDocument.value.documentImage
                                   .add('');

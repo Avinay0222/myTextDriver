@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:driver/app/models/docsModel.dart';
+import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/models/user_model.dart';
 import 'package:driver/constant/api_constant.dart';
+import 'package:driver/constant_widgets/show_toast_dialog.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:http/http.dart' as http;
 
 String globalToken = "";
@@ -104,7 +107,6 @@ Future<Map<String, dynamic>> checkVerificationStatus(
   }
 }
 
-
 Future<Map<String, dynamic>> uploadVehicleDetails(
     Map<String, String> payload) async {
   final response = await http.post(
@@ -114,8 +116,27 @@ Future<Map<String, dynamic>> uploadVehicleDetails(
   );
 
   if (response.statusCode == 200) {
+    DriverVehicleDetails vehicleDetails = DriverVehicleDetails(
+      vehicleTypeName: payload['vehicle_type'],
+      vehicleTypeId: payload['vehicle_type'],
+      brandName: payload['brand_name'],
+      brandId: payload['brand_name'],
+      modelName: payload['model_name'],
+      modelId: payload['model_name'],
+      vehicleNumber: payload['vehicle_number'],
+      isVerified: true,
+    );
+
+    DriverUserModel? userModel = Preferences.userModel;
+    userModel!.driverVehicleDetails = vehicleDetails;
+
+    await Preferences.setDriverUserModel(userModel);
+
     return jsonDecode(response.body);
   } else {
+    ShowToastDialog.closeLoader();
+    ShowToastDialog.showToast(
+        'Failed to Create Account: ${response.reasonPhrase}');
     throw Exception('Failed to Create Account: ${response.reasonPhrase}');
   }
 }
@@ -133,24 +154,48 @@ Future<Map<String, dynamic>> getVehicleDetial() async {
   }
 }
 
-Future<bool> uploadDriverDocumentImageToStorage(
-      DocsModel model) async {
-    // Convert image to base64
-    final response = await http.put(
-      Uri.parse(baseURL + updloadDocumentEndpoint),
-      headers: {"Content-Type": "application/json", "token": globalToken},
-      body: jsonEncode(
-        model.toJson(),
-      ),
-    );
+// Future<bool> updateDriverUserOnline(bool isOnline) async {
+//     bool isUpdate = false;
+//     DriverUserModel? userModel = await getDriverUserProfile(getCurrentUid());
+//     if (userModel != null) {
+//       userModel.isOnline = isOnline;
+//       await fireStore
+//           .collection(CollectionName.drivers)
+//           .doc(userModel.id)
+//           .set(userModel.toJson())
+//           .whenComplete(() {
+//         isUpdate = true;
+//       }).catchError((error) {
+//         log("Failed to update user: $error");
+//         isUpdate = false;
+//       });
+//     }
+//     return isUpdate;
+//   }
 
-    if (response.statusCode == 200) {
-      // Parse the response to get the image name
-      var responseData = jsonDecode(response.body);
-      String imageName =
-          responseData['data']; // Adjust based on your API response
-      return true;
-    } else {
-      throw Exception('Failed to upload image');
-    }
+Future<bool> uploadDriverDocumentImageToStorage(DocsModel model) async {
+  // Convert image to base64
+  final response = await http.put(
+    Uri.parse(baseURL + updloadDocumentEndpoint),
+    headers: {"Content-Type": "application/json", "token": globalToken},
+    body: jsonEncode(
+      model.toJson(),
+    ),
+  );
+
+  if (response.statusCode == 200) {
+    DriverUserModel? userModel = await Preferences.getDriverUserModel();
+
+    List<DocsModel> list = List.from(userModel?.driverdDocs ?? []);
+
+    list.add(model);
+
+    userModel?.driverdDocs = list;
+
+    await Preferences.setDriverUserModel(userModel!);
+
+    return true;
+  } else {
+    return false;
   }
+}

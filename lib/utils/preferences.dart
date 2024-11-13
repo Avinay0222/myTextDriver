@@ -9,6 +9,8 @@ class Preferences {
   static const isFinishOnBoardingKey = "isFinishOnBoardingKey";
   static const String userLoginStatus = "USER_LOGIN_STATUS";
 
+  static DriverUserModel? userModel;
+
   static Future<bool> getBoolean(String key) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getBool(key) ?? false;
@@ -56,11 +58,12 @@ class Preferences {
 
   static Future<bool> getUserLoginStatus() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    return pref.getBool(userLoginStatus)?? false;
+    return pref.getBool(userLoginStatus) ?? false;
   }
 
   static Future<void> setDriverUserModel(DriverUserModel userModel) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
+    Preferences.userModel = userModel;
     String jsonString = json.encode(userModel.toJson());
     await pref.setString('driverUserModel', jsonString);
   }
@@ -69,7 +72,8 @@ class Preferences {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? jsonString = pref.getString('driverUserModel');
     if (jsonString != null) {
-        return DriverUserModel.fromJson(json.decode(jsonString));
+      Preferences.userModel = DriverUserModel.fromJson(json.decode(jsonString));
+      return userModel;
     }
     return null;
   }

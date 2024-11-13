@@ -116,7 +116,8 @@ class UploadDocumentsController extends GetxController {
     }
   }
 
-  uploadDocument(DocumentsModel document, List<dynamic> Listr) async {
+  uploadDocument(
+      DocumentsModel document, List<dynamic> Listr, controller) async {
     ShowToastDialog.showLoader("Please wait");
 
     List<String> imageList = List.from([]);
@@ -127,21 +128,20 @@ class UploadDocumentsController extends GetxController {
           File image = File(verifyDocument.value.documentImage[i].toString());
           List<int> imageBytes = await image.readAsBytes();
           String base64Image = base64Encode(imageBytes);
-          imageList.add(base64Image);
+          imageList.add("data:image/png;base64,$base64Image");
         }
       }
     }
-   
+
     DriverUserModel? userModel = await Preferences.getDriverUserModel();
 
-
-
     DocsModel docsModel = DocsModel(
-        type: document.type,
-        document_number: "document",
-        name: '',
-        date_of_birth: '',
-        image: imageList);
+        type: document.slug,
+        document_number: controller.numberController.text,
+        name: controller.nameController.text,
+        date_of_birth: controller.dobController.text,
+        image: imageList,
+        id: document.id);
 
     bool isUpdated = await uploadDriverDocumentImageToStorage(docsModel);
 
