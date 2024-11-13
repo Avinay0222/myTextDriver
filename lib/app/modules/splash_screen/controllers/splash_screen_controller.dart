@@ -39,8 +39,6 @@ class SplashScreenController extends GetxController {
       if (isLogin == true) {
         DriverUserModel? userModel = await Preferences.getDriverUserModel();
 
-        globalToken = userModel!.fcmToken ?? '';
-
         if (userModel != null && userModel.isVerified == true) {
           bool permissionGiven = await Constant.isPermissionApplied();
           if (permissionGiven) {

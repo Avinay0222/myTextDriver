@@ -8,6 +8,7 @@ class Preferences {
   static const themKey = "themKey";
   static const isFinishOnBoardingKey = "isFinishOnBoardingKey";
   static const String userLoginStatus = "USER_LOGIN_STATUS";
+  static const String fcmToken = "FCM_TOKEN";
 
   static DriverUserModel? userModel;
 
@@ -49,6 +50,16 @@ class Preferences {
   static Future<void> clearKeyData(String key) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.remove(key);
+  }
+
+  static Future<String> getFcmToken() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getString(fcmToken) ?? "";
+  }
+
+  static Future<void> setFcmToken(String token) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString(fcmToken, token);
   }
 
   static Future<void> setUserLoginStatus(bool value) async {

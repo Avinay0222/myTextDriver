@@ -304,7 +304,7 @@ class Constant {
     // Create a multipart request
     final request = http.MultipartRequest('PUT', url)
       ..headers.addAll({
-        "token": globalToken,
+        "token": await Preferences.getFcmToken(),
       })
       ..files.add(
         await http.MultipartFile.fromPath(
@@ -339,7 +339,7 @@ class Constant {
 
     final response = await http.put(
       Uri.parse(baseURL + updloadDocumentEndpoint),
-      headers: {"Content-Type": "application/json", "token": globalToken},
+      headers: {"Content-Type": "application/json", "token": await Preferences.fcmToken},
       body: jsonEncode(
         {
           "type": "driving-license",
@@ -460,6 +460,33 @@ class Constant {
         firstDate: isForFuture ? DateTime.now() : DateTime(1945),
         //DateTime.now() - not to allow to choose before today.
         lastDate: isForFuture ? DateTime(2101) : DateTime.now());
+    return pickedDate;
+  }
+
+  static Future<DateTime?> selectDateOfBirth(context, bool isForFuture) async {
+    DateTime? pickedDate = await showDatePicker(
+        context: context,
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: const ColorScheme.light(
+                primary: AppThemData.primary600, // header background color
+                onPrimary: AppThemData.grey800, // header text color
+                onSurface: AppThemData.grey800, // body text color
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: AppThemData.grey800, // button text color
+                ),
+              ),
+            ),
+            child: child!,
+          );
+        },
+        initialDate: DateTime(2000),
+        //get today's date
+        firstDate: DateTime(1950), // Set the minimum year to 1950
+        lastDate: DateTime.now().subtract(Duration(days: 365 * 18)));
     return pickedDate;
   }
 
