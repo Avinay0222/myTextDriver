@@ -7,6 +7,7 @@ import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/theme/app_them_data.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -50,21 +51,19 @@ class VerifyDocumentsView extends GetView<VerifyDocumentsController> {
                     buttonColor: AppThemData.primary500,
                     buttonTextColor: AppThemData.black,
                     onTap: () async {
-                      var userModel = controller.userModel.value;
-                      if (userModel.driverVehicleDetails != null &&
-                          userModel.driverVehicleDetails!.brandId!.isNotEmpty) {
+                      DriverUserModel? userModel = Preferences.userModel;
+                      if (userModel!.driverVehicleDetails != null &&
+                          userModel.driverVehicleDetails!.modelId!.isNotEmpty) {
                         ShowToastDialog.showLoader("Please wait");
-                        await controller.getData();
-                        DriverUserModel? userModel =
-                            await FireStoreUtils.getDriverUserProfile(
-                                FireStoreUtils.getCurrentUid());
+                        // await controller.getData();
+
                         bool isUserVerified = userModel!.isVerified ?? false;
-                        bool isVehicleDetailsVerified = controller.userModel
-                                .value.driverVehicleDetails!.isVerified ??
+                        bool isVehicleDetailsVerified = userModel
+                                .driverVehicleDetails!.isVerified ??
                             false;
-                        int index = controller
-                            .verifyDriverModel.value.verifyDocument!
-                            .indexWhere((element) => element.isVerify == false);
+                        int? index = userModel!
+                            .driverdDocs
+                            ?.indexWhere((element) => element.isVerify == false);
                         bool isDocumentVerified = index == -1;
                         if (isUserVerified &&
                             isVehicleDetailsVerified &&

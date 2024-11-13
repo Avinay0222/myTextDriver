@@ -1,8 +1,13 @@
 // ignore_for_file: unnecessary_overrides
 
+import 'dart:convert';
+import 'dart:core';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:driver/app/models/docsModel.dart';
+import 'package:driver/app/services/api_service.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -111,43 +116,35 @@ class UploadDocumentsController extends GetxController {
     }
   }
 
-  uploadDocument(DocumentsModel document,List<dynamic> imageList) async {
+  uploadDocument(
+      DocumentsModel document, List<dynamic> Listr, controller) async {
     ShowToastDialog.showLoader("Please wait");
-    // if (verifyDocument.value.documentImage.isNotEmpty) {
-    //   for (int i = 0; i < verifyDocument.value.documentImage.length; i++) {
-    //     if (verifyDocument.value.documentImage[i].isNotEmpty) {
-    //       if (Constant.hasValidUrl(
-    //               verifyDocument.value.documentImage[i].toString()) ==
-    //           false) {
-            // String image = await Constant.uploadDriverDocumentImageToFireStorage(
-            //   File(verifyDocument.value.documentImage[i].toString()),
-            //   "driver_documents/${document.id}/${FireStoreUtils.getCurrentUid()}",
-            //   verifyDocument.value.documentImage[i].split('/').last,
-            // );
-    //         verifyDocument.value.documentImage.removeAt(i);
-    //         // verifyDocument.value.documentImage.insert(i, image);
-    //       }
-    //     }
-    //   }
-    // }
-    verifyDocument.value.documentId = document.id;
-    verifyDocument.value.name = nameController.text;
-    verifyDocument.value.number = numberController.text;
-    verifyDocument.value.dob = dobController.text;
-    verifyDocument.value.isVerify = false;
-    // VerifyDocumentsController verifyDocumentsController =
-    //     Get.find<VerifyDocumentsController>();
-    DriverUserModel? userModel = await FireStoreUtils.getDriverUserProfile(
-        FireStoreUtils.getCurrentUid());
-        
-    VerifyDriverModel verifyDriverModel = VerifyDriverModel(
-      createAt: Timestamp.now(),
-      driverEmail: userModel!.email ?? '',
-      driverId: userModel.id ?? '',
-      driverName: userModel.fullName ?? '',
-      verifyDocument: imageList,
-    );
-    bool isUpdated = await FireStoreUtils.addDocument(verifyDriverModel);
+
+    List<String> imageList = List.from([]);
+
+    if (verifyDocument.value.documentImage.isNotEmpty) {
+      for (int i = 0; i < verifyDocument.value.documentImage.length; i++) {
+        if (verifyDocument.value.documentImage[i].isNotEmpty) {
+          File image = File(verifyDocument.value.documentImage[i].toString());
+          List<int> imageBytes = await image.readAsBytes();
+          String base64Image = base64Encode(imageBytes);
+          imageList.add("data:image/png;base64,$base64Image");
+        }
+      }
+    }
+
+    DriverUserModel? userModel = await Preferences.getDriverUserModel();
+
+    DocsModel docsModel = DocsModel(
+        type: document.slug,
+        document_number: controller.numberController.text,
+        name: controller.nameController.text,
+        date_of_birth: controller.dobController.text,
+        image: imageList,
+        id: document.id);
+
+    bool isUpdated = await uploadDriverDocumentImageToStorage(docsModel);
+
     ShowToastDialog.closeLoader();
     if (isUpdated) {
       ShowToastDialog.showToast(
