@@ -205,6 +205,14 @@ class VerifyOtpView extends StatelessWidget {
                               if (responseData["status"] == true) {
                                 Preferences.setFcmToken(responseData["token"]);
                                 Preferences.setUserLoginStatus(true);
+                                DriverUserModel model =
+                                    await getOnlineUserModel();
+                                if (model != DriverUserModel()) {
+                                  Preferences.setDriverUserModel(model);
+                                } else {
+                                  ShowToastDialog.showToast(
+                                      'Faild to get User Data');
+                                }
                                 if (responseData['complete'] == 'false') {
                                   DriverUserModel userModel = DriverUserModel();
                                   userModel.id = responseData['id'];

@@ -12,3 +12,6 @@ const String listOfUploadDocument = "/driver/list_of_upload_documents"; //GET
 const String addVehicleDetail = "/driver/vehicle/add"; //POST
 const String getVehicleList = "/driver/vehicles"; //GET
 const String setCurrentLocation = "/driver/current_location"; //POST
+const String getDriveModel = "/driver/preview/vehicle_docs"; //GET
+const String setDriveModel = "/driver/vehicle/docs/save"; //POST
+const String driveOnlineStatus = "/driver/ride_status"; //PUT

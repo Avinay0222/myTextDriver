@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:driver/app/models/driver_user_model.dart';
+import 'package:driver/app/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Preferences {
@@ -76,6 +77,7 @@ class Preferences {
     SharedPreferences pref = await SharedPreferences.getInstance();
     Preferences.userModel = userModel;
     String jsonString = json.encode(userModel.toJson());
+    await saveUserModelOnline(userModel);
     await pref.setString('driverUserModel', jsonString);
   }
 

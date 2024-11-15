@@ -255,3 +255,59 @@ Future<bool> updateCurrentLocation(String latitude, String longitude) async {
     return false;
   }
 }
+
+Future<bool> saveUserModelOnline(DriverUserModel model) async {
+  final response = await http.post(
+    Uri.parse(baseURL + setDriveModel),
+    headers: {
+      "Content-Type": "application/json",
+      "token": await Preferences.getFcmToken()
+    },
+    body: jsonEncode(model),
+  );
+
+  if (response.statusCode == 200) {
+    if (jsonDecode(response.body)["status"] == true) {
+      return true;
+    }
+    return false;
+  } else {
+    return false;
+  }
+}
+
+Future<DriverUserModel> getOnlineUserModel() async {
+  final response = await http.get(
+    Uri.parse(baseURL + getDriveModel),
+    headers: {
+      "Content-Type": "application/json",
+      "token": await Preferences.getFcmToken()
+    },
+  );
+
+  if (response.statusCode == 200) {
+    if (jsonDecode(response.body)["status"]) {
+      return DriverUserModel.fromJson(
+          jsonDecode(response.body.toString())["data"]);
+    }
+    return DriverUserModel();
+  } else {
+    return DriverUserModel();
+  }
+}
+
+Future<bool> getDriverOnlineStatus() async {
+  final response = await http.put(
+    Uri.parse(baseURL + driveOnlineStatus),
+    headers: {
+      "Content-Type": "application/json",
+      "token": await Preferences.getFcmToken()
+    },
+  );
+
+  if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
+    return  jsonDecode(response.body)["data"]=="offline"?false:true;
+  } else {
+    return false;
+  }
+}

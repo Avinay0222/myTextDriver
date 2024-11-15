@@ -3,6 +3,7 @@ import 'package:driver/app/modules/home/views/home_view.dart';
 import 'package:driver/app/modules/permission/views/permission_view.dart';
 import 'package:driver/app/modules/update_vehicle_details/views/update_vehicle_details_view.dart';
 import 'package:driver/app/modules/upload_documents/views/upload_documents_view.dart';
+import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
@@ -51,19 +52,17 @@ class VerifyDocumentsView extends GetView<VerifyDocumentsController> {
                     buttonColor: AppThemData.primary500,
                     buttonTextColor: AppThemData.black,
                     onTap: () async {
-                      DriverUserModel? userModel = Preferences.userModel;
+                      DriverUserModel? userModel = await getOnlineUserModel();
                       if (userModel!.driverVehicleDetails != null &&
                           userModel.driverVehicleDetails!.modelId!.isNotEmpty) {
                         ShowToastDialog.showLoader("Please wait");
                         // await controller.getData();
 
                         bool isUserVerified = userModel!.isVerified ?? false;
-                        bool isVehicleDetailsVerified = userModel
-                                .driverVehicleDetails!.isVerified ??
-                            false;
-                        int? index = userModel!
-                            .driverdDocs
-                            ?.indexWhere((element) => element.isVerify == false);
+                        bool isVehicleDetailsVerified =
+                            userModel.driverVehicleDetails!.isVerified ?? false;
+                        int? index = userModel!.driverdDocs?.indexWhere(
+                            (element) => element.isVerify == false);
                         bool isDocumentVerified = index == -1;
                         if (isUserVerified &&
                             isVehicleDetailsVerified &&

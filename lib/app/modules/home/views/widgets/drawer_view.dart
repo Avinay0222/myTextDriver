@@ -7,6 +7,7 @@ import 'package:driver/app/modules/create_drive_screen/views/create_driver_view.
 import 'package:driver/app/modules/edit_profile/views/edit_profile_view.dart';
 import 'package:driver/app/modules/home/controllers/home_controller.dart';
 import 'package:driver/app/modules/login/views/login_view.dart';
+import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant_widgets/custom_dialog_box.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/theme/app_them_data.dart';
@@ -147,17 +148,10 @@ class DrawerView extends StatelessWidget {
                             activeColor: AppThemData.white,
                             activeTrackColor: AppThemData.success,
                             onChanged: (value) async {
-                              bool isUpdated =
-                                  await FireStoreUtils.updateDriverUserOnline(
-                                      value);
-                              if (isUpdated) {
-                                controller.isOnline.value = value;
-                                if (controller.isOnline.value == true) {
-                                  controller.updateCurrentLocation();
-                                }
-                              } else {
-                                ShowToastDialog.showToast(
-                                    "Failed to update status please try again");
+                              bool isUpdated = await getDriverOnlineStatus();
+                              controller.isOnline.value = isUpdated;
+                              if (controller.isOnline.value == true) {
+                                controller.updateCurrentLocation();
                               }
                             },
                           ),

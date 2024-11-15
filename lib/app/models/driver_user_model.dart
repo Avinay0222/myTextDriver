@@ -71,9 +71,7 @@ class DriverUserModel {
         phoneNumber: json['phoneNumber'],
         walletAmount: json['walletAmount'] ?? "0",
         totalEarning: json['totalEarning'] ?? "0",
-        createdAt: json['createdAt'] != null
-            ? Timestamp.fromDate(DateTime.parse(json['createdAt']))
-            : null,
+        createdAt: json['createdAt'] != null ? null : null,
         gender: json['gender'],
         dateOfBirth: json['dateOfBirth'] ?? '',
         isActive: json['isActive'] ?? false,
@@ -137,17 +135,18 @@ class DriverVehicleDetails {
   String? modelId;
   String? vehicleNumber;
   bool? isVerified;
+  String? status;
 
-  DriverVehicleDetails({
-    this.vehicleTypeName,
-    this.vehicleTypeId,
-    this.brandName,
-    this.brandId,
-    this.modelName,
-    this.modelId,
-    this.vehicleNumber,
-    this.isVerified,
-  });
+  DriverVehicleDetails(
+      {this.vehicleTypeName,
+      this.vehicleTypeId,
+      this.brandName,
+      this.brandId,
+      this.modelName,
+      this.modelId,
+      this.vehicleNumber,
+      this.isVerified,
+      this.status});
 
   factory DriverVehicleDetails.fromRawJson(String str) =>
       DriverVehicleDetails.fromJson(json.decode(str));
@@ -163,7 +162,10 @@ class DriverVehicleDetails {
         modelName: json["modelName"],
         modelId: json["modelId"],
         vehicleNumber: json["vehicleNumber"],
-        isVerified: json["isVerified"],
+        // UNCOMMENT THIS CURRENTLY ITS STATIC
+        // isVerified: json["isVerified"] ?? json["status"]=="approved"?true:false??false,
+        isVerified: true,
+        status: json["status"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -175,5 +177,6 @@ class DriverVehicleDetails {
         "modelId": modelId ?? '',
         "vehicleNumber": vehicleNumber ?? '',
         "isVerified": isVerified ?? false,
+        "status": status ?? '',
       };
 }
