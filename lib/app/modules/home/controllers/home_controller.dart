@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:driver/app/services/api_service.dart';
 import 'package:driver/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -64,6 +65,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     getFcm();
+    setLocation();
     getUserData();
     getChartData();
     updateCurrentLocation();
@@ -245,4 +247,13 @@ class HomeController extends GetxController {
     update();
     log("=======> Update Location");
   }
+}
+
+void setLocation() async {
+  Location().onLocationChanged.listen(
+    (event) async {
+      final response = await updateCurrentLocation(
+          event.latitude.toString(), event.latitude.toString());
+    },
+  );
 }

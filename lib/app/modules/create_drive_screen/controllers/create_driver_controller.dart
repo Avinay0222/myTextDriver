@@ -14,14 +14,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-class SignupController extends GetxController {
+class CreateDriverController extends GetxController {
   Rx<GlobalKey<FormState>> formKey = GlobalKey<FormState>().obs;
 
   TextEditingController countryCodeController =
       TextEditingController(text: '+91');
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
   RxInt selectedGender = 1.obs;
   RxString loginType = "".obs;
 
@@ -42,56 +42,29 @@ class SignupController extends GetxController {
         phoneNumberController.text = userModel.value.phoneNumber.toString();
         countryCodeController.text = userModel.value.countryCode.toString();
       } else {
-        emailController.text = userModel.value.email.toString();
         nameController.text = userModel.value.fullName.toString();
       }
     }
     update();
   }
 
-  createAccount(String token) async {
-    String fcmToken = token;
+  createDriverAccount() async {
     ShowToastDialog.showLoader("please_wait".tr);
-    DriverUserModel userModelData = userModel.value;
-    userModelData.fullName = nameController.value.text;
-    userModelData.slug = nameController.value.text.toSlug(delimiter: "-");
-    userModelData.email = emailController.value.text;
-    userModelData.countryCode = countryCodeController.value.text;
-    userModelData.phoneNumber = phoneNumberController.value.text;
-    userModelData.gender = selectedGender.value == 1 ? "Male" : "Female";
-    userModelData.profilePic = '';
-    userModelData.fcmToken = fcmToken;
-    userModelData.createdAt = Timestamp.now();
-    userModelData.isActive = true;
-    userModelData.isVerified = false;
+
+    Map<String, dynamic> driverMap = {
+      "name": nameController.value.text,
+      "phone": phoneNumberController.value.text,
+      "date_of_birth": dobController.value.text,
+      "gender": selectedGender.value == 1 ? "Male" : "Female"
+    };
 
     try {
       ShowToastDialog.showLoader("please_wait".tr);
 
-      final responseData = await createNewAccount(
-          userModelData.fullName!, userModelData.gender!, fcmToken);
+      final responseData = await createNewDriverAccount(driverMap);
 
-      userModelData.id = responseData["data"]["_id"];
-
-      Preferences.setDriverUserModel(userModelData);
-
-      if (userModelData.isActive == true) {
-        if (userModelData.isVerified == false) {
-          bool permissionGiven = await Constant.isPermissionApplied();
-          if (permissionGiven) {
-            Get.offAll(const VerifyDocumentsView(
-              isFromDrawer: false,
-            ));
-          } else {
-            Get.offAll(const PermissionView());
-          }
-        } else {
-          ShowToastDialog.closeLoader();
-          Get.offAll(const HomeView());
-        }
-      } else {
-        // await FirebaseAuth.instance.signOut();
-        ShowToastDialog.showToast("user_disable_admin_contact".tr);
+      if(responseData["status"]==true){
+        Get.to(() => const HomeView());
       }
 
       ShowToastDialog.closeLoader();
