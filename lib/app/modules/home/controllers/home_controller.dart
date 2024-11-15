@@ -2,6 +2,8 @@
 
 import 'dart:developer';
 
+import 'package:driver/app/services/api_service.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
@@ -40,8 +42,18 @@ class HomeController extends GetxController {
     "Rejected": 0,
     "Cancelled": 0,
   }.obs;
-  RxList color = [AppThemData.secondary50, AppThemData.success50, AppThemData.danger50, AppThemData.info50].obs;
-  RxList colorDark = [AppThemData.secondary950, AppThemData.success950, AppThemData.danger950, AppThemData.info950].obs;
+  RxList color = [
+    AppThemData.secondary50,
+    AppThemData.success50,
+    AppThemData.danger50,
+    AppThemData.info50
+  ].obs;
+  RxList colorDark = [
+    AppThemData.secondary950,
+    AppThemData.success950,
+    AppThemData.danger950,
+    AppThemData.info950
+  ].obs;
 
   RxInt totalRides = 0.obs;
 
@@ -53,6 +65,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     getFcm();
+    setLocation();
     getUserData();
     getChartData();
     updateCurrentLocation();
@@ -71,7 +84,8 @@ class HomeController extends GetxController {
 
   getUserData() async {
     isLoading.value = true;
-    await FireStoreUtils.getDriverUserProfile(FireStoreUtils.getCurrentUid()).then((value) {
+    await FireStoreUtils.getDriverUserProfile(FireStoreUtils.getCurrentUid())
+        .then((value) {
       if (value != null) {
         userModel.value = value;
       }
@@ -79,10 +93,12 @@ class HomeController extends GetxController {
     checkActiveStatus();
     Constant.userModel = userModel.value;
     isOnline.value = userModel.value.isOnline ?? false;
-    profilePic.value =
-        (userModel.value.profilePic ?? "").isNotEmpty ? userModel.value.profilePic ?? Constant.profileConstant : Constant.profileConstant;
+    profilePic.value = (userModel.value.profilePic ?? "").isNotEmpty
+        ? userModel.value.profilePic ?? Constant.profileConstant
+        : Constant.profileConstant;
     name.value = userModel.value.fullName ?? '';
-    phoneNumber.value = (userModel.value.countryCode ?? '') + (userModel.value.phoneNumber ?? '');
+    phoneNumber.value = (userModel.value.countryCode ?? '') +
+        (userModel.value.phoneNumber ?? '');
     await FireStoreUtils.getReviewList(userModel.value).then((value) {
       if (value != null) {
         reviewList.addAll(value);
@@ -92,13 +108,17 @@ class HomeController extends GetxController {
   }
 
   checkActiveStatus() async {
-    DriverUserModel? driverUserModel = await FireStoreUtils.getDriverUserProfile(FireStoreUtils.getCurrentUid());
+    DriverUserModel? driverUserModel =
+        await FireStoreUtils.getDriverUserProfile(
+            FireStoreUtils.getCurrentUid());
     if (driverUserModel!.isActive == false) {
       Get.defaultDialog(
           titlePadding: const EdgeInsets.only(top: 16),
           title: "Account Disabled",
-          middleText: "Your account has been disabled. Please contact the administrator.",
-          titleStyle: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700),
+          middleText:
+              "Your account has been disabled. Please contact the administrator.",
+          titleStyle:
+              GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.w700),
           barrierDismissible: false,
           onWillPop: () async {
             SystemNavigator.pop();
@@ -109,12 +129,17 @@ class HomeController extends GetxController {
   }
 
   getChartData() async {
-    totalRides.value = int.parse((await FireStoreUtils.getTotalRide()).toString());
+    totalRides.value =
+        int.parse((await FireStoreUtils.getTotalRide()).toString());
     int newRide = int.parse((await FireStoreUtils.getNewRide()).toString());
-    int onGoingRide = int.parse((await FireStoreUtils.getOngoingRide()).toString());
-    int completedRide = int.parse((await FireStoreUtils.getCompletedRide()).toString());
-    int rejectedRide = int.parse((await FireStoreUtils.getRejectedRide()).toString());
-    int cancelledRide = int.parse((await FireStoreUtils.getCancelledRide()).toString());
+    int onGoingRide =
+        int.parse((await FireStoreUtils.getOngoingRide()).toString());
+    int completedRide =
+        int.parse((await FireStoreUtils.getCompletedRide()).toString());
+    int rejectedRide =
+        int.parse((await FireStoreUtils.getRejectedRide()).toString());
+    int cancelledRide =
+        int.parse((await FireStoreUtils.getCancelledRide()).toString());
     // log(" +++++++++");
     totalRides.value = totalRides.value + rejectedRide;
     dataMap.value = {
@@ -130,7 +155,8 @@ class HomeController extends GetxController {
 
   getFcm() async {
     Rx<DriverUserModel> userModel = DriverUserModel().obs;
-    await FireStoreUtils.getDriverUserProfile(FireStoreUtils.getCurrentUid()).then((value) async {
+    await FireStoreUtils.getDriverUserProfile(FireStoreUtils.getCurrentUid())
+        .then((value) async {
       if (value != null) {
         userModel.value = value;
         userModel.value.fcmToken = await NotificationService.getToken();
@@ -148,22 +174,31 @@ class HomeController extends GetxController {
     if (permissionStatus == PermissionStatus.granted) {
       location.enableBackgroundMode(enable: true);
       location.changeSettings(
-          accuracy: LocationAccuracy.high, distanceFilter: double.parse(Constant.driverLocationUpdate.toString()), interval: 2000);
+          accuracy: LocationAccuracy.high,
+          distanceFilter:
+              double.parse(Constant.driverLocationUpdate.toString()),
+          interval: 2000);
       location.onLocationChanged.listen((locationData) async {
         log("------>");
         log(locationData.toString());
-        Constant.currentLocation = LocationLatLng(latitude: locationData.latitude, longitude: locationData.longitude);
-        await FireStoreUtils.getDriverUserProfile(FireStoreUtils.getCurrentUid()).then((value) async {
-          DriverUserModel driverUserModel = value!;
-          if (driverUserModel.isOnline == true) {
-            driverUserModel.location = LocationLatLng(latitude: locationData.latitude, longitude: locationData.longitude);
-            GeoFirePoint position = GeoFlutterFire().point(latitude: locationData.latitude!, longitude: locationData.longitude!);
+        Constant.currentLocation = LocationLatLng(
+            latitude: locationData.latitude, longitude: locationData.longitude);
 
-            driverUserModel.position = Positions(geoPoint: position.geoPoint, geohash: position.hash);
-            driverUserModel.rotation = locationData.heading;
-            await FireStoreUtils.updateDriverUser(driverUserModel);
-          }
-        });
+        DriverUserModel driverUserModel = Preferences.userModel!;
+        if (driverUserModel.isOnline == true) {
+          driverUserModel.location = LocationLatLng(
+              latitude: locationData.latitude,
+              longitude: locationData.longitude);
+          GeoFirePoint position = GeoFlutterFire().point(
+              latitude: locationData.latitude!,
+              longitude: locationData.longitude!);
+
+          driverUserModel.position =
+              Positions(geoPoint: position.geoPoint, geohash: position.hash);
+          driverUserModel.rotation = locationData.heading;
+          await FireStoreUtils.updateDriverUser(driverUserModel);
+        }
+
         isLoading.value = false;
         log("------>1");
       });
@@ -174,18 +209,30 @@ class HomeController extends GetxController {
         if (permissionStatus == PermissionStatus.granted) {
           location.enableBackgroundMode(enable: true);
           location.changeSettings(
-              accuracy: LocationAccuracy.high, distanceFilter: double.parse(Constant.driverLocationUpdate.toString()), interval: 2000);
+              accuracy: LocationAccuracy.high,
+              distanceFilter:
+                  double.parse(Constant.driverLocationUpdate.toString()),
+              interval: 2000);
           location.onLocationChanged.listen((locationData) async {
-            Constant.currentLocation = LocationLatLng(latitude: locationData.latitude, longitude: locationData.longitude);
+            Constant.currentLocation = LocationLatLng(
+                latitude: locationData.latitude,
+                longitude: locationData.longitude);
             log("------>4");
-            await FireStoreUtils.getDriverUserProfile(FireStoreUtils.getCurrentUid()).then((value) async {
+            await FireStoreUtils.getDriverUserProfile(
+                    FireStoreUtils.getCurrentUid())
+                .then((value) async {
               DriverUserModel driverUserModel = value!;
               if (driverUserModel.isOnline == true) {
-                driverUserModel.location = LocationLatLng(latitude: locationData.latitude, longitude: locationData.longitude);
+                driverUserModel.location = LocationLatLng(
+                    latitude: locationData.latitude,
+                    longitude: locationData.longitude);
                 driverUserModel.rotation = locationData.heading;
-                GeoFirePoint position = GeoFlutterFire().point(latitude: locationData.latitude!, longitude: locationData.longitude!);
+                GeoFirePoint position = GeoFlutterFire().point(
+                    latitude: locationData.latitude!,
+                    longitude: locationData.longitude!);
 
-                driverUserModel.position = Positions(geoPoint: position.geoPoint, geohash: position.hash);
+                driverUserModel.position = Positions(
+                    geoPoint: position.geoPoint, geohash: position.hash);
 
                 await FireStoreUtils.updateDriverUser(driverUserModel);
               }
@@ -200,4 +247,13 @@ class HomeController extends GetxController {
     update();
     log("=======> Update Location");
   }
+}
+
+void setLocation() async {
+  Location().onLocationChanged.listen(
+    (event) async {
+      final response = await updateCurrentLocation(
+          event.latitude.toString(), event.latitude.toString());
+    },
+  );
 }

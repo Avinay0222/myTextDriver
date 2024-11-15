@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class     DocumentsModel {
+class DocumentsModel {
   final String id;
   final String title;
   final String slug;

@@ -8,6 +8,7 @@ import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -179,7 +180,7 @@ class VerifyOtpView extends StatelessWidget {
                         //     ShowToastDialog.showToast("invalid_code".tr);
                         //   });
                         // } else {
-                          controller.otpCode.value = pin;
+                        controller.otpCode.value = pin;
                         // }
                       },
                     ),
@@ -202,6 +203,16 @@ class VerifyOtpView extends StatelessWidget {
                               );
 
                               if (responseData["status"] == true) {
+                                Preferences.setFcmToken(responseData["token"]);
+                                Preferences.setUserLoginStatus(true);
+                                DriverUserModel model =
+                                    await getOnlineUserModel();
+                                if (model != DriverUserModel()) {
+                                  Preferences.setDriverUserModel(model);
+                                } else {
+                                  ShowToastDialog.showToast(
+                                      'Faild to get User Data');
+                                }
                                 if (responseData['complete'] == 'false') {
                                   DriverUserModel userModel = DriverUserModel();
                                   userModel.id = responseData['id'];

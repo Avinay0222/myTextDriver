@@ -353,17 +353,17 @@ class FireStoreUtils {
   }
 
   static Future<bool> addDocument(VerifyDriverModel verifyDriver) async {
-    bool isUpdate = false;
-    await fireStore
-        .collection(CollectionName.verifyDriver)
-        .doc(verifyDriver.driverId)
-        .set(verifyDriver.toJson())
-        .whenComplete(() {
-      isUpdate = true;
-    }).catchError((error) {
-      log("Failed to update data: $error");
-      isUpdate = false;
-    });
+    bool isUpdate = true;
+    // await fireStore
+    //     .collection(CollectionName.verifyDriver)
+    //     .doc(verifyDriver.driverId)
+    //     .set(verifyDriver.toJson())
+    //     .whenComplete(() {
+    //   isUpdate = true;
+    // }).catchError((error) {
+    //   log("Failed to update data: $error");
+    //   isUpdate = false;
+    // });
     return isUpdate;
   }
 
@@ -376,7 +376,7 @@ class FireStoreUtils {
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {
-        verifyDriverModel = VerifyDriverModel.fromJson(value.docs.first.data());
+        // verifyDriverModel = VerifyDriverModel.fromJson(value.docs.first.data());
       } else {
         verifyDriverModel = null;
       }
