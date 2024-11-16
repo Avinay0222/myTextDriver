@@ -85,7 +85,7 @@ class OtpScreenView extends StatelessWidget {
                       buttonColor: AppThemData.primary500,
                       buttonTextColor: AppThemData.black,
                       onTap: () async {
-                        if (controller.otp.value == bookingModel.otp) {
+                        if (controller.otp.value == bookingModel.ride?.otp) {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) {

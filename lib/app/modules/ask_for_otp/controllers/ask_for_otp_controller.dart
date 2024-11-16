@@ -44,23 +44,23 @@ class AskForOtpController extends GetxController {
           FirebaseFirestore.instance.collection(CollectionName.drivers).doc(bookingModel.value.driverId).snapshots().listen((event) {
             if (event.data() != null) {
               driverUserModel.value = DriverUserModel.fromJson(event.data()!);
-              if (bookingModel.value.bookingStatus == BookingStatus.bookingOngoing) {
+              if (bookingModel.value.status == BookingStatus.bookingOngoing) {
                 getPolyline(
                     sourceLatitude: driverUserModel.value.location!.latitude,
                     sourceLongitude: driverUserModel.value.location!.longitude,
-                    destinationLatitude: bookingModel.value.dropLocation!.latitude,
-                    destinationLongitude: bookingModel.value.dropLocation!.longitude);
+                    destinationLatitude: bookingModel.value.ride?.dropoffLocation?.coordinates?[1]??0,
+                    destinationLongitude: bookingModel.value.ride?.dropoffLocation?.coordinates?[0]??0);
               } else {
                 getPolyline(
                     sourceLatitude: driverUserModel.value.location!.latitude,
                     sourceLongitude: driverUserModel.value.location!.longitude,
-                    destinationLatitude: bookingModel.value.pickUpLocation!.latitude,
-                    destinationLongitude: bookingModel.value.pickUpLocation!.longitude);
+                    destinationLatitude: bookingModel.value.ride?.dropoffLocation?.coordinates?[1]??0,
+                    destinationLongitude: bookingModel.value.ride?.dropoffLocation?.coordinates?[0]??0);
               }
             }
           });
 
-          if (bookingModel.value.bookingStatus == BookingStatus.bookingCompleted) {
+          if (bookingModel.value.status == BookingStatus.bookingCompleted) {
             Get.back();
           }
         }
@@ -102,14 +102,14 @@ class AskForOtpController extends GetxController {
       }
 
       addMarker(
-          latitude: bookingModel.value.pickUpLocation!.latitude,
-          longitude: bookingModel.value.pickUpLocation!.longitude,
+          latitude: bookingModel.value.ride?.pickupLocation?.coordinates?[1]??0,
+          longitude: bookingModel.value.ride?.dropoffLocation?.coordinates?[0]??0,
           id: "Departure",
           descriptor: departureIcon!,
           rotation: 0.0);
       addMarker(
-          latitude: bookingModel.value.dropLocation!.latitude,
-          longitude: bookingModel.value.dropLocation!.longitude,
+          latitude: bookingModel.value.ride?.dropoffLocation?.coordinates?[1]??0,
+          longitude: bookingModel.value.ride?.dropoffLocation?.coordinates?[0]??0,
           id: "Destination",
           descriptor: destinationIcon!,
           rotation: 0.0);

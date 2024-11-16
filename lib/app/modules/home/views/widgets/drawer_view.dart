@@ -325,32 +325,6 @@ class DrawerView extends StatelessWidget {
                         padding: EdgeInsets.only(left: 50),
                         child: Divider(),
                       ),
-                      ListTile(
-                        leading: SvgPicture.asset(
-                          "assets/icon/ic_document_drawer.svg",
-                          colorFilter: ColorFilter.mode(
-                              themeChange.isDarkTheme()
-                                  ? AppThemData.white
-                                  : AppThemData.black,
-                              BlendMode.srcIn),
-                        ),
-                        trailing: const Icon(Icons.keyboard_arrow_right_rounded,
-                            size: 30),
-                        title: Text(
-                          'Add a driver'.tr,
-                          style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: themeChange.isDarkTheme()
-                                  ? AppThemData.white
-                                  : AppThemData.black,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        onTap: () {
-                          Get.back();
-                          controller.drawerIndex.value = 4;
-                          Get.to(() => const CreateDriverView());
-                        },
-                      ),
                       const Padding(
                         padding: EdgeInsets.only(left: 50),
                         child: Divider(),

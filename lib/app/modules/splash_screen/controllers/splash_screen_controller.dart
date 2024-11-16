@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:driver/app/modules/signup/views/signup_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:get/get.dart';
 import 'package:driver/app/models/driver_user_model.dart';
@@ -47,7 +48,11 @@ class SplashScreenController extends GetxController {
             Get.offAll(const PermissionView());
           }
         } else {
-          Get.offAll(const VerifyDocumentsView(isFromDrawer: false));
+          if (userModel != null && userModel.fullName == null) {
+            Get.offAll(const LoginView());
+          }else{
+            Get.offAll(const VerifyDocumentsView(isFromDrawer: false));
+          }
         }
       } else {
         Get.offAll(const LoginView());
