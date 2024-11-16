@@ -1,8 +1,9 @@
-import 'package:driver/app/modules/create_drive_screen/views/create_driver_view.dart';
+import 'package:driver/app/modules/create_drive_screen/controllers/create_driver_controller.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/country_code_selector_view.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/text_field_with_title.dart';
+import 'package:driver/extension/date_time_extension.dart';
 import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/theme/responsive.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
@@ -13,18 +14,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../controllers/signup_controller.dart';
-
-class SignupView extends StatelessWidget {
-  const SignupView({super.key});
+class CreateDriverView extends StatelessWidget {
+  const CreateDriverView({super.key});
 
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
-    return GetBuilder<SignupController>(
-        init: SignupController(),
+    return GetBuilder<CreateDriverController>(
+        init: CreateDriverController(),
         builder: (controller) {
           return GestureDetector(
             onTap: () {
@@ -60,7 +60,7 @@ class SignupView extends StatelessWidget {
                                         : "assets/icon/taxi.png")),
                           ),
                           Text(
-                            "Create Account".tr,
+                            "Create a Driver".tr,
                             style: GoogleFonts.inter(
                                 fontSize: 24,
                                 color: themeChange.isDarkTheme()
@@ -69,7 +69,7 @@ class SignupView extends StatelessWidget {
                                 fontWeight: FontWeight.w700),
                           ),
                           Text(
-                            "Create an account to start ride.".tr,
+                            "Create an account for driver.".tr,
                             style: GoogleFonts.inter(
                                 fontSize: 14,
                                 color: themeChange.isDarkTheme()
@@ -91,20 +91,9 @@ class SignupView extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           TextFieldWithTitle(
-                            title: "Email Address".tr,
-                            hintText: "Enter Email Address".tr,
-                            prefixIcon: const Icon(Icons.email_outlined),
-                            keyboardType: TextInputType.emailAddress,
-                            controller: controller.emailController,
-                            isEnable: controller.loginType.value ==
-                                Constant.phoneLoginType,
-                            validator: (value) =>
-                                Constant().validateEmail(value),
-                          ),
-                          const SizedBox(height: 20),
-                          TextFieldWithTitle(
                             title: "Phone Number".tr,
                             hintText: "Enter Phone Number".tr,
+                            maxLength: 10,
                             prefixIcon: CountryCodeSelectorView(
                               isCountryNameShow: false,
                               countryCodeController:
@@ -127,41 +116,32 @@ class SignupView extends StatelessWidget {
                             isEnable: controller.loginType.value !=
                                 Constant.phoneLoginType,
                           ),
-                          // Column(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          //   crossAxisAlignment: CrossAxisAlignment.start,
-                          //   children: [
-                          //     CountryCodeSelectorView(
-                          //       countryCodeController: controller.countryCodeController,
-                          //       isEnable: controller.loginType.value != Constant.phoneLoginType,
-                          //       onChanged: (value) {
-                          //         controller.countryCodeController.text = value.dialCode.toString();
-                          //       },
-                          //     ),
-                          //     Container(
-                          //       transform: Matrix4.translationValues(0.0, -05.0, 0.0),
-                          //       child: TextFormField(
-                          //         cursorColor: Colors.black,
-                          //         keyboardType: TextInputType.number,
-                          //         controller: controller.phoneNumberController,
-                          //         enabled: controller.loginType.value != Constant.phoneLoginType,
-                          //         inputFormatters: <TextInputFormatter>[
-                          //           FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                          //         ],
-                          //         style: GoogleFonts.inter(fontSize: 14, color: themeChange.isDarkTheme() ? AppThemData.white : AppThemData.grey950, fontWeight: FontWeight.w400),
-                          //         decoration: InputDecoration(
-                          //           border: const UnderlineInputBorder(borderSide: BorderSide(color: AppThemData.grey500, width: 1)),
-                          //           focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppThemData.grey500, width: 1)),
-                          //           enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppThemData.grey500, width: 1)),
-                          //           errorBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppThemData.grey500, width: 1)),
-                          //           disabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppThemData.grey500, width: 1)),
-                          //           hintText: "Enter your Phone Number".tr,
-                          //           hintStyle: GoogleFonts.inter(fontSize: 14, color: AppThemData.grey500, fontWeight: FontWeight.w400),
-                          //         ),
-                          //       ),
-                          //     )
-                          //   ],
-                          // ),
+                          const SizedBox(height: 20),
+                          // Create a Date picker Here
+                          InkWell(
+                            onTap: () async {
+                              DateTime? datetime =
+                                  await Constant.selectDateOfBirth(
+                                      context, false);
+                              controller.dobController.text =
+                                  datetime!.dateMonthYear();
+                            },
+                            child: TextFieldWithTitle(
+                              title: "Date of Birth".tr,
+                              hintText: "Enter Date of Birth".tr,
+                              keyboardType: TextInputType.text,
+                              controller: controller.dobController,
+                              suffixIcon: const Icon(
+                                Icons.calendar_month_outlined,
+                                size: 20,
+                              ),
+                              isEnable: false,
+                              validator: (value) =>
+                                  value != null && value.isNotEmpty
+                                      ? null
+                                      : 'This field required'.tr,
+                            ),
+                          ),
                           const SizedBox(height: 20),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -243,15 +223,13 @@ class SignupView extends StatelessWidget {
                           Center(
                             child: RoundShapeButton(
                                 size: const Size(200, 45),
-                                title: "Sign Up".tr,
+                                title: "Create".tr,
                                 buttonColor: AppThemData.primary500,
                                 buttonTextColor: AppThemData.black,
                                 onTap: () {
                                   if (controller.formKey.value.currentState!
                                       .validate()) {
-                                    controller.createAccount(
-                                        controller.userModel.value.fcmToken ??
-                                            "");
+                                    controller.createDriverAccount();
                                   }
                                 }),
                           ),
