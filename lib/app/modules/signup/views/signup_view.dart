@@ -255,6 +255,16 @@ class SignupView extends StatelessWidget {
                                   }
                                 }),
                           ),
+                          Center(
+                            child: RoundShapeButton(
+                                size: const Size(200, 45),
+                                title: "Regisrer as an owner".tr,
+                                buttonColor: AppThemData.blueLight01,
+                                buttonTextColor: AppThemData.black,
+                                onTap: () {
+                                  Get.to(() => const CreateDriverView());
+                                }),
+                          ),
                         ],
                       ),
                     ),

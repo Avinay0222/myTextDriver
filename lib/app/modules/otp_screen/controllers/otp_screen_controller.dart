@@ -29,12 +29,12 @@ class OtpScreenController extends GetxController {
 
   Future<bool> startBooking(BookingModel bookingModels) async {
     BookingModel bookingModel = bookingModels;
-    bookingModel.bookingStatus = BookingStatus.bookingOngoing;
-    bookingModel.updateAt = Timestamp.now();
-    bookingModel.pickupTime = Timestamp.now();
+    bookingModel.status = BookingStatus.bookingOngoing;
+    bookingModel.updatedAt = Timestamp.now().toString();
+    bookingModel.createdAt = Timestamp.now().toString();
     bool? isStarted = await FireStoreUtils.setBooking(bookingModel);
     ShowToastDialog.showToast("Your ride started....");
-    UserModel? receiverUserModel = await FireStoreUtils.getUserProfile(bookingModel.customerId.toString());
+    UserModel? receiverUserModel = await FireStoreUtils.getUserProfile(bookingModel.rideId.toString());
     Map<String, dynamic> playLoad = <String, dynamic>{"bookingId": bookingModel.id};
 
     await SendNotification.sendOneNotification(
@@ -45,7 +45,7 @@ class OtpScreenController extends GetxController {
         senderId: FireStoreUtils.getCurrentUid(),
         bookingId: bookingModel.id.toString(),
         driverId: bookingModel.driverId.toString(),
-        body: 'Your Ride is Started From ${bookingModel.pickUpLocationAddress.toString()} to ${bookingModel.dropLocationAddress.toString()}.',
+        body: 'Your Ride is Started From ${bookingModel.ride?.pickupAddress.toString()} to ${bookingModel.ride?.dropoffAddress.toString()}.',
         payload: playLoad);
 
     // Get.offAll(const HomeView());

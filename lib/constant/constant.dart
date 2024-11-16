@@ -28,7 +28,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:location/location.dart';
+import 'package:location/location.dart' as loc;
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/uuid.dart';
@@ -115,9 +115,9 @@ class Constant {
   // }
 
   static Future<bool> isPermissionApplied() async {
-    Location location = Location();
-    PermissionStatus permissionStatus = await location.hasPermission();
-    if (permissionStatus == PermissionStatus.granted) {
+    loc.Location location = loc.Location();
+    loc.PermissionStatus permissionStatus = await location.hasPermission();
+    if (permissionStatus == loc.PermissionStatus.granted) {
       if (Platform.isAndroid) {
         bool bgMode = await location.enableBackgroundMode(enable: true);
         if (bgMode) {
@@ -181,25 +181,27 @@ class Constant {
   }
 
   static double amountBeforeTax(BookingModel bookingModel) {
-    return (double.parse(bookingModel.subTotal ?? '0.0') -
-        double.parse((bookingModel.discount ?? '0.0').toString()));
+    // return (double.parse(bookingModel.subTotal ?? '0.0') -
+    //     double.parse((bookingModel.discount ?? '0.0').toString()));
+    return 0;
   }
 
   static double calculateFinalAmount(BookingModel bookingModel) {
-    RxString taxAmount = "0.0".obs;
-    for (var element in (bookingModel.taxList ?? [])) {
-      taxAmount.value = (double.parse(taxAmount.value) +
-              Constant.calculateTax(
-                  amount: ((double.parse(bookingModel.subTotal ?? '0.0')) -
-                          double.parse(
-                              (bookingModel.discount ?? '0.0').toString()))
-                      .toString(),
-                  taxModel: element))
-          .toStringAsFixed(Constant.currencyModel!.decimalDigits!);
-    }
-    return (double.parse(bookingModel.subTotal ?? '0.0') -
-            double.parse((bookingModel.discount ?? '0.0').toString())) +
-        double.parse(taxAmount.value);
+    // RxString taxAmount = "0.0".obs;
+    // for (var element in (bookingModel.taxList ?? [])) {
+    //   taxAmount.value = (double.parse(taxAmount.value) +
+    //           Constant.calculateTax(
+    //               amount: ((double.parse(bookingModel.subTotal ?? '0.0')) -
+    //                       double.parse(
+    //                           (bookingModel.discount ?? '0.0').toString()))
+    //                   .toString(),
+    //               taxModel: element))
+    //       .toStringAsFixed(Constant.currencyModel!.decimalDigits!);
+    // }
+    // return (double.parse(bookingModel.subTotal ?? '0.0') -
+    //         double.parse((bookingModel.discount ?? '0.0').toString())) +
+    //     double.parse(taxAmount.value);
+    return 0;
   }
 
   static String getUuid() {
@@ -339,7 +341,10 @@ class Constant {
 
     final response = await http.put(
       Uri.parse(baseURL + updloadDocumentEndpoint),
-      headers: {"Content-Type": "application/json", "token": await Preferences.fcmToken},
+      headers: {
+        "Content-Type": "application/json",
+        "token": await Preferences.fcmToken
+      },
       body: jsonEncode(
         {
           "type": "driving-license",
