@@ -82,7 +82,7 @@ class DriverUserModel {
             ? DriverVehicleDetails.fromJson(json["driverVehicleDetails"])
             : null,
         // isVerified: json['isVerified'] ?? false,
-        isVerified: true,
+        isVerified: false,
         location: json['location'] != null
             ? LocationLatLng.fromJson(json['location'])
             : LocationLatLng(),
