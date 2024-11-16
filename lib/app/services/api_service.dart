@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:driver/app/models/booking_model.dart';
 import 'package:driver/app/models/docsModel.dart';
 import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/models/user_model.dart';
@@ -277,12 +278,10 @@ Future<bool> saveUserModelOnline(DriverUserModel model) async {
 }
 
 Future<DriverUserModel> getOnlineUserModel() async {
+  String token = await Preferences.getFcmToken();
   final response = await http.get(
     Uri.parse(baseURL + getDriveModel),
-    headers: {
-      "Content-Type": "application/json",
-      "token": await Preferences.getFcmToken()
-    },
+    headers: {"Content-Type": "application/json", "token": token},
   );
 
   if (response.statusCode == 200) {
@@ -306,8 +305,39 @@ Future<bool> getDriverOnlineStatus() async {
   );
 
   if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
-    return  jsonDecode(response.body)["data"]=="offline"?false:true;
+    return jsonDecode(response.body)["data"] == "offline" ? false : true;
   } else {
     return false;
+  }
+}
+
+Future<bool> acceptRideAPI(String ride_id) async {
+  String token = await Preferences.getFcmToken();
+  Map<String, dynamic> map = {"ride_id": ride_id};
+  final response = await http.put(Uri.parse(baseURL + acceptRide),
+      headers: {"Content-Type": "application/json", "token": token}, body: map);
+
+  if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
+    return jsonDecode(response.body)["data"] == "offline" ? false : true;
+  } else {
+    return false;
+  }
+}
+
+Future<List<BookingModel>> getRequest() async {
+  final response = await http.get(
+    Uri.parse(baseURL + getRideRequest),
+    headers: {
+      "Content-Type": "application/json",
+      "token": await Preferences.getFcmToken()
+    },
+  );
+
+  if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
+    List<BookingModel> listModel = List<BookingModel>.from(
+        jsonDecode(response.body)["data"].map((e) => BookingModel.fromJson(e)));
+    return listModel;
+  } else {
+    return [];
   }
 }

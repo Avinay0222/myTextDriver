@@ -6,6 +6,7 @@ import 'package:driver/app/modules/booking_details/controllers/booking_details_c
 import 'package:driver/app/modules/booking_details/views/booking_details_view.dart';
 import 'package:driver/app/modules/reason_for_cancel/views/reason_for_cancel_view.dart';
 import 'package:driver/app/routes/app_pages.dart';
+import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/booking_status.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant/send_notification.dart';
@@ -34,7 +35,8 @@ class NewRideView extends StatelessWidget {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     return InkWell(
       onTap: () {
-        BookingDetailsController detailsController = Get.put(BookingDetailsController());
+        BookingDetailsController detailsController =
+            Get.put(BookingDetailsController());
         detailsController.bookingId.value = bookingModel!.id ?? '';
         detailsController.bookingModel.value = bookingModel!;
         Get.to(() => const BookingDetailsView());
@@ -45,7 +47,11 @@ class NewRideView extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 16),
         decoration: ShapeDecoration(
           shape: RoundedRectangleBorder(
-            side: BorderSide(width: 1, color: themeChange.isDarkTheme() ? AppThemData.grey800 : AppThemData.grey100),
+            side: BorderSide(
+                width: 1,
+                color: themeChange.isDarkTheme()
+                    ? AppThemData.grey800
+                    : AppThemData.grey100),
             borderRadius: BorderRadius.circular(12),
           ),
         ),
@@ -60,9 +66,13 @@ class NewRideView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  bookingModel == null ? "" : bookingModel!.bookingTime!.toDate().dateMonthYear(),
+                  bookingModel == null
+                      ? ""
+                      : bookingModel!.ride?.createdAt ?? "",
                   style: GoogleFonts.inter(
-                    color: themeChange.isDarkTheme() ? AppThemData.grey400 : AppThemData.grey500,
+                    color: themeChange.isDarkTheme()
+                        ? AppThemData.grey400
+                        : AppThemData.grey500,
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                   ),
@@ -75,7 +85,9 @@ class NewRideView extends StatelessWidget {
                       side: BorderSide(
                         width: 1,
                         strokeAlign: BorderSide.strokeAlignCenter,
-                        color: themeChange.isDarkTheme() ? AppThemData.grey800 : AppThemData.grey100,
+                        color: themeChange.isDarkTheme()
+                            ? AppThemData.grey800
+                            : AppThemData.grey100,
                       ),
                     ),
                   ),
@@ -83,9 +95,14 @@ class NewRideView extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    bookingModel == null ? "" : bookingModel!.bookingTime!.toDate().time(),
+                    // bookingModel == null ? "" : bookingModel!.bookingTime!.toDate().time(),
+                    bookingModel == null
+                        ? ""
+                        : bookingModel!.ride?.createdAt ?? "",
                     style: GoogleFonts.inter(
-                      color: themeChange.isDarkTheme() ? AppThemData.grey400 : AppThemData.grey500,
+                      color: themeChange.isDarkTheme()
+                          ? AppThemData.grey400
+                          : AppThemData.grey500,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                     ),
@@ -94,7 +111,9 @@ class NewRideView extends StatelessWidget {
                 const SizedBox(width: 8),
                 Icon(
                   Icons.keyboard_arrow_right_sharp,
-                  color: themeChange.isDarkTheme() ? AppThemData.grey400 : AppThemData.grey500,
+                  color: themeChange.isDarkTheme()
+                      ? AppThemData.grey400
+                      : AppThemData.grey500,
                 )
               ],
             ),
@@ -106,8 +125,12 @@ class NewRideView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CachedNetworkImage(
-                    imageUrl: bookingModel == null ? Constant.profileConstant : bookingModel!.vehicleType!.image,
+                  // CachedNetworkImage(
+                  //   imageUrl: bookingModel == null ? Constant.profileConstant :" bookingModel!.vehicleType!.image",
+                  // ),
+                  InkWell(
+                    child: Text("Accept Ride"),
+                    onTap: () => acceptRideAPI(bookingModel?.rideId ?? ""),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -117,18 +140,25 @@ class NewRideView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          bookingModel == null ? "" : bookingModel!.vehicleType!.title,
+                          bookingModel == null
+                              ? ""
+                              : bookingModel!.ride?.vehicleId ?? "",
                           style: GoogleFonts.inter(
-                            color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                            color: themeChange.isDarkTheme()
+                                ? AppThemData.grey25
+                                : AppThemData.grey950,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          (bookingModel!.paymentStatus ?? false) ? 'Payment is Completed'.tr : 'Payment is Pending'.tr,
+                          // (bookingModel!.ride?.paymentStatus="approved" ?? false) ? 'Payment is Completed'.tr : 'Payment is Pending'.tr,
+                          "Payment is Completed".tr,
                           style: GoogleFonts.inter(
-                            color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                            color: themeChange.isDarkTheme()
+                                ? AppThemData.grey25
+                                : AppThemData.grey950,
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                           ),
@@ -145,10 +175,15 @@ class NewRideView extends StatelessWidget {
                       Text(
                         bookingModel == null
                             ? ""
-                            : Constant.amountShow(amount: Constant.calculateFinalAmount(bookingModel!).toStringAsFixed(2)),
+                            : Constant.amountShow(
+                                amount:
+                                    Constant.calculateFinalAmount(bookingModel!)
+                                        .toStringAsFixed(2)),
                         textAlign: TextAlign.right,
                         style: GoogleFonts.inter(
-                          color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                          color: themeChange.isDarkTheme()
+                              ? AppThemData.grey25
+                              : AppThemData.grey950,
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
@@ -162,7 +197,9 @@ class NewRideView extends StatelessWidget {
                           SvgPicture.asset("assets/icon/ic_multi_person.svg"),
                           const SizedBox(width: 6),
                           Text(
-                            bookingModel == null ? "" : bookingModel!.vehicleType!.persons,
+                            bookingModel == null
+                                ? ""
+                                : bookingModel!.ride?.vehicleTypeId ?? "",
                             style: GoogleFonts.inter(
                               color: AppThemData.primary500,
                               fontSize: 16,
@@ -177,10 +214,16 @@ class NewRideView extends StatelessWidget {
               ),
             ),
             PickDropPointView(
-                pickUpAddress: bookingModel == null ? "" : bookingModel!.pickUpLocationAddress ?? '',
-                dropAddress: bookingModel == null ? "" : bookingModel!.dropLocationAddress ?? ''),
-            if ((bookingModel!.bookingStatus ?? '') == BookingStatus.bookingPlaced &&
-                !bookingModel!.rejectedDriverId!.contains(FireStoreUtils.getCurrentUid())) ...{
+                pickUpAddress: bookingModel == null
+                    ? ""
+                    : bookingModel!.ride?.pickupAddress ?? '',
+                dropAddress: bookingModel == null
+                    ? ""
+                    : bookingModel!.ride?.dropoffAddress ?? ''),
+            // if ((bookingModel!.status ?? '') == BookingStatus.bookingPlaced &&
+            //     !bookingModel!.!.contains(FireStoreUtils.getCurrentUid())) ...{
+            if ((bookingModel!.status ?? '') ==
+                BookingStatus.bookingPlaced) ...{
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -197,44 +240,68 @@ class NewRideView extends StatelessWidget {
                             return CustomDialogBox(
                                 themeChange: themeChange,
                                 title: "Cancel Ride".tr,
-                                negativeButtonColor: themeChange.isDarkTheme() ? AppThemData.grey950 : AppThemData.grey50,
-                                negativeButtonTextColor: themeChange.isDarkTheme() ? AppThemData.grey50 : AppThemData.grey950,
+                                negativeButtonColor: themeChange.isDarkTheme()
+                                    ? AppThemData.grey950
+                                    : AppThemData.grey50,
+                                negativeButtonTextColor:
+                                    themeChange.isDarkTheme()
+                                        ? AppThemData.grey50
+                                        : AppThemData.grey950,
                                 positiveButtonColor: AppThemData.danger500,
                                 positiveButtonTextColor: AppThemData.grey25,
-                                descriptions: "Are you sure you want cancel this ride?".tr,
+                                descriptions:
+                                    "Are you sure you want cancel this ride?"
+                                        .tr,
                                 positiveString: "Cancel Ride".tr,
                                 negativeString: "Cancel".tr,
                                 positiveClick: () async {
                                   Navigator.pop(context);
-                                  List rejectedId = bookingModel!.rejectedDriverId ?? [];
-                                  rejectedId.add(FireStoreUtils.getCurrentUid());
-                                  bookingModel!.bookingStatus = BookingStatus.bookingRejected;
-                                  bookingModel!.rejectedDriverId = rejectedId;
-                                  bookingModel!.updateAt = Timestamp.now();
-                                  FireStoreUtils.setBooking(bookingModel!).then((value) async {
+                                  List rejectedId =
+                                      bookingModel!.rejectedDriverId ?? [];
+                                  rejectedId
+                                      .add(FireStoreUtils.getCurrentUid());
+                                  bookingModel!.status =
+                                      BookingStatus.bookingRejected;
+                                  // bookingModel!.rejectedDriverId = rejectedId;
+                                  bookingModel!.updatedAt =
+                                      Timestamp.now().toString();
+                                  FireStoreUtils.setBooking(bookingModel!)
+                                      .then((value) async {
                                     if (value == true) {
-                                      ShowToastDialog.showToast("Ride cancelled successfully!");
+                                      ShowToastDialog.showToast(
+                                          "Ride cancelled successfully!");
                                       // DriverUserModel? driverModel =
                                       //     await FireStoreUtils.getDriverUserProfile(bookingModel!.driverId.toString());
                                       UserModel? receiverUserModel =
-                                          await FireStoreUtils.getUserProfile(bookingModel!.customerId.toString());
-                                      Map<String, dynamic> playLoad = <String, dynamic>{"bookingId": bookingModel!.id};
+                                          await FireStoreUtils.getUserProfile(
+                                              bookingModel!.rideId.toString());
+                                      Map<String, dynamic> playLoad =
+                                          <String, dynamic>{
+                                        "bookingId": bookingModel!.id
+                                      };
 
-                                      await SendNotification.sendOneNotification(
-                                          type: "order",
-                                          token: receiverUserModel!.fcmToken.toString(),
-                                          title: 'Your Ride is Rejected',
-                                          customerId: receiverUserModel.id,
-                                          senderId: FireStoreUtils.getCurrentUid(),
-                                          bookingId: bookingModel!.id.toString(),
-                                          driverId: bookingModel!.driverId.toString(),
-                                          body: 'Your ride #${bookingModel!.id.toString().substring(0, 4)} has been Rejected by Driver.',
-                                          // body: 'Your ride has been rejected by ${driverModel!.fullName}.',
-                                          payload: playLoad);
+                                      await SendNotification
+                                          .sendOneNotification(
+                                              type: "order",
+                                              token: receiverUserModel!.fcmToken
+                                                  .toString(),
+                                              title: 'Your Ride is Rejected',
+                                              customerId: receiverUserModel.id,
+                                              senderId: FireStoreUtils
+                                                  .getCurrentUid(),
+                                              bookingId:
+                                                  bookingModel!.id.toString(),
+                                              driverId: bookingModel!.driverId
+                                                  .toString(),
+                                              body:
+                                                  'Your ride #${bookingModel!.id.toString().substring(0, 4)} has been Rejected by Driver.',
+                                              // body: 'Your ride has been rejected by ${driverModel!.fullName}.',
+                                              payload: playLoad);
 
                                       Navigator.pop(context);
                                     } else {
-                                      ShowToastDialog.showToast("Something went wrong!");
+                                      ShowToastDialog.showToast(
+                                          "Something went wrong!");
                                       Navigator.pop(context);
                                     }
                                   });
@@ -256,8 +323,10 @@ class NewRideView extends StatelessWidget {
                     buttonColor: AppThemData.primary500,
                     buttonTextColor: AppThemData.black,
                     onTap: () {
-                      if (double.parse(Constant.userModel!.walletAmount.toString()) >
-                          double.parse(Constant.minimumAmountToAcceptRide.toString())) {
+                      if (double.parse(
+                              Constant.userModel!.walletAmount.toString()) >
+                          double.parse(
+                              Constant.minimumAmountToAcceptRide.toString())) {
                         showDialog(
                           context: context,
                           builder: (context) {
@@ -271,30 +340,45 @@ class NewRideView extends StatelessWidget {
                                   width: 58,
                                 ),
                                 positiveClick: () {
-                                  bookingModel!.driverId = FireStoreUtils.getCurrentUid();
-                                  bookingModel!.bookingStatus = BookingStatus.bookingAccepted;
-                                  bookingModel!.updateAt = Timestamp.now();
-                                  FireStoreUtils.setBooking(bookingModel!).then((value) async {
+                                  bookingModel!.driverId =
+                                      FireStoreUtils.getCurrentUid();
+                                  bookingModel!.status =
+                                      BookingStatus.bookingAccepted;
+                                  bookingModel!.updatedAt =
+                                      Timestamp.now().toString();
+                                  FireStoreUtils.setBooking(bookingModel!)
+                                      .then((value) async {
                                     if (value == true) {
-                                      ShowToastDialog.showToast("Ride accepted successfully!");
+                                      ShowToastDialog.showToast(
+                                          "Ride accepted successfully!");
 
                                       UserModel? receiverUserModel =
-                                          await FireStoreUtils.getUserProfile(bookingModel!.customerId.toString());
-                                      Map<String, dynamic> playLoad = <String, dynamic>{"bookingId": bookingModel!.id};
+                                          await FireStoreUtils.getUserProfile(
+                                              bookingModel!.rideId.toString());
+                                      Map<String, dynamic> playLoad =
+                                          <String, dynamic>{
+                                        "bookingId": bookingModel!.id
+                                      };
 
                                       await SendNotification.sendOneNotification(
                                           type: "order",
-                                          token: receiverUserModel!.fcmToken.toString(),
+                                          token: receiverUserModel!.fcmToken
+                                              .toString(),
                                           title: 'Your Ride is Accepted',
                                           customerId: receiverUserModel.id,
-                                          senderId: FireStoreUtils.getCurrentUid(),
-                                          bookingId: bookingModel!.id.toString(),
-                                          driverId: bookingModel!.driverId.toString(),
-                                          body: 'Your ride #${bookingModel!.id.toString().substring(0, 4)} has been confirmed.',
+                                          senderId:
+                                              FireStoreUtils.getCurrentUid(),
+                                          bookingId:
+                                              bookingModel!.id.toString(),
+                                          driverId:
+                                              bookingModel!.driverId.toString(),
+                                          body:
+                                              'Your ride #${bookingModel!.id.toString().substring(0, 4)} has been confirmed.',
                                           payload: playLoad);
                                       Navigator.pop(context);
                                     } else {
-                                      ShowToastDialog.showToast("Something went wrong!");
+                                      ShowToastDialog.showToast(
+                                          "Something went wrong!");
                                       Navigator.pop(context);
                                     }
                                   });
@@ -318,9 +402,11 @@ class NewRideView extends StatelessWidget {
                 ],
               )
             },
-            if ((bookingModel!.bookingStatus ?? '') == BookingStatus.bookingAccepted &&
-                !bookingModel!.rejectedDriverId!.contains(FireStoreUtils.getCurrentUid()) &&
-                bookingModel!.driverId!.contains(FireStoreUtils.getCurrentUid())) ...{
+            if ((bookingModel!.status ?? '') == BookingStatus.bookingAccepted &&
+                !bookingModel!.rejectedDriverId!
+                    .contains(FireStoreUtils.getCurrentUid()) &&
+                bookingModel!.driverId!
+                    .contains(FireStoreUtils.getCurrentUid())) ...{
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -328,8 +414,12 @@ class NewRideView extends StatelessWidget {
                 children: [
                   RoundShapeButton(
                     title: "Cancel Ride",
-                    buttonColor: themeChange.isDarkTheme() ? AppThemData.grey900 : AppThemData.grey50,
-                    buttonTextColor: themeChange.isDarkTheme() ? AppThemData.white : AppThemData.black,
+                    buttonColor: themeChange.isDarkTheme()
+                        ? AppThemData.grey900
+                        : AppThemData.grey50,
+                    buttonTextColor: themeChange.isDarkTheme()
+                        ? AppThemData.white
+                        : AppThemData.black,
                     onTap: () {
                       Get.to(() => ReasonForCancelView(
                             bookingModel: bookingModel ?? BookingModel(),
@@ -342,7 +432,8 @@ class NewRideView extends StatelessWidget {
                     buttonColor: AppThemData.primary500,
                     buttonTextColor: AppThemData.black,
                     onTap: () {
-                      Get.toNamed(Routes.ASK_FOR_OTP, arguments: {"bookingModel": bookingModel!});
+                      Get.toNamed(Routes.ASK_FOR_OTP,
+                          arguments: {"bookingModel": bookingModel!});
                     },
                     size: Size(Responsive.width(40, context), 42),
                   )

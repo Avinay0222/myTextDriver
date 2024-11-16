@@ -32,16 +32,16 @@ class ReasonForCancelController extends GetxController {
 
   Future<bool> cancelBooking(BookingModel bookingModels) async {
     BookingModel bookingModel = bookingModels;
-    bookingModel.bookingStatus = BookingStatus.bookingRejected;
+    bookingModel.status = BookingStatus.bookingRejected;
     bookingModel.cancelledBy = FireStoreUtils.getCurrentUid();
     bookingModel.driverId = FireStoreUtils.getCurrentUid();
-    bookingModel.cancelledReason = reasons[selectedIndex.value] != "Other"
+    bookingModel.cancelledBy = reasons[selectedIndex.value] != "Other"
         ? reasons[selectedIndex.value].toString()
         : "${reasons[selectedIndex.value].toString()} : ${otherReasonController.value.text}";
     List rejectedId = bookingModel.rejectedDriverId ?? [];
     rejectedId.add(FireStoreUtils.getCurrentUid());
-    bookingModel.rejectedDriverId = rejectedId;
-    bookingModel.updateAt = Timestamp.now();
+    // bookingModel.rejectedDriverId = rejectedId;
+    bookingModel.updatedAt = Timestamp.now().toString();
     bool? isCancelled = await FireStoreUtils.setBooking(bookingModel);
     return (isCancelled ?? false);
   }

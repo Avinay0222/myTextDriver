@@ -26,7 +26,7 @@ class TrackRideScreenView extends GetView<TrackRideScreenController> {
                   height: Responsive.height(100, context),
                   child: GoogleMap(
                     initialCameraPosition: CameraPosition(
-                      target: LatLng(controller.bookingModel.value.pickUpLocation!.latitude ?? 0.0, controller.bookingModel.value.pickUpLocation!.longitude ?? 0.0),
+                      target: LatLng(controller.bookingModel.value.ride?.pickupLocation?.coordinates?[1]??0, controller.bookingModel.value.ride?.pickupLocation?.coordinates?[0]??0),
                       zoom: 5,
                     ),
                     padding: const EdgeInsets.only(

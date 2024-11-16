@@ -15,3 +15,5 @@ const String setCurrentLocation = "/driver/current_location"; //POST
 const String getDriveModel = "/driver/preview/vehicle_docs"; //GET
 const String setDriveModel = "/driver/vehicle/docs/save"; //POST
 const String driveOnlineStatus = "/driver/ride_status"; //PUT
+const String getRideRequest = "/driver/passenger/ride/request"; //GET
+const String acceptRide = "/ride/request/accepted"; //PUT

@@ -1,8 +1,10 @@
 // ignore_for_file: unnecessary_overrides
 
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:driver/app/services/api_service.dart';
+import 'package:driver/constant/api_constant.dart';
 import 'package:driver/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +20,7 @@ import 'package:driver/utils/fire_store_utils.dart';
 import 'package:driver/utils/notification_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class HomeController extends GetxController {
   RxString profilePic = Constant.profileConstant.obs;
@@ -56,6 +59,9 @@ class HomeController extends GetxController {
   ].obs;
 
   RxInt totalRides = 0.obs;
+  late IO.Socket socket;
+
+  late Timer _timer;
 
   // RxInt newRides = 0.obs;
   // RxInt ongoingRides = 0.obs;
@@ -69,6 +75,13 @@ class HomeController extends GetxController {
     getUserData();
     getChartData();
     updateCurrentLocation();
+    // getRideRequestt();
+
+    //  _timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    //   getRequest();
+    // });
+
+    // initializeSocket();
     super.onInit();
   }
 
@@ -79,7 +92,13 @@ class HomeController extends GetxController {
 
   @override
   void onClose() {
+    socket.disconnect();
     super.onClose();
+  }
+
+  Future<void> getRideRequestt() async {
+    DriverUserModel model =
+        await Preferences.getDriverUserModel() ?? DriverUserModel();
   }
 
   getUserData() async {
@@ -246,6 +265,35 @@ class HomeController extends GetxController {
     }
     update();
     log("=======> Update Location");
+  }
+
+  void initializeSocket() {
+    // Configure the socket
+    socket = IO.io('http://172.93.54.177:3002', <String, dynamic>{
+      'transports': ['websocket'],
+      'autoConnect': false,
+    });
+
+    // Connect to the socket
+    socket.connect();
+
+    // Listen for responses from the server
+    socket.on('/driver/passenger/ride/request', (data) {
+      // Handle the response data
+      print('Received ride request response: $data');
+      // You can update your state or perform actions based on the response
+    });
+
+    // Optionally, handle connection events
+    socket.onConnect((_) {
+      print('Connected to socket');
+      // Emit a request to get ride requests
+      socket.emit('getRideRequest');
+    });
+
+    socket.onDisconnect((_) {
+      print('Disconnected from socket');
+    });
   }
 }
 
