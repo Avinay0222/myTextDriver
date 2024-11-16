@@ -77,14 +77,15 @@ class SignupController extends GetxController {
 
       if (userModelData.isActive == true) {
         if (userModelData.isVerified == false) {
-          bool permissionGiven = await Constant.isPermissionApplied();
-          if (permissionGiven) {
-            Get.offAll(const VerifyDocumentsView(
-              isFromDrawer: false,
-            ));
-          } else {
-            Get.offAll(const PermissionView());
-          }
+          // bool permissionGiven = await Constant.isPermissionApplied();
+          // if (permissionGiven) {
+          Get.offAll(const VerifyDocumentsView(
+            isFromDrawer: false,
+          ));
+          // ));
+          // } else {
+          //   Get.offAll(const PermissionView());
+          // }
         } else {
           ShowToastDialog.closeLoader();
           Get.offAll(const HomeView());

@@ -51,7 +51,7 @@ class BookingDetailsView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  if (controller.bookingModel.value.bookingStatus == BookingStatus.bookingPlaced &&
+                  if (controller.bookingModel.value.status == BookingStatus.bookingPlaced &&
                       !controller.bookingModel.value.rejectedDriverId!.contains(FireStoreUtils.getCurrentUid())) ...{
                     RoundShapeButton(
                       title: "Cancel Ride".tr,
@@ -70,9 +70,9 @@ class BookingDetailsView extends StatelessWidget {
                                   positiveClick: () async {
                                     List rejectedId = controller.bookingModel.value.rejectedDriverId ?? [];
                                     rejectedId.add(FireStoreUtils.getCurrentUid());
-                                    controller.bookingModel.value.bookingStatus = BookingStatus.bookingRejected;
-                                    controller.bookingModel.value.rejectedDriverId = rejectedId;
-                                    controller.bookingModel.value.updateAt = Timestamp.now();
+                                    controller.bookingModel.value.status = BookingStatus.bookingRejected;
+                                    // controller.bookingModel.value.rejectedDriverId = rejectedId;
+                                    controller.bookingModel.value.updatedAt = Timestamp.now().toString();
                                     FireStoreUtils.setBooking(controller.bookingModel.value).then((value) async {
                                       if (value == true) {
                                         controller.getBookingDetails();
@@ -80,7 +80,7 @@ class BookingDetailsView extends StatelessWidget {
                                         // DriverUserModel? driverModel =
                                         //     await FireStoreUtils.getDriverUserProfile(controller.bookingModel.value.driverId.toString());
                                         UserModel? receiverUserModel =
-                                            await FireStoreUtils.getUserProfile(controller.bookingModel.value.customerId.toString());
+                                            await FireStoreUtils.getUserProfile(controller.bookingModel.value.rideId.toString());
                                         Map<String, dynamic> playLoad = <String, dynamic>{"bookingId": controller.bookingModel.value.id};
 
                                         await SendNotification.sendOneNotification(
@@ -141,8 +141,8 @@ class BookingDetailsView extends StatelessWidget {
                                   ),
                                   positiveClick: () {
                                     controller.bookingModel.value.driverId = FireStoreUtils.getCurrentUid();
-                                    controller.bookingModel.value.bookingStatus = BookingStatus.bookingAccepted;
-                                    controller.bookingModel.value.updateAt = Timestamp.now();
+                                    controller.bookingModel.value.status = BookingStatus.bookingAccepted;
+                                    controller.bookingModel.value.updatedAt = Timestamp.now().toString();
                                     FireStoreUtils.setBooking(controller.bookingModel.value).then((value) async {
                                       if (value == true) {
                                         controller.getBookingDetails();
@@ -150,7 +150,7 @@ class BookingDetailsView extends StatelessWidget {
                                         ShowToastDialog.showToast("Ride accepted successfully!");
 
                                         UserModel? receiverUserModel =
-                                            await FireStoreUtils.getUserProfile(controller.bookingModel.value.customerId.toString());
+                                            await FireStoreUtils.getUserProfile(controller.bookingModel.value.rideId.toString());
                                         Map<String, dynamic> playLoad = <String, dynamic>{"bookingId": controller.bookingModel.value.id};
 
                                         await SendNotification.sendOneNotification(
@@ -189,11 +189,11 @@ class BookingDetailsView extends StatelessWidget {
                       size: Size(Responsive.width(45, context), 52),
                     ),
                   },
-                  if (controller.bookingModel.value.bookingStatus != BookingStatus.bookingCancelled &&
-                      controller.bookingModel.value.bookingStatus != BookingStatus.bookingRejected &&
-                      controller.bookingModel.value.bookingStatus != BookingStatus.bookingPlaced &&
-                      controller.bookingModel.value.bookingStatus != BookingStatus.bookingCompleted &&
-                      controller.bookingModel.value.bookingStatus != BookingStatus.bookingOngoing) ...{
+                  if (controller.bookingModel.value.status != BookingStatus.bookingCancelled &&
+                      controller.bookingModel.value.status != BookingStatus.bookingRejected &&
+                      controller.bookingModel.value.status != BookingStatus.bookingPlaced &&
+                      controller.bookingModel.value.status != BookingStatus.bookingCompleted &&
+                      controller.bookingModel.value.status != BookingStatus.bookingOngoing) ...{
                     RoundShapeButton(
                       title: "Cancel".tr,
                       buttonColor: AppThemData.grey50,
@@ -217,15 +217,15 @@ class BookingDetailsView extends StatelessWidget {
                       size: Size(Responsive.width(45, context), 52),
                     )
                   },
-                  if (controller.bookingModel.value.bookingStatus == BookingStatus.bookingOngoing) ...{
+                  if (controller.bookingModel.value.status == BookingStatus.bookingOngoing) ...{
                     RoundShapeButton(
                       title: "Complete Ride".tr,
                       buttonColor: AppThemData.success500,
                       buttonTextColor: AppThemData.white,
                       onTap: () {
                         controller.getBookingDetails();
-                        if (controller.bookingModel.value.paymentType != Constant.paymentModel!.cash!.name) {
-                          if (controller.bookingModel.value.paymentStatus == true) {
+                        if (controller.bookingModel.value.ride?.paymentMode != Constant.paymentModel!.cash!.name) {
+                          if (controller.bookingModel.value.ride?.paymentStatus == "approved") {
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -269,59 +269,59 @@ class BookingDetailsView extends StatelessWidget {
                                   positiveString: "Complete".tr,
                                   negativeString: "Cancel".tr,
                                   positiveClick: () async {
-                                    if (controller.bookingModel.value.paymentType == Constant.paymentModel!.cash!.name) {
-                                      Navigator.pop(context);
-                                      controller.bookingModel.value.paymentStatus = true;
-                                      WalletTransactionModel adminCommissionWallet = WalletTransactionModel(
-                                          id: Constant.getUuid(),
-                                          amount:
-                                              "${Constant.calculateAdminCommission(amount: Constant.calculateFinalAmount(controller.bookingModel.value).toString(), adminCommission: controller.bookingModel.value.adminCommission)}",
-                                          createdDate: Timestamp.now(),
-                                          paymentType: "Wallet",
-                                          transactionId: controller.bookingModel.value.id,
-                                          isCredit: false,
-                                          type: Constant.typeDriver,
-                                          userId: controller.bookingModel.value.driverId,
-                                          note: "Admin commission Debited",
-                                          adminCommission: controller.bookingModel.value.adminCommission);
+                                    // if (controller.bookingModel.value.ride?.paymentStatus == Constant.paymentModel!.cash!.name) {
+                                    //   Navigator.pop(context);
+                                    //   controller.bookingModel.value.ride?.paymentStatus  = "approved";
+                                    //   WalletTransactionModel adminCommissionWallet = WalletTransactionModel(
+                                    //       id: Constant.getUuid(),
+                                    //       amount:
+                                    //           "${Constant.calculateAdminCommission(amount: Constant.calculateFinalAmount(controller.bookingModel.value).toString(), adminCommission: controller.bookingModel.value.adminCommission)}",
+                                    //       createdDate: Timestamp.now(),
+                                    //       paymentType: "Wallet",
+                                    //       transactionId: controller.bookingModel.value.id,
+                                    //       isCredit: false,
+                                    //       type: Constant.typeDriver,
+                                    //       userId: controller.bookingModel.value.driverId,
+                                    //       note: "Admin commission Debited",
+                                    //       adminCommission: controller.bookingModel.value.adminCommission);
 
-                                      await FireStoreUtils.setWalletTransaction(adminCommissionWallet).then((value) async {
-                                        if (value == true) {
-                                          await FireStoreUtils.updateDriverUserWallet(
-                                              amount:
-                                                  "-${Constant.calculateAdminCommission(amount: Constant.calculateFinalAmount(controller.bookingModel.value).toString(), adminCommission: controller.bookingModel.value.adminCommission)}");
-                                        }
-                                      });
+                                    //   await FireStoreUtils.setWalletTransaction(adminCommissionWallet).then((value) async {
+                                    //     if (value == true) {
+                                    //       await FireStoreUtils.updateDriverUserWallet(
+                                    //           amount:
+                                    //               "-${Constant.calculateAdminCommission(amount: Constant.calculateFinalAmount(controller.bookingModel.value).toString(), adminCommission: controller.bookingModel.value.adminCommission)}");
+                                    //     }
+                                    //   });
 
-                                      await FireStoreUtils.setBooking(controller.bookingModel.value).then((value) async {
-                                        controller.completeBooking(controller.bookingModel.value);
-                                        await FireStoreUtils.updateTotalEarning(
-                                            amount: (double.parse(Constant.calculateFinalAmount(controller.bookingModel.value).toString()) -
-                                                    double.parse(Constant.calculateAdminCommission(
-                                                            amount: Constant.calculateFinalAmount(controller.bookingModel.value).toString(),
-                                                            adminCommission: controller.bookingModel.value.adminCommission)
-                                                        .toString()))
-                                                .toString());
-                                        controller.getBookingDetails();
-                                        Navigator.pop(context);
-                                        Get.to(const HomeView());
+                                    //   await FireStoreUtils.setBooking(controller.bookingModel.value).then((value) async {
+                                    //     controller.completeBooking(controller.bookingModel.value);
+                                    //     await FireStoreUtils.updateTotalEarning(
+                                    //         amount: (double.parse(Constant.calculateFinalAmount(controller.bookingModel.value).toString()) -
+                                    //                 double.parse(Constant.calculateAdminCommission(
+                                    //                         amount: Constant.calculateFinalAmount(controller.bookingModel.value).toString(),
+                                    //                         adminCommission: controller.bookingModel.value.adminCommission)
+                                    //                     .toString()))
+                                    //             .toString());
+                                    //     controller.getBookingDetails();
+                                    //     Navigator.pop(context);
+                                    //     Get.to(const HomeView());
 
-                                        // Get.back();
-                                        // Get.offAll(const HomeView());
-                                      });
-                                    } else {
-                                      if (controller.bookingModel.value.paymentStatus == true) {
-                                        controller.completeBooking(controller.bookingModel.value);
-                                        controller.getBookingDetails();
-                                        Navigator.pop(context);
-                                        Get.to(const HomeView());
-                                        // Get.back();
-                                        // Get.offAll(const HomeView());
-                                      } else {
-                                        ShowToastDialog.showToast("Payment of this ride is remaining from Customer");
-                                        Navigator.pop(context);
-                                      }
-                                    }
+                                    //     // Get.back();
+                                    //     // Get.offAll(const HomeView());
+                                    //   });
+                                    // } else {
+                                    //   if (controller.bookingModel.value.ride?.paymentStatus == "approved") {
+                                    //     controller.completeBooking(controller.bookingModel.value);
+                                    //     controller.getBookingDetails();
+                                    //     Navigator.pop(context);
+                                    //     Get.to(const HomeView());
+                                    //     // Get.back();
+                                    //     // Get.offAll(const HomeView());
+                                    //   } else {
+                                    //     ShowToastDialog.showToast("Payment of this ride is remaining from Customer");
+                                    //     Navigator.pop(context);
+                                    //   }
+                                    // }
                                   },
                                   negativeClick: () {
                                     Navigator.pop(context);
@@ -372,10 +372,10 @@ class BookingDetailsView extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            BookingStatus.getBookingStatusTitle(controller.bookingModel.value.bookingStatus ?? ''),
+                            BookingStatus.getBookingStatusTitle(controller.bookingModel.value.status ?? ''),
                             textAlign: TextAlign.right,
                             style: GoogleFonts.inter(
-                              color: BookingStatus.getBookingStatusTitleColor(controller.bookingModel.value.bookingStatus ?? ''),
+                              color: BookingStatus.getBookingStatusTitleColor(controller.bookingModel.value.status ?? ''),
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),
@@ -400,11 +400,11 @@ class BookingDetailsView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              CachedNetworkImage(
-                                imageUrl: controller.bookingModel.value.vehicleType == null
-                                    ? Constant.profileConstant
-                                    : controller.bookingModel.value.vehicleType!.image,
-                              ),
+                              // CachedNetworkImage(
+                              //   // imageUrl: controller.bookingModel.value.ride?.vehicleTypeId == null
+                              //   //     ? Constant.profileConstant
+                              //   //     : controller.bookingModel.value.vehicleType!.image,
+                              // ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
@@ -413,9 +413,9 @@ class BookingDetailsView extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      controller.bookingModel.value.vehicleType == null
+                                      controller.bookingModel.value.ride?.vehicleTypeId == null
                                           ? ""
-                                          : controller.bookingModel.value.vehicleType!.title,
+                                          : controller.bookingModel.value.ride?.vehicleTypeId?? "",
                                       style: GoogleFonts.inter(
                                         color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
                                         fontSize: 16,
@@ -424,7 +424,7 @@ class BookingDetailsView extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
-                                      (controller.bookingModel.value.paymentStatus ?? false)
+                                      (controller.bookingModel.value.ride?.paymentStatus=="approved" ?? false)
                                           ? 'Payment is Completed'.tr
                                           : 'Payment is Pending'.tr,
                                       style: GoogleFonts.inter(
@@ -461,9 +461,9 @@ class BookingDetailsView extends StatelessWidget {
                                       SvgPicture.asset("assets/icon/ic_multi_person.svg"),
                                       const SizedBox(width: 6),
                                       Text(
-                                        controller.bookingModel.value.vehicleType == null
+                                        controller.bookingModel.value.ride?.vehicleTypeId == null
                                             ? ""
-                                            : controller.bookingModel.value.vehicleType!.persons,
+                                            : controller.bookingModel.value.ride?.vehicleTypeId??"",
                                         style: GoogleFonts.inter(
                                           color: AppThemData.primary500,
                                           fontSize: 16,
@@ -479,7 +479,7 @@ class BookingDetailsView extends StatelessWidget {
                         ),
                       ),
                       FutureBuilder<UserModel?>(
-                          future: FireStoreUtils.getUserProfile(controller.bookingModel.value.customerId ?? ''),
+                          future: FireStoreUtils.getUserProfile(controller.bookingModel.value.rideId ?? ''),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
                               return Container();
@@ -536,7 +536,7 @@ class BookingDetailsView extends StatelessWidget {
                                       InkWell(
                                           onTap: () {
                                             Get.to(() => ChatScreenView(
-                                                  receiverId: controller.bookingModel.value.customerId ?? '',
+                                                  receiverId: controller.bookingModel.value.rideId ?? '',
                                                 ));
                                           },
                                           child: SvgPicture.asset("assets/icon/ic_message.svg")),
@@ -556,8 +556,8 @@ class BookingDetailsView extends StatelessWidget {
                             );
                           }),
                       PickDropPointView(
-                        pickUpAddress: controller.bookingModel.value.pickUpLocationAddress ?? '',
-                        dropAddress: controller.bookingModel.value.dropLocationAddress ?? '',
+                        pickUpAddress: controller.bookingModel.value.ride?.pickupAddress ?? '',
+                        dropAddress: controller.bookingModel.value.ride?.dropoffAddress ?? '',
                       ),
                       TitleView(titleText: 'Ride Details'.tr, padding: const EdgeInsets.fromLTRB(0, 20, 0, 12)),
                       Container(
@@ -594,9 +594,9 @@ class BookingDetailsView extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  controller.bookingModel.value.bookingTime == null
+                                  controller.bookingModel.value.createdAt == null
                                       ? ""
-                                      : controller.bookingModel.value.bookingTime!.toDate().dateMonthYear(),
+                                      : controller.bookingModel.value.createdAt!.toString(),
                                   textAlign: TextAlign.right,
                                   style: GoogleFonts.inter(
                                     color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
@@ -631,9 +631,9 @@ class BookingDetailsView extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  controller.bookingModel.value.bookingTime == null
+                                  controller.bookingModel.value.createdAt == null
                                       ? ""
-                                      : controller.bookingModel.value.bookingTime!.toDate().time(),
+                                      : controller.bookingModel.value.createdAt.toString(),
                                   textAlign: TextAlign.right,
                                   style: GoogleFonts.inter(
                                     color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
@@ -702,114 +702,115 @@ class BookingDetailsView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: Obx(
-                          () => Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              PriceRowView(
-                                price: controller.bookingModel.value.subTotal.toString(),
-                                title: "Amount".tr,
-                                priceColor: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
-                                titleColor: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
-                              ),
-                              const SizedBox(height: 16),
-                              PriceRowView(
-                                  price: Constant.amountToShow(amount: controller.bookingModel.value.discount ?? '0.0'),
-                                  title: "Discount".tr,
-                                  priceColor: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
-                                  titleColor: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950),
-                              const SizedBox(height: 16),
-                              ListView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemCount: controller.bookingModel.value.taxList!.length,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  TaxModel taxModel = controller.bookingModel.value.taxList![index];
-                                  return Column(
-                                    children: [
-                                      PriceRowView(
-                                          price: Constant.amountToShow(
-                                              amount: Constant.calculateTax(
-                                                      amount: Constant.amountBeforeTax(controller.bookingModel.value).toString(),
-                                                      taxModel: taxModel)
-                                                  .toString()),
-                                          title:
-                                              "${taxModel.name!} (${taxModel.isFix == true ? Constant.amountToShow(amount: taxModel.value) : "${taxModel.value}%"})",
-                                          priceColor: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
-                                          titleColor: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950),
-                                      const SizedBox(height: 16),
-                                    ],
-                                  );
-                                },
-                              ),
-                              const SizedBox(height: 8),
-                              Divider(color: themeChange.isDarkTheme() ? AppThemData.grey800 : AppThemData.grey100),
-                              const SizedBox(height: 12),
-                              PriceRowView(
-                                price:
-                                    Constant.amountToShow(amount: Constant.calculateFinalAmount(controller.bookingModel.value).toString()),
-                                title: "Total Amount".tr,
-                                priceColor: AppThemData.primary500,
-                                titleColor: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
-                              ),
-                            ],
-                          ),
-                        ),
+                      //   child: Obx(
+                      //     () => Column(
+                      //       mainAxisAlignment: MainAxisAlignment.start,
+                      //       crossAxisAlignment: CrossAxisAlignment.start,
+                      //       children: [
+                      //         PriceRowView(
+                      //           price: controller.bookingModel.value.subTotal.toString(),
+                      //           title: "Amount".tr,
+                      //           priceColor: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                      //           titleColor: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                      //         ),
+                      //         const SizedBox(height: 16),
+                      //         PriceRowView(
+                      //             price: Constant.amountToShow(amount: controller.bookingModel.value.discount ?? '0.0'),
+                      //             title: "Discount".tr,
+                      //             priceColor: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                      //             titleColor: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950),
+                      //         const SizedBox(height: 16),
+                      //         ListView.builder(
+                      //           physics: const NeverScrollableScrollPhysics(),
+                      //           itemCount: controller.bookingModel.value.taxList!.length,
+                      //           shrinkWrap: true,
+                      //           itemBuilder: (context, index) {
+                      //             TaxModel taxModel = controller.bookingModel.value.taxList![index];
+                      //             return Column(
+                      //               children: [
+                      //                 PriceRowView(
+                      //                     price: Constant.amountToShow(
+                      //                         amount: Constant.calculateTax(
+                      //                                 amount: Constant.amountBeforeTax(controller.bookingModel.value).toString(),
+                      //                                 taxModel: taxModel)
+                      //                             .toString()),
+                      //                     title:
+                      //                         "${taxModel.name!} (${taxModel.isFix == true ? Constant.amountToShow(amount: taxModel.value) : "${taxModel.value}%"})",
+                      //                     priceColor: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                      //                     titleColor: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950),
+                      //                 const SizedBox(height: 16),
+                      //               ],
+                      //             );
+                      //           },
+                      //         ),
+                      //         const SizedBox(height: 8),
+                      //         Divider(color: themeChange.isDarkTheme() ? AppThemData.grey800 : AppThemData.grey100),
+                      //         const SizedBox(height: 12),
+                      //         PriceRowView(
+                      //           price:
+                      //               Constant.amountToShow(amount: Constant.calculateFinalAmount(controller.bookingModel.value).toString()),
+                      //           title: "Total Amount".tr,
+                      //           priceColor: AppThemData.primary500,
+                      //           titleColor: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                       ),
                       TitleView(titleText: 'Payment Method'.tr, padding: const EdgeInsets.fromLTRB(0, 20, 0, 12)),
-                      Container(
-                        width: Responsive.width(100, context),
-                        height: 56,
-                        padding: const EdgeInsets.all(16),
-                        decoration: ShapeDecoration(
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(width: 1, color: themeChange.isDarkTheme() ? AppThemData.grey800 : AppThemData.grey100),
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            (controller.bookingModel.value.paymentType == "Cash")
-                                ? SvgPicture.asset("assets/icon/ic_cash.svg")
-                                : (controller.bookingModel.value.paymentType == "Wallet")
-                                    ? SvgPicture.asset(
-                                        "assets/icon/ic_wallet.svg",
-                                        height: 24,
-                                        color: themeChange.isDarkTheme() ? AppThemData.white : AppThemData.black,
-                                      )
-                                    : (controller.bookingModel.value.paymentType == "Razorpay")
-                                        ? Image.asset("assets/images/ig_razorpay.png", height: 24, width: 24)
-                                        : (controller.bookingModel.value.paymentType == "Paypal")
-                                            ? Image.asset("assets/images/ig_paypal.png", height: 24, width: 24)
-                                            : (controller.bookingModel.value.paymentType == "Strip")
-                                                ? Image.asset("assets/images/ig_stripe.png", height: 24, width: 24)
-                                                : (controller.bookingModel.value.paymentType == "PayStack")
-                                                    ? Image.asset("assets/images/ig_paystack.png", height: 24, width: 24)
-                                                    : (controller.bookingModel.value.paymentType == "Mercado Pago")
-                                                        ? Image.asset("assets/images/ig_marcadopago.png", height: 24, width: 24)
-                                                        : (controller.bookingModel.value.paymentType == "payfast")
-                                                            ? Image.asset("assets/images/ig_payfast.png", height: 24, width: 24)
-                                                            : (controller.bookingModel.value.paymentType == "Flutter Wave")
-                                                                ? Image.asset("assets/images/ig_flutterwave.png", height: 24, width: 24)
-                                                                : SvgPicture.asset("assets/icons/ic_cash.svg"),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Text(
-                                controller.bookingModel.value.paymentType ?? '',
-                                style: GoogleFonts.inter(
-                                  color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
+                      // Container(
+                      //   width: Responsive.width(100, context),
+                      //   height: 56,
+                      //   padding: const EdgeInsets.all(16),
+                      //   decoration: ShapeDecoration(
+                      //     shape: RoundedRectangleBorder(
+                      //       side: BorderSide(width: 1, color: themeChange.isDarkTheme() ? AppThemData.grey800 : AppThemData.grey100),
+                      //       borderRadius: BorderRadius.circular(8),
+                      //     ),
+                      //   ),
+                      //   child: Row(
+                      //     mainAxisSize: MainAxisSize.min,
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     crossAxisAlignment: CrossAxisAlignment.center,
+                      //     children: [
+                      //       (controller.bookingModel.value.paymentType == "Cash")
+                      //           ? SvgPicture.asset("assets/icon/ic_cash.svg")
+                      //           : (controller.bookingModel.value.paymentType == "Wallet")
+                      //               ? SvgPicture.asset(
+                      //                   "assets/icon/ic_wallet.svg",
+                      //                   height: 24,
+                      //                   color: themeChange.isDarkTheme() ? AppThemData.white : AppThemData.black,
+                      //                 )
+                      //               : (controller.bookingModel.value.paymentType == "Razorpay")
+                      //                   ? Image.asset("assets/images/ig_razorpay.png", height: 24, width: 24)
+                      //                   : (controller.bookingModel.value.paymentType == "Paypal")
+                      //                       ? Image.asset("assets/images/ig_paypal.png", height: 24, width: 24)
+                      //                       : (controller.bookingModel.value.paymentType == "Strip")
+                      //                           ? Image.asset("assets/images/ig_stripe.png", height: 24, width: 24)
+                      //                           : (controller.bookingModel.value.paymentType == "PayStack")
+                      //                               ? Image.asset("assets/images/ig_paystack.png", height: 24, width: 24)
+                      //                               : (controller.bookingModel.value.paymentType == "Mercado Pago")
+                      //                                   ? Image.asset("assets/images/ig_marcadopago.png", height: 24, width: 24)
+                      //                                   : (controller.bookingModel.value.paymentType == "payfast")
+                      //                                       ? Image.asset("assets/images/ig_payfast.png", height: 24, width: 24)
+                      //                                       : (controller.bookingModel.value.paymentType == "Flutter Wave")
+                      //                                           ? Image.asset("assets/images/ig_flutterwave.png", height: 24, width: 24)
+                      //                                           : SvgPicture.asset("assets/icons/ic_cash.svg"),
+                      //       const SizedBox(width: 12),
+                      //       Expanded(
+                      //         child: Text(
+                      //           controller.bookingModel.value.paymentType ?? '',
+                      //           style: GoogleFonts.inter(
+                      //             color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                      //             fontSize: 16,
+                      //             fontWeight: FontWeight.w400,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // )
                     ],
                   ),
                 ),

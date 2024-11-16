@@ -15,6 +15,8 @@ import 'package:driver/app/modules/notifications/views/notifications_view.dart';
 import 'package:driver/app/modules/support_screen/views/support_screen_view.dart';
 import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
 import 'package:driver/app/routes/app_pages.dart';
+import 'package:driver/app/services/api_service.dart';
+import 'package:driver/constant/api_constant.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/star_rating.dart';
 import 'package:driver/theme/app_them_data.dart';
@@ -42,19 +44,32 @@ class HomeView extends GetView<HomeController> {
         },
         builder: (controller) {
           return Scaffold(
-            backgroundColor: themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
+            backgroundColor: themeChange.isDarkTheme()
+                ? AppThemData.black
+                : AppThemData.white,
             appBar: AppBar(
-              shape: Border(bottom: BorderSide(color: themeChange.isDarkTheme() ? AppThemData.grey800 : AppThemData.grey100, width: 1)),
+              shape: Border(
+                  bottom: BorderSide(
+                      color: themeChange.isDarkTheme()
+                          ? AppThemData.grey800
+                          : AppThemData.grey100,
+                      width: 1)),
               title: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset("assets/icon/logo_only.svg"),
+                  InkWell(
+                      onTap: () async {
+                        await getRequest();
+                      },
+                      child: SvgPicture.asset("assets/icon/logo_only.svg")),
                   const SizedBox(width: 10),
                   Text(
                     'MyTaxi'.tr,
                     style: GoogleFonts.inter(
-                      color: themeChange.isDarkTheme() ? AppThemData.white : AppThemData.black,
+                      color: themeChange.isDarkTheme()
+                          ? AppThemData.white
+                          : AppThemData.black,
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
                     ),
@@ -85,66 +100,116 @@ class HomeView extends GetView<HomeController> {
                               : controller.drawerIndex.value == 5
                                   ? const SupportScreenView()
                                   : controller.drawerIndex.value == 6
-                                      ? HtmlViewScreenView(title: "Privacy & Policy", htmlData: Constant.privacyPolicy)
+                                      ? HtmlViewScreenView(
+                                          title: "Privacy & Policy",
+                                          htmlData: Constant.privacyPolicy)
                                       : controller.drawerIndex.value == 7
-                                          ? HtmlViewScreenView(title: "Terms & Condition", htmlData: Constant.termsAndConditions)
+                                          ? HtmlViewScreenView(
+                                              title: "Terms & Condition",
+                                              htmlData:
+                                                  Constant.termsAndConditions)
                                           : controller.drawerIndex.value == 8
                                               ? const LanguageView()
                                               : controller.isLoading.value
                                                   ? Constant.loader()
                                                   : SingleChildScrollView(
                                                       child: Padding(
-                                                        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .fromLTRB(
+                                                                16, 12, 16, 12),
                                                         child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
                                                           children: [
                                                             Container(
-                                                              width: Responsive.width(100, context),
+                                                              width: Responsive
+                                                                  .width(100,
+                                                                      context),
                                                               // height: 100,
-                                                              padding: const EdgeInsets.all(16),
-                                                              margin: const EdgeInsets.only(bottom: 20),
-                                                              decoration: ShapeDecoration(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(16),
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      bottom:
+                                                                          20),
+                                                              decoration:
+                                                                  ShapeDecoration(
                                                                 image: const DecorationImage(
-                                                                    image: AssetImage("assets/images/top_banner_background.png"),
-                                                                    fit: BoxFit.cover),
-                                                                shape: RoundedRectangleBorder(
-                                                                  borderRadius: BorderRadius.circular(16),
+                                                                    image: AssetImage(
+                                                                        "assets/images/top_banner_background.png"),
+                                                                    fit: BoxFit
+                                                                        .cover),
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              16),
                                                                 ),
                                                               ),
                                                               child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .center,
                                                                 children: [
                                                                   Column(
-                                                                    mainAxisAlignment: MainAxisAlignment.center,
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    crossAxisAlignment:
+                                                                        CrossAxisAlignment
+                                                                            .start,
                                                                     children: [
                                                                       Text(
-                                                                        'Total Earnings'.tr,
-                                                                        style: GoogleFonts.inter(
-                                                                          color: AppThemData.white,
-                                                                          fontSize: 12,
-                                                                          fontWeight: FontWeight.w400,
+                                                                        'Total Earnings'
+                                                                            .tr,
+                                                                        style: GoogleFonts
+                                                                            .inter(
+                                                                          color:
+                                                                              AppThemData.white,
+                                                                          fontSize:
+                                                                              12,
+                                                                          fontWeight:
+                                                                              FontWeight.w400,
                                                                         ),
                                                                       ),
                                                                       Container(
-                                                                        width: Responsive.width(60, context),
-                                                                        margin: const EdgeInsets.only(top: 6),
-                                                                        child: Text(
+                                                                        width: Responsive.width(
+                                                                            60,
+                                                                            context),
+                                                                        margin: const EdgeInsets
+                                                                            .only(
+                                                                            top:
+                                                                                6),
+                                                                        child:
+                                                                            Text(
                                                                           Constant.amountShow(
-                                                                              amount: (controller.userModel.value.totalEarning ?? '0.0')
-                                                                                  .toString()),
-                                                                          style: GoogleFonts.inter(
-                                                                            color: AppThemData.grey50,
-                                                                            fontSize: 28,
-                                                                            fontWeight: FontWeight.w700,
+                                                                              amount: (controller.userModel.value.totalEarning ?? '0.0').toString()),
+                                                                          style:
+                                                                              GoogleFonts.inter(
+                                                                            color:
+                                                                                AppThemData.grey50,
+                                                                            fontSize:
+                                                                                28,
+                                                                            fontWeight:
+                                                                                FontWeight.w700,
                                                                           ),
                                                                         ),
                                                                       ),
                                                                     ],
                                                                   ),
-                                                                  SvgPicture.asset(
+                                                                  SvgPicture
+                                                                      .asset(
                                                                     "assets/icon/ic_hand_currency.svg",
                                                                     width: 52,
                                                                     height: 52,
@@ -154,89 +219,149 @@ class HomeView extends GetView<HomeController> {
                                                             ),
                                                             Text(
                                                               'Total Rides'.tr,
-                                                              style: GoogleFonts.inter(
-                                                                color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                                                              style: GoogleFonts
+                                                                  .inter(
+                                                                color: themeChange
+                                                                        .isDarkTheme()
+                                                                    ? AppThemData
+                                                                        .grey25
+                                                                    : AppThemData
+                                                                        .grey950,
                                                                 fontSize: 18,
-                                                                fontWeight: FontWeight.w600,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
                                                               ),
                                                             ),
-                                                            const SizedBox(height: 16),
-                                                            ChartView(themeChange: themeChange),
-                                                            const SizedBox(height: 20),
+                                                            const SizedBox(
+                                                                height: 16),
+                                                            ChartView(
+                                                                themeChange:
+                                                                    themeChange),
+                                                            const SizedBox(
+                                                                height: 20),
                                                             Container(
-                                                              width: double.infinity,
-                                                              padding: const EdgeInsets.all(16),
-                                                              decoration: ShapeDecoration(
+                                                              width: double
+                                                                  .infinity,
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(16),
+                                                              decoration:
+                                                                  ShapeDecoration(
                                                                 color: themeChange.isDarkTheme()
-                                                                    ? AppThemData.secondary950
-                                                                    : AppThemData.secondary50,
-                                                                shape: RoundedRectangleBorder(
-                                                                  borderRadius: BorderRadius.circular(12),
+                                                                    ? AppThemData
+                                                                        .secondary950
+                                                                    : AppThemData
+                                                                        .secondary50,
+                                                                shape:
+                                                                    RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12),
                                                                 ),
                                                               ),
                                                               child: Column(
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
                                                                 children: [
                                                                   Text(
                                                                     'Note'.tr,
-                                                                    style: GoogleFonts.inter(
+                                                                    style: GoogleFonts
+                                                                        .inter(
                                                                       color: themeChange.isDarkTheme()
-                                                                          ? AppThemData.grey25
-                                                                          : AppThemData.grey950,
-                                                                      fontSize: 16,
-                                                                      fontWeight: FontWeight.w600,
+                                                                          ? AppThemData
+                                                                              .grey25
+                                                                          : AppThemData
+                                                                              .grey950,
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
                                                                     ),
                                                                   ),
-                                                                  const SizedBox(height: 8),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          8),
                                                                   Text(
                                                                     'A ${Constant.adminCommission!.isFix == true ? Constant.amountToShow(amount: Constant.adminCommission!.value) : "${Constant.adminCommission!.value}%"} commission fee will be deducted from each ride payment for administrative purposes.'
                                                                         .tr,
-                                                                    style: GoogleFonts.inter(
+                                                                    style: GoogleFonts
+                                                                        .inter(
                                                                       color: themeChange.isDarkTheme()
-                                                                          ? AppThemData.grey25
-                                                                          : AppThemData.grey950,
-                                                                      fontSize: 14,
-                                                                      fontWeight: FontWeight.w400,
+                                                                          ? AppThemData
+                                                                              .grey25
+                                                                          : AppThemData
+                                                                              .grey950,
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
                                                                     ),
                                                                   ),
                                                                 ],
                                                               ),
                                                             ),
-                                                            const SizedBox(height: 16),
+                                                            const SizedBox(
+                                                                height: 16),
                                                             Visibility(
-                                                              visible: controller.isOnline.value,
-                                                              child: StreamBuilder<List<BookingModel>>(
-                                                                  stream: FireStoreUtils().getBookings(Constant.currentLocation!.latitude,
-                                                                      Constant.currentLocation!.longitude),
-                                                                  builder: (context, snapshot) {
+                                                              visible:
+                                                                  controller
+                                                                      .isOnline
+                                                                      .value,
+                                                              child: FutureBuilder<
+                                                                      List<
+                                                                          BookingModel>>(
+                                                                  future:
+                                                                      getRequest(),
+                                                                  builder: (context,
+                                                                      snapshot) {
                                                                     log("State : ${snapshot.connectionState}");
-                                                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                                                      return Constant.loader();
+                                                                    if (snapshot
+                                                                            .connectionState ==
+                                                                        ConnectionState
+                                                                            .waiting) {
+                                                                      return Constant
+                                                                          .loader();
                                                                     }
-                                                                    if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true)) {
+                                                                    if (!snapshot
+                                                                            .hasData ||
+                                                                        (snapshot.data?.isEmpty ??
+                                                                            true)) {
                                                                       return Container();
                                                                     } else {
-                                                                      BookingModel bookingModel = snapshot.data!.first;
+                                                                      BookingModel
+                                                                          bookingModel =
+                                                                          snapshot
+                                                                              .data!
+                                                                              .first;
                                                                       return Column(
-                                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                                        crossAxisAlignment:
+                                                                            CrossAxisAlignment.start,
+                                                                        mainAxisAlignment:
+                                                                            MainAxisAlignment.start,
                                                                         children: [
                                                                           Text(
                                                                             'New Ride'.tr,
-                                                                            style: GoogleFonts.inter(
-                                                                              color: themeChange.isDarkTheme()
-                                                                                  ? AppThemData.grey25
-                                                                                  : AppThemData.grey950,
+                                                                            style:
+                                                                                GoogleFonts.inter(
+                                                                              color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
                                                                               fontSize: 18,
                                                                               fontWeight: FontWeight.w600,
                                                                               height: 0.08,
                                                                             ),
                                                                           ),
-                                                                          const SizedBox(height: 20),
+                                                                          const SizedBox(
+                                                                              height: 20),
                                                                           NewRideView(
-                                                                            bookingModel: bookingModel,
+                                                                            bookingModel:
+                                                                                bookingModel,
                                                                           ),
-                                                                          const SizedBox(height: 4),
+                                                                          const SizedBox(
+                                                                              height: 4),
                                                                         ],
                                                                       );
                                                                     }
@@ -244,28 +369,45 @@ class HomeView extends GetView<HomeController> {
                                                             ),
                                                             Obx(
                                                               () => Visibility(
-                                                                visible: controller.isOnline.value,
-                                                                child: StreamBuilder<List<BookingModel>>(
-                                                                    stream: FireStoreUtils().getHomeOngoingBookings(),
-                                                                    builder: (context, snapshot) {
+                                                                visible:
+                                                                    controller
+                                                                        .isOnline
+                                                                        .value,
+                                                                child: StreamBuilder<
+                                                                        List<
+                                                                            BookingModel>>(
+                                                                    stream: FireStoreUtils()
+                                                                        .getHomeOngoingBookings(),
+                                                                    builder:
+                                                                        (context,
+                                                                            snapshot) {
                                                                       log("State : ${snapshot.connectionState}");
-                                                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                                                        return Constant.loader();
+                                                                      if (snapshot
+                                                                              .connectionState ==
+                                                                          ConnectionState
+                                                                              .waiting) {
+                                                                        return Constant
+                                                                            .loader();
                                                                       }
-                                                                      if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true)) {
+                                                                      if (!snapshot
+                                                                              .hasData ||
+                                                                          (snapshot.data?.isEmpty ??
+                                                                              true)) {
                                                                         return Container();
                                                                       } else {
-                                                                        BookingModel bookingModel = snapshot.data!.first;
+                                                                        BookingModel
+                                                                            bookingModel =
+                                                                            snapshot.data!.first;
                                                                         return Column(
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                                          mainAxisAlignment: MainAxisAlignment.start,
+                                                                          crossAxisAlignment:
+                                                                              CrossAxisAlignment.start,
+                                                                          mainAxisAlignment:
+                                                                              MainAxisAlignment.start,
                                                                           children: [
                                                                             Text(
                                                                               'Ongoing Ride'.tr,
                                                                               style: GoogleFonts.inter(
-                                                                                color: themeChange.isDarkTheme()
-                                                                                    ? AppThemData.grey25
-                                                                                    : AppThemData.grey950,
+                                                                                color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
                                                                                 fontSize: 18,
                                                                                 fontWeight: FontWeight.w600,
                                                                               ),
@@ -283,105 +425,187 @@ class HomeView extends GetView<HomeController> {
                                                             ),
                                                             Obx(
                                                               () => Visibility(
-                                                                  visible: controller.isOnline.value == false,
+                                                                  visible: controller
+                                                                          .isOnline
+                                                                          .value ==
+                                                                      false,
                                                                   child: Column(
                                                                     children: [
                                                                       goOnlineDialog(
-                                                                        title: "You're Now Offline",
+                                                                        title:
+                                                                            "You're Now Offline",
                                                                         descriptions:
                                                                             "Please change your status to online to access all features. When offline, you won't be able to access any functionalities.",
-                                                                        img: SvgPicture.asset(
+                                                                        img: SvgPicture
+                                                                            .asset(
                                                                           "assets/icon/ic_offline.svg",
-                                                                          height: 58,
-                                                                          width: 58,
+                                                                          height:
+                                                                              58,
+                                                                          width:
+                                                                              58,
                                                                         ),
-                                                                        onClick: () async {
-                                                                          await FireStoreUtils.updateDriverUserOnline(true);
-                                                                          controller.isOnline.value = true;
-                                                                          controller.updateCurrentLocation();
+                                                                        onClick:
+                                                                            () async {
+                                                                          await FireStoreUtils.updateDriverUserOnline(
+                                                                              true);
+                                                                          controller
+                                                                              .isOnline
+                                                                              .value = true;
+                                                                          controller
+                                                                              .updateCurrentLocation();
                                                                         },
-                                                                        string: "Go Online".tr,
-                                                                        themeChange: themeChange,
-                                                                        context: context,
+                                                                        string:
+                                                                            "Go Online".tr,
+                                                                        themeChange:
+                                                                            themeChange,
+                                                                        context:
+                                                                            context,
                                                                       ),
-                                                                      const SizedBox(height: 20),
+                                                                      const SizedBox(
+                                                                          height:
+                                                                              20),
                                                                     ],
                                                                   )),
                                                             ),
                                                             Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
                                                               children: [
                                                                 Text(
-                                                                  'Customer Reviews'.tr,
-                                                                  style: GoogleFonts.inter(
+                                                                  'Customer Reviews'
+                                                                      .tr,
+                                                                  style:
+                                                                      GoogleFonts
+                                                                          .inter(
                                                                     color: themeChange.isDarkTheme()
-                                                                        ? AppThemData.grey25
-                                                                        : AppThemData.grey950,
-                                                                    fontSize: 18,
-                                                                    fontWeight: FontWeight.w600,
-                                                                    height: 0.08,
+                                                                        ? AppThemData
+                                                                            .grey25
+                                                                        : AppThemData
+                                                                            .grey950,
+                                                                    fontSize:
+                                                                        18,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    height:
+                                                                        0.08,
                                                                   ),
                                                                 ),
                                                                 GestureDetector(
                                                                   onTap: () {
-                                                                    Get.toNamed(Routes.REVIEW_SCREEN);
+                                                                    Get.toNamed(
+                                                                        Routes
+                                                                            .REVIEW_SCREEN);
                                                                   },
                                                                   child: Text(
-                                                                    'View all'.tr,
-                                                                    style: GoogleFonts.inter(
-                                                                      color: AppThemData.primary500,
-                                                                      fontSize: 14,
-                                                                      fontWeight: FontWeight.w600,
+                                                                    'View all'
+                                                                        .tr,
+                                                                    style: GoogleFonts
+                                                                        .inter(
+                                                                      color: AppThemData
+                                                                          .primary500,
+                                                                      fontSize:
+                                                                          14,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
                                                                     ),
                                                                   ),
                                                                 ),
                                                               ],
                                                             ),
-                                                            const SizedBox(height: 20),
-                                                            if (controller.reviewList.isEmpty) ...{
-                                                              const SizedBox(height: 20),
+                                                            const SizedBox(
+                                                                height: 20),
+                                                            if (controller
+                                                                .reviewList
+                                                                .isEmpty) ...{
+                                                              const SizedBox(
+                                                                  height: 20),
                                                               Center(
                                                                 child: Text(
-                                                                  'No Customer review found'.tr,
-                                                                  style: GoogleFonts.inter(
+                                                                  'No Customer review found'
+                                                                      .tr,
+                                                                  style:
+                                                                      GoogleFonts
+                                                                          .inter(
                                                                     color: themeChange.isDarkTheme()
-                                                                        ? AppThemData.grey25
-                                                                        : AppThemData.grey950,
-                                                                    fontSize: 14,
-                                                                    fontWeight: FontWeight.w200,
-                                                                    height: 0.08,
+                                                                        ? AppThemData
+                                                                            .grey25
+                                                                        : AppThemData
+                                                                            .grey950,
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w200,
+                                                                    height:
+                                                                        0.08,
                                                                   ),
                                                                 ),
                                                               ),
                                                             },
                                                             SizedBox(
                                                               height: 164,
-                                                              child: ListView.builder(
-                                                                shrinkWrap: true,
-                                                                itemCount:
-                                                                    controller.reviewList.length >= 5 ? 5 : controller.reviewList.length,
-                                                                scrollDirection: Axis.horizontal,
-                                                                itemBuilder: (context, index) {
+                                                              child: ListView
+                                                                  .builder(
+                                                                shrinkWrap:
+                                                                    true,
+                                                                itemCount: controller
+                                                                            .reviewList
+                                                                            .length >=
+                                                                        5
+                                                                    ? 5
+                                                                    : controller
+                                                                        .reviewList
+                                                                        .length,
+                                                                scrollDirection:
+                                                                    Axis.horizontal,
+                                                                itemBuilder:
+                                                                    (context,
+                                                                        index) {
                                                                   return Container(
                                                                     width: 210,
-                                                                    padding: const EdgeInsets.all(16),
-                                                                    margin: const EdgeInsets.only(right: 16),
-                                                                    decoration: ShapeDecoration(
-                                                                      color: themeChange.isDarkTheme()
-                                                                          ? controller.colorDark[index % 4]
-                                                                          : controller.color[index % 4],
-                                                                      shape: RoundedRectangleBorder(
-                                                                        borderRadius: BorderRadius.circular(12),
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            16),
+                                                                    margin: const EdgeInsets
+                                                                        .only(
+                                                                        right:
+                                                                            16),
+                                                                    decoration:
+                                                                        ShapeDecoration(
+                                                                      color: themeChange
+                                                                              .isDarkTheme()
+                                                                          ? controller.colorDark[index %
+                                                                              4]
+                                                                          : controller.color[index %
+                                                                              4],
+                                                                      shape:
+                                                                          RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(12),
                                                                       ),
                                                                     ),
-                                                                    child: Column(
-                                                                      mainAxisSize: MainAxisSize.min,
-                                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                    child:
+                                                                        Column(
+                                                                      mainAxisSize:
+                                                                          MainAxisSize
+                                                                              .min,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .start,
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .start,
                                                                       children: [
-                                                                        FutureBuilder<UserModel?>(
-                                                                          future: FireStoreUtils.getUserProfile(
-                                                                              controller.reviewList[index].customerId.toString()),
+                                                                        FutureBuilder<
+                                                                            UserModel?>(
+                                                                          future: FireStoreUtils.getUserProfile(controller
+                                                                              .reviewList[index]
+                                                                              .customerId
+                                                                              .toString()),
                                                                           builder:
                                                                               (BuildContext context, AsyncSnapshot<UserModel?> snapshot) {
                                                                             switch (snapshot.connectionState) {
@@ -436,9 +660,12 @@ class HomeView extends GetView<HomeController> {
                                                                             }
                                                                           },
                                                                         ),
-                                                                        FutureBuilder<UserModel?>(
-                                                                          future: FireStoreUtils.getUserProfile(
-                                                                              controller.reviewList[index].customerId.toString()),
+                                                                        FutureBuilder<
+                                                                            UserModel?>(
+                                                                          future: FireStoreUtils.getUserProfile(controller
+                                                                              .reviewList[index]
+                                                                              .customerId
+                                                                              .toString()),
                                                                           builder:
                                                                               (BuildContext context, AsyncSnapshot<UserModel?> snapshot) {
                                                                             switch (snapshot.connectionState) {
@@ -454,9 +681,7 @@ class HomeView extends GetView<HomeController> {
                                                                                   return Text(
                                                                                     userModel!.fullName.toString(),
                                                                                     style: GoogleFonts.inter(
-                                                                                      color: themeChange.isDarkTheme()
-                                                                                          ? AppThemData.grey25
-                                                                                          : AppThemData.grey950,
+                                                                                      color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
                                                                                       fontSize: 14,
                                                                                       fontWeight: FontWeight.w600,
                                                                                     ),
@@ -465,24 +690,40 @@ class HomeView extends GetView<HomeController> {
                                                                             }
                                                                           },
                                                                         ),
-                                                                        const SizedBox(height: 4),
+                                                                        const SizedBox(
+                                                                            height:
+                                                                                4),
                                                                         StarRating(
-                                                                          onRatingChanged: (rating) {},
-                                                                          color: AppThemData.warning500,
-                                                                          starCount: 5,
-                                                                          rating: 4,
+                                                                          onRatingChanged:
+                                                                              (rating) {},
+                                                                          color:
+                                                                              AppThemData.warning500,
+                                                                          starCount:
+                                                                              5,
+                                                                          rating:
+                                                                              4,
                                                                         ),
-                                                                        const SizedBox(height: 4),
+                                                                        const SizedBox(
+                                                                            height:
+                                                                                4),
                                                                         Text(
-                                                                          controller.reviewList[index].comment.toString(),
-                                                                          maxLines: 2,
-                                                                          overflow: TextOverflow.ellipsis,
-                                                                          style: GoogleFonts.inter(
+                                                                          controller
+                                                                              .reviewList[index]
+                                                                              .comment
+                                                                              .toString(),
+                                                                          maxLines:
+                                                                              2,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                          style:
+                                                                              GoogleFonts.inter(
                                                                             color: themeChange.isDarkTheme()
                                                                                 ? AppThemData.grey25
                                                                                 : AppThemData.grey950,
-                                                                            fontSize: 12,
-                                                                            fontWeight: FontWeight.w400,
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight:
+                                                                                FontWeight.w400,
                                                                           ),
                                                                         ),
                                                                       ],
@@ -515,7 +756,9 @@ goOnlineDialog({
   return Container(
     padding: const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 20),
     decoration: BoxDecoration(
-        shape: BoxShape.rectangle, color: themeChange.isDarkTheme() ? Colors.black : Colors.white, borderRadius: BorderRadius.circular(20)),
+        shape: BoxShape.rectangle,
+        color: themeChange.isDarkTheme() ? Colors.black : Colors.white,
+        borderRadius: BorderRadius.circular(20)),
     child: Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -530,7 +773,9 @@ goOnlineDialog({
             style: GoogleFonts.inter(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+              color: themeChange.isDarkTheme()
+                  ? AppThemData.grey25
+                  : AppThemData.grey950,
             ),
           ),
         ),
@@ -544,7 +789,9 @@ goOnlineDialog({
             style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w400,
-              color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+              color: themeChange.isDarkTheme()
+                  ? AppThemData.grey25
+                  : AppThemData.grey950,
             ),
             textAlign: TextAlign.center,
           ),

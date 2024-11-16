@@ -1,4 +1,6 @@
 import 'package:driver/app/modules/create_drive_screen/controllers/create_driver_controller.dart';
+import 'package:driver/app/modules/create_own_driver/controllers/create_driver_controller.dart';
+import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/country_code_selector_view.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
@@ -17,14 +19,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class CreateDriverView extends StatelessWidget {
-  const CreateDriverView({super.key});
+class CreateOwnDriver extends StatelessWidget {
+  const CreateOwnDriver({super.key});
 
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
-    return GetBuilder<CreateDriverController>(
-        init: CreateDriverController(),
+    return GetBuilder<CreateOwnDriverController>(
+        init: CreateOwnDriverController(),
         builder: (controller) {
           return GestureDetector(
             onTap: () {
@@ -60,7 +62,7 @@ class CreateDriverView extends StatelessWidget {
                                         : "assets/icon/taxi.png")),
                           ),
                           Text(
-                            "Register as a owner".tr,
+                            "Create a new Driver".tr,
                             style: GoogleFonts.inter(
                                 fontSize: 24,
                                 color: themeChange.isDarkTheme()
@@ -69,7 +71,7 @@ class CreateDriverView extends StatelessWidget {
                                 fontWeight: FontWeight.w700),
                           ),
                           Text(
-                            "Create an account as driver owner.".tr,
+                            "Enter your driver details".tr,
                             style: GoogleFonts.inter(
                                 fontSize: 14,
                                 color: themeChange.isDarkTheme()
@@ -116,50 +118,32 @@ class CreateDriverView extends StatelessWidget {
                             isEnable: controller.loginType.value !=
                                 Constant.phoneLoginType,
                           ),
-                          TextFieldWithTitle(
-                            title: "Email Address",
-                            hintText: "Enter Email Address",
-                            prefixIcon: const Icon(Icons.email_outlined),
-                            keyboardType: TextInputType.emailAddress,
-                            controller: controller.emailController,
-                            isEnable: true,
-                            validator: (value) =>
-                                Constant().validateEmail(value),
+                          const SizedBox(height: 20),
+                          InkWell(
+                            onTap: () async {
+                              DateTime? datetime =
+                                  await Constant.selectDateOfBirth(
+                                      context, false);
+                              controller.dobController.text =
+                                  datetime!.dateMonthYear();
+                            },
+                            child: TextFieldWithTitle(
+                              title: "Date of Birth".tr,
+                              hintText: "Enter Date of Birth".tr,
+                              keyboardType: TextInputType.text,
+                              controller: controller.dobController,
+                              suffixIcon: const Icon(
+                                Icons.calendar_month_outlined,
+                                size: 20,
+                              ),
+                              isEnable: false,
+                              validator: (value) =>
+                                  value != null && value.isNotEmpty
+                                      ? null
+                                      : 'This field required'.tr,
+                            ),
                           ),
                           const SizedBox(height: 20),
-                          TextFieldWithTitle(
-                            title: "Password",
-                            hintText: "Enter your password",
-                            prefixIcon: const Icon(Icons.password),
-                            keyboardType: TextInputType.visiblePassword,
-                            controller: controller.passwordController,
-                            isEnable: true,
-                          ),
-                          // InkWell(
-                          //   onTap: () async {
-                          //     DateTime? datetime =
-                          //         await Constant.selectDateOfBirth(
-                          //             context, false);
-                          //     controller.dobController.text =
-                          //         datetime!.dateMonthYear();
-                          //   },
-                          //   child: TextFieldWithTitle(
-                          //     title: "Date of Birth".tr,
-                          //     hintText: "Enter Date of Birth".tr,
-                          //     keyboardType: TextInputType.text,
-                          //     controller: controller.dobController,
-                          //     suffixIcon: const Icon(
-                          //       Icons.calendar_month_outlined,
-                          //       size: 20,
-                          //     ),
-                          //     isEnable: false,
-                          //     validator: (value) =>
-                          //         value != null && value.isNotEmpty
-                          //             ? null
-                          //             : 'This field required'.tr,
-                          //   ),
-                          // ),
-                          // const SizedBox(height: 20),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,14 +224,25 @@ class CreateDriverView extends StatelessWidget {
                           Center(
                             child: RoundShapeButton(
                                 size: const Size(200, 45),
-                                title: "Create".tr,
+                                title: "Create Driver".tr,
                                 buttonColor: AppThemData.primary500,
                                 buttonTextColor: AppThemData.black,
                                 onTap: () {
                                   if (controller.formKey.value.currentState!
                                       .validate()) {
-                                    controller.createDriverAccount();
+                                    controller.createyourDriverAccount();
                                   }
+                                }),
+                          ),
+                          Center(
+                            child: RoundShapeButton(
+                                size: const Size(200, 45),
+                                title: "Get Drivers Details".tr,
+                                buttonColor: AppThemData.blueLight01,
+                                buttonTextColor: AppThemData.black,
+                                onTap: () async {
+                                  final model = await getDriverList();
+                                  print(model);
                                 }),
                           ),
                         ],

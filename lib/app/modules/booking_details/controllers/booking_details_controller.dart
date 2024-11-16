@@ -22,8 +22,8 @@ class BookingDetailsController extends GetxController {
 
   Future<String> getDistanceInKm() async {
     String km = '';
-    LatLng departureLatLong = LatLng(bookingModel.value.pickUpLocation!.latitude ?? 0.0, bookingModel.value.pickUpLocation!.longitude ?? 0.0);
-    LatLng destinationLatLong = LatLng(bookingModel.value.dropLocation!.latitude ?? 0.0, bookingModel.value.dropLocation!.longitude ?? 0.0);
+    LatLng departureLatLong = LatLng(bookingModel.value.ride?.pickupLocation?.coordinates?[1] ?? 0.0, bookingModel.value.ride?.pickupLocation?.coordinates?[0] ?? 0.0);
+    LatLng destinationLatLong = LatLng(bookingModel.value.ride?.dropoffLocation?.coordinates?[1] ?? 0.0, bookingModel.value.ride?.dropoffLocation?.coordinates?[0] ?? 0.0);
     MapModel? mapModel = await Constant.getDurationDistance(departureLatLong, destinationLatLong);
     if (mapModel != null) {
       print("KM : ${mapModel.toJson()}");
@@ -34,13 +34,13 @@ class BookingDetailsController extends GetxController {
 
   Future<bool> completeBooking(BookingModel bookingModels) async {
     BookingModel bookingModel = bookingModels;
-    bookingModel.bookingStatus = BookingStatus.bookingCompleted;
-    bookingModel.updateAt = Timestamp.now();
-    bookingModel.dropTime = Timestamp.now();
+    bookingModel.status = BookingStatus.bookingCompleted;
+    bookingModel.updatedAt = Timestamp.now().toString();
+    bookingModel.dropTime = Timestamp.now().toString();
     bool? isStarted = await FireStoreUtils.setBooking(bookingModel);
     ShowToastDialog.showToast("Your ride is completed....");
 
-    UserModel? receiverUserModel = await FireStoreUtils.getUserProfile(bookingModel.customerId.toString());
+    UserModel? receiverUserModel = await FireStoreUtils.getUserProfile(bookingModel.rideId.toString());
     Map<String, dynamic> playLoad = <String, dynamic>{"bookingId": bookingModel.id};
 
     await SendNotification.sendOneNotification(
