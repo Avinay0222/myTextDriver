@@ -301,7 +301,7 @@ void setLocation() async {
   Location().onLocationChanged.listen(
     (event) async {
       final response = await updateCurrentLocation(
-          event.latitude.toString(), event.latitude.toString());
+          "28.5961", "77.3683");
     },
   );
 }

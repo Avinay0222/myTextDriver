@@ -1,22 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/app/models/driver_user_model.dart';
-import 'package:driver/app/modules/create_own_driver/views/create_driver_view.dart';
 import 'package:driver/app/modules/home/views/home_view.dart';
-import 'package:driver/app/modules/permission/views/permission_view.dart';
-import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
-import 'package:driver/app/modules/verify_driver_otp/views/verify_otp_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
-import 'package:driver/extension/string_extensions.dart';
-import 'package:driver/utils/fire_store_utils.dart';
-import 'package:driver/utils/notification_service.dart';
-import 'package:driver/utils/preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-class CreateDriverController extends GetxController {
+class CreateOwnDriverController extends GetxController {
   Rx<GlobalKey<FormState>> formKey = GlobalKey<FormState>().obs;
 
   TextEditingController countryCodeController =
@@ -52,26 +42,24 @@ class CreateDriverController extends GetxController {
     update();
   }
 
-  createDriverAccount() async {
+  createyourDriverAccount() async {
     ShowToastDialog.showLoader("please_wait".tr);
 
     Map<String, dynamic> driverMap = {
       "name": nameController.value.text,
       "phone": phoneNumberController.value.text,
-      "email": emailController.text,
-      "password": passwordController.text,
+      "date_of_birth": dobController.text,
       "gender": selectedGender.value == 1 ? "Male" : "Female"
     };
 
     try {
       ShowToastDialog.showLoader("please_wait".tr);
 
-      final responseData = await createNewDriverAccount(driverMap);
+      final responseData = await createYourDriverAccount(driverMap);
 
-      if (responseData["status"] == true) {
-        List<String> otp = responseData["msg"].toString().split(" ");
-        Get.to(() =>  DriverVerifyOtpView(otp: otp.last, email: emailController.text,));
-      }
+      // if (responseData["status"] == true) {
+      //   Get.to(() => const HomeView());
+      // }
 
       ShowToastDialog.closeLoader();
 

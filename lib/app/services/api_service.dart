@@ -53,6 +53,26 @@ Future<Map<String, dynamic>> verifyOtp(String otp, String mobileNumber) async {
   }
 }
 
+Future<Map<String, dynamic>> verifyDriverOtp(String otp, String email) async {
+  final Map<String, String> payload = {
+    "otp": otp,
+    "email": email,
+  };
+
+  final response = await http.post(
+    Uri.parse(baseURL + verifyDriverOTP),
+    headers: {"Content-Type": "application/json"},
+    body: jsonEncode(payload),
+  );
+
+  if (response.statusCode == 200) {
+    Preferences.setFcmToken(jsonDecode(response.body)["token"]);
+    return jsonDecode(response.body);
+  } else {
+    throw Exception('Failed to verify OTP: ${response.reasonPhrase}');
+  }
+}
+
 Future<Map<String, dynamic>> createNewAccount(
     String name, String gender, String token) async {
   final Map<String, String> payload = {
@@ -78,6 +98,24 @@ Future<Map<String, dynamic>> createNewDriverAccount(
     Map<String, dynamic> map) async {
   final response = await http.post(
     Uri.parse(baseURL + complpeteSignUpEndpoint),
+    headers: {
+      "Content-Type": "application/json",
+      "token": await Preferences.getFcmToken()
+    },
+    body: jsonEncode(map),
+  );
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw Exception('Failed to Create Account: ${response.reasonPhrase}');
+  }
+}
+
+Future<Map<String, dynamic>> createYourDriverAccount(
+    Map<String, dynamic> map) async {
+  final response = await http.post(
+    Uri.parse(baseURL + createDriverAcc),
     headers: {
       "Content-Type": "application/json",
       "token": await Preferences.getFcmToken()
@@ -339,5 +377,22 @@ Future<List<BookingModel>> getRequest() async {
     return listModel;
   } else {
     return [];
+  }
+}
+
+Future<Map<String, dynamic>> getDriverList() async {
+  final response = await http.get(
+    Uri.parse(baseURL + getDriverListAPI),
+    headers: {
+      "Content-Type": "application/json",
+      "token": await Preferences.getFcmToken()
+    },
+  );
+
+  if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
+    return jsonDecode(response.body);
+    ;
+  } else {
+    return {};
   }
 }
