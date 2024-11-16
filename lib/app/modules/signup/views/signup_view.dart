@@ -96,8 +96,7 @@ class SignupView extends StatelessWidget {
                             prefixIcon: const Icon(Icons.email_outlined),
                             keyboardType: TextInputType.emailAddress,
                             controller: controller.emailController,
-                            isEnable: controller.loginType.value ==
-                                Constant.phoneLoginType,
+                            isEnable: true,
                             validator: (value) =>
                                 Constant().validateEmail(value),
                           ),

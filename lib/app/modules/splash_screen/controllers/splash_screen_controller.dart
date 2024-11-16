@@ -49,7 +49,7 @@ class SplashScreenController extends GetxController {
           }
         } else {
           if (userModel != null && userModel.fullName == null) {
-            Get.offAll(const SignupView());
+            Get.offAll(const LoginView());
           }else{
             Get.offAll(const VerifyDocumentsView(isFromDrawer: false));
           }

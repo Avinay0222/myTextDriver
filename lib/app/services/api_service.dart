@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:driver/app/models/booking_model.dart';
 import 'package:driver/app/models/docsModel.dart';
 import 'package:driver/app/models/driver_user_model.dart';
-import 'package:driver/app/models/user_model.dart';
+import 'package:driver/app/models/my_driver_model.dart';
 import 'package:driver/constant/api_constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/utils/preferences.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 
@@ -97,7 +95,7 @@ Future<Map<String, dynamic>> createNewAccount(
 Future<Map<String, dynamic>> createNewDriverAccount(
     Map<String, dynamic> map) async {
   final response = await http.post(
-    Uri.parse(baseURL + complpeteSignUpEndpoint),
+    Uri.parse(baseURL + OwnerSignUP),
     headers: {
       "Content-Type": "application/json",
       "token": await Preferences.getFcmToken()
@@ -269,11 +267,11 @@ Future<bool> uploadDriverDocumentImageToStorage(DocsModel model) async {
   }
 }
 
-Future<bool> updateCurrentLocation(String latitude, String longitude) async {
+Future<bool> updateCurrentLocationAPI(String latitude, String longitude) async {
   Map<String, dynamic> map = {
     "latitude": latitude,
     "longitude": longitude,
-    "fcmToken": FirebaseMessaging.instance.getToken(),
+    "fcmToken": await Preferences.getFcmToken(),
   };
 
   final response = await http.put(
@@ -353,7 +351,8 @@ Future<bool> acceptRideAPI(String ride_id) async {
   String token = await Preferences.getFcmToken();
   Map<String, dynamic> map = {"ride_id": ride_id};
   final response = await http.put(Uri.parse(baseURL + acceptRide),
-      headers: {"Content-Type": "application/json", "token": token}, body: map);
+      headers: {"Content-Type": "application/json", 
+      "token": token}, body: jsonEncode(map));
 
   if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
     return jsonDecode(response.body)["data"] == "offline" ? false : true;
@@ -380,7 +379,7 @@ Future<List<BookingModel>> getRequest() async {
   }
 }
 
-Future<Map<String, dynamic>> getDriverList() async {
+Future<List<MyDriverModel>> getDriverList() async {
   final response = await http.get(
     Uri.parse(baseURL + getDriverListAPI),
     headers: {
@@ -390,9 +389,9 @@ Future<Map<String, dynamic>> getDriverList() async {
   );
 
   if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
-    return jsonDecode(response.body);
-    ;
+    return List<MyDriverModel>.from(jsonDecode(response.body)["data"]
+        .map((e) => MyDriverModel.fromJson(e)));
   } else {
-    return {};
+    return [];
   }
 }

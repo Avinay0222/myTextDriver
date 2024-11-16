@@ -241,7 +241,8 @@ class CreateOwnDriver extends StatelessWidget {
                                 buttonColor: AppThemData.blueLight01,
                                 buttonTextColor: AppThemData.black,
                                 onTap: () async {
-                                      await getDriverList();
+                                  final model = await getDriverList();
+                                  print(model);
                                 }),
                           ),
                         ],

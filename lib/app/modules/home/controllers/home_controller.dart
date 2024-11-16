@@ -295,13 +295,15 @@ class HomeController extends GetxController {
       print('Disconnected from socket');
     });
   }
-}
 
-void setLocation() async {
-  Location().onLocationChanged.listen(
-    (event) async {
-      final response = await updateCurrentLocation(
-          "28.5961", "77.3683");
-    },
-  );
+  void setLocation() async {
+    Location location = Location();
+    LocationData data = await location.getLocation();
+    try {
+      await updateCurrentLocationAPI(
+          data.latitude.toString(), data.longitude.toString());
+    } catch (e) {
+      print(e);
+    }
+  }
 }
