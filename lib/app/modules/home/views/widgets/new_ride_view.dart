@@ -128,9 +128,14 @@ class NewRideView extends StatelessWidget {
                   // CachedNetworkImage(
                   //   imageUrl: bookingModel == null ? Constant.profileConstant :" bookingModel!.vehicleType!.image",
                   // ),
-                  InkWell(
-                    child: Text("Accept Ride"),
-                    onTap: () => acceptRideAPI(bookingModel?.rideId ?? ""),
+                  RoundShapeButton(
+                    title: "Accept Ride",
+                    buttonColor: AppThemData.blueLight01,
+                    buttonTextColor: AppThemData.black,
+                    onTap: () {
+                      acceptRideAPI(bookingModel?.rideId ?? "");
+                    },
+                    size: Size(Responsive.width(40, context), 42),
                   ),
                   const SizedBox(width: 12),
                   Expanded(

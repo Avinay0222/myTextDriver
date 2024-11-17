@@ -96,8 +96,7 @@ class SignupView extends StatelessWidget {
                             prefixIcon: const Icon(Icons.email_outlined),
                             keyboardType: TextInputType.emailAddress,
                             controller: controller.emailController,
-                            isEnable: controller.loginType.value ==
-                                Constant.phoneLoginType,
+                            isEnable: true,
                             validator: (value) =>
                                 Constant().validateEmail(value),
                           ),
@@ -253,16 +252,6 @@ class SignupView extends StatelessWidget {
                                         controller.userModel.value.fcmToken ??
                                             "");
                                   }
-                                }),
-                          ),
-                          Center(
-                            child: RoundShapeButton(
-                                size: const Size(200, 45),
-                                title: "Regisrer as an owner".tr,
-                                buttonColor: AppThemData.blueLight01,
-                                buttonTextColor: AppThemData.black,
-                                onTap: () {
-                                  Get.to(() => const CreateDriverView());
                                 }),
                           ),
                         ],
