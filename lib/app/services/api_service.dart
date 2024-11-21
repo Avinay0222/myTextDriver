@@ -384,6 +384,29 @@ Stream<List<BookingModel>> getRequest() async* {
   }
 }
 
+Stream<List<RideData>> getActiveRidesRequest() async* {
+  while (true) {
+    final response = await http.get(
+      Uri.parse(baseURL + getActiveRides),
+      headers: {
+        "Content-Type": "application/json",
+        "token": await Preferences.getFcmToken()
+      },
+    );
+
+    if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
+      List<RideData> listModel = (jsonDecode(response.body)["data"] as List)
+          .map((e) => RideData.fromJson(e))
+          .toList();
+      yield listModel; // {{ edit_1 }}
+    } else {
+      yield []; // {{ edit_2 }}
+    }
+    await Future.delayed(Duration(
+        seconds: 5)); // Delay for 5 seconds before making the next request
+  }
+}
+
 Future<List<MyDriverModel>> getDriverList() async {
   final response = await http.get(
     Uri.parse(baseURL + getDriverListAPI),
