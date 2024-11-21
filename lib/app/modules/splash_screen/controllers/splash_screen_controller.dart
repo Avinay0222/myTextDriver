@@ -41,11 +41,15 @@ class SplashScreenController extends GetxController {
         DriverUserModel? userModel = await Preferences.getDriverUserModel();
 
         if (userModel != null && userModel.isVerified == true) {
-          bool permissionGiven = await Constant.isPermissionApplied();
-          if (permissionGiven) {
+          try {
+            bool permissionGiven = await Constant.isPermissionApplied();
+            if (permissionGiven) {
+              Get.offAll(const HomeView());
+            } else {
+              Get.offAll(const PermissionView());
+            }
+          } catch (e) {
             Get.offAll(const HomeView());
-          } else {
-            Get.offAll(const PermissionView());
           }
         } else {
           if (userModel != null && userModel.fullName == null) {

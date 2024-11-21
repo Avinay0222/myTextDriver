@@ -4,13 +4,15 @@ import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+String globalToken = '';
+
 class Preferences {
   static const languageCodeKey = "languageCodeKey";
   static const themKey = "themKey";
   static const isFinishOnBoardingKey = "isFinishOnBoardingKey";
   static const String userLoginStatus = "USER_LOGIN_STATUS";
   static const String fcmToken = "FCM_TOKEN";
-
+  
   static DriverUserModel? userModel;
 
   static Future<bool> getBoolean(String key) async {
@@ -55,7 +57,8 @@ class Preferences {
 
   static Future<String> getFcmToken() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    return pref.getString(fcmToken) ?? "";
+    globalToken=pref.getString(fcmToken) ?? "";
+    return globalToken;
   }
 
   static Future<void> setFcmToken(String token) async {

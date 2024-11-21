@@ -351,8 +351,8 @@ Future<bool> acceptRideAPI(String ride_id) async {
   String token = await Preferences.getFcmToken();
   Map<String, dynamic> map = {"ride_id": ride_id};
   final response = await http.put(Uri.parse(baseURL + acceptRide),
-      headers: {"Content-Type": "application/json", 
-      "token": token}, body: jsonEncode(map));
+      headers: {"Content-Type": "application/json", "token": token},
+      body: jsonEncode(map));
 
   if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
     return jsonDecode(response.body)["data"] == "offline" ? false : true;
@@ -361,21 +361,26 @@ Future<bool> acceptRideAPI(String ride_id) async {
   }
 }
 
-Future<List<BookingModel>> getRequest() async {
-  final response = await http.get(
-    Uri.parse(baseURL + getRideRequest),
-    headers: {
-      "Content-Type": "application/json",
-      "token": await Preferences.getFcmToken()
-    },
-  );
+Stream<List<BookingModel>> getRequest() async* {
+  while (true) {
+    final response = await http.get(
+      Uri.parse(baseURL + getRideRequest),
+      headers: {
+        "Content-Type": "application/json",
+        "token": await Preferences.getFcmToken()
+      },
+    );
 
-  if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
-    List<BookingModel> listModel = List<BookingModel>.from(
-        jsonDecode(response.body)["data"].map((e) => BookingModel.fromJson(e)));
-    return listModel;
-  } else {
-    return [];
+    if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
+      List<BookingModel> listModel = List<BookingModel>.from(
+          jsonDecode(response.body)["data"]
+              .map((e) => BookingModel.fromJson(e)));
+      yield listModel; // {{ edit_1 }}
+    } else {
+      yield []; // {{ edit_2 }}
+    }
+    await Future.delayed(Duration(
+        seconds: 5)); // Delay for 5 seconds before making the next request
   }
 }
 
