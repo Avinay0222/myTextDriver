@@ -200,6 +200,67 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget buildBookingStream(HomeController controller) {
+    // Visibility(
+    //   visible:
+    //       controller
+    //           .isOnline
+    //           .value,
+    //   child: StreamBuilder<
+    //           List<
+    //               BookingModel>>(
+    //       future:
+    //           getRequest(),
+    //       builder: (context,
+    //           snapshot) {
+    //         log("State : ${snapshot.connectionState}");
+    //         if (snapshot
+    //                 .connectionState ==
+    //             ConnectionState
+    //                 .waiting) {
+    //           return Constant
+    //               .loader();
+    //         }
+    //         if (!snapshot
+    //                 .hasData ||
+    //             (snapshot.data?.isEmpty ??
+    //                 true)) {
+    //           return Container();
+    //         } else {
+    //           BookingModel
+    //               bookingModel =
+    //               snapshot
+    //                   .data!
+    //                   .first;
+    //           return Column(
+    //             crossAxisAlignment:
+    //                 CrossAxisAlignment.start,
+    //             mainAxisAlignment:
+    //                 MainAxisAlignment.start,
+    //             children: [
+    //               Text(
+    //                 'New Ride'.tr,
+    //                 style:
+    //                     GoogleFonts.inter(
+    //                   color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+    //                   fontSize: 18,
+    //                   fontWeight: FontWeight.w600,
+    //                   height: 0.08,
+    //                 ),
+    //               ),
+    //               const SizedBox(
+    //                   height: 20),
+    //               NewRideView(
+    //                 bookingModel:
+    //                     bookingModel,
+    //               ),
+    //               const SizedBox(
+    //                   height: 4),
+    //             ],
+    //           );
+    //         }
+    //       }),
+    // ),
+
     return Visibility(
       visible: controller.isOnline.value,
       child: StreamBuilder<List<BookingModel>>(
@@ -212,14 +273,37 @@ class HomeView extends GetView<HomeController> {
           } else if (snapshot.hasData) {
             List<BookingModel> bookings = snapshot.data!;
             if (bookings.isNotEmpty) {
-              return ListView.builder(
-                itemCount: bookings.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(bookings[index].rideId!),
-                    subtitle: Text(bookings[index].status!),
-                  );
-                },
+              return SingleChildScrollView(
+                child: Column(
+                  children: bookings.map((booking) {
+                    BookingModel bookingModel = snapshot.data!.first;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          'New Ride'.tr,
+                          style: GoogleFonts.inter(
+                            // color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            height: 0.08,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        NewRideView(
+                          bookingModel: bookingModel,
+                        ),
+                        const SizedBox(height: 4),
+                      ],
+                    );
+
+                    // return ListTile(
+                    //   title: Text(booking.rideId!),
+                    //   subtitle: Text(booking.status!),
+                    // );
+                  }).toList(),
+                ),
               );
             } else {
               return Center(child: Text('No bookings available'));

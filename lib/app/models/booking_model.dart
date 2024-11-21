@@ -44,13 +44,15 @@ class BookingModel {
         version: json["__v"],
         ride: json["ride"] != null ? Ride.fromJson(json["ride"]) : null,
         passengers: json["passenger"] != null
-            ? List<Passenger>.from(json["passenger"].map((x) => Passenger.fromJson(x)))
+            ? List<Passenger>.from(
+                json["passenger"].map((x) => Passenger.fromJson(x)))
             : [],
         drivers: json["driver"] != null
             ? List<Driver>.from(json["driver"].map((x) => Driver.fromJson(x)))
             : [],
         dropTime: json["dropTime"],
-        rejectedDriverId: List<String>.from(json['rejectedDriverId'] ?? []), // Add this line
+        rejectedDriverId:
+            List<String>.from(json['rejectedDriverId'] ?? []), // Add this line
         cancelledBy: json["cancelledBy"], // Add this line
       );
 
@@ -84,7 +86,7 @@ class Ride {
   String? dropoffAddress; // Corresponds to dropoff_address
   String? distance; // Corresponds to distance
   String? fareAmount; // Corresponds to fare_amount
-  double? durationInMinutes; // Corresponds to duration_in_minutes
+  int? durationInMinutes; // Corresponds to duration_in_minutes
   String? rideStatus; // Corresponds to status
   String? couponId; // Corresponds to coupon_id
   String? otp; // Corresponds to otp
@@ -176,7 +178,8 @@ class Location {
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
         type: json["type"],
-        coordinates: List<double>.from(json["coordinates"].map((x) => x.toDouble())),
+        coordinates:
+            List<double>.from(json["coordinates"].map((x) => x.toDouble())),
       );
 
   Map<String, dynamic> toJson() => {
@@ -229,7 +232,9 @@ class Passenger {
         role: json["role"],
         rideStatus: json["ride_status"],
         languages: List<String>.from(json["languages"].map((x) => x)),
-        location: json["location"] != null ? Location.fromJson(json["location"]) : null,
+        location: json["location"] != null
+            ? Location.fromJson(json["location"])
+            : null,
         createdAt: json["createdAt"].toString(),
         updatedAt: json["updatedAt"].toString(),
         gender: json["gender"],
@@ -297,7 +302,9 @@ class Driver {
         role: json["role"],
         rideStatus: json["ride_status"],
         languages: List<String>.from(json["languages"].map((x) => x)),
-        location: json["location"] != null ? Location.fromJson(json["location"]) : null,
+        location: json["location"] != null
+            ? Location.fromJson(json["location"])
+            : null,
         createdAt: json["createdAt"].toString(),
         updatedAt: json["updatedAt"].toString(),
         gender: json["gender"],

@@ -372,9 +372,9 @@ Stream<List<BookingModel>> getRequest() async* {
     );
 
     if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
-      List<BookingModel> listModel = List<BookingModel>.from(
-          jsonDecode(response.body)["data"]
-              .map((e) => BookingModel.fromJson(e)));
+      List<BookingModel> listModel = (jsonDecode(response.body)["data"] as List)
+          .map((e) => BookingModel.fromJson(e))
+          .toList();
       yield listModel; // {{ edit_1 }}
     } else {
       yield []; // {{ edit_2 }}
