@@ -29,3 +29,10 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
+
+// dependencies {
+//     implementation 'com.ideativemind.driver:your-library:version' {
+//         exclude group: 'com.ideativemind.driver', module: 'BuildConfig'
+//     }
+//     // other dependencies...
+// }
