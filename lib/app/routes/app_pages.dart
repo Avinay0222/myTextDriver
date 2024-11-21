@@ -158,11 +158,11 @@ class AppPages {
       page: () => const EditProfileView(),
       binding: EditProfileBinding(),
     ),
-    GetPage(
-      name: _Paths.MY_WALLET,
-      page: () => const MyWalletView(),
-      binding: MyWalletBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.MY_WALLET,
+    //   page: () => const MyWalletView(),
+    //   binding: MyWalletBinding(),
+    // ),
     GetPage(
       name: _Paths.LANGUAGE,
       page: () => const LanguageView(),
