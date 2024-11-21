@@ -35,7 +35,12 @@ class ActiveRideView extends StatelessWidget {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     return InkWell(
       onTap: () {
-        // Handle tap event
+        //  BookingDetailsController detailsController =
+        //     Get.put(BookingDetailsController());
+        // detailsController.bookingId.value = bookingModel!.id ?? '';
+        // detailsController.bookingModel.value = bookingModel!;
+        Get.to(() => const BookingDetailsView());
+     
       },
       child: Container(
         width: MediaQuery.of(context).size.width - 40,

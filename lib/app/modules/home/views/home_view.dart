@@ -279,11 +279,6 @@ class HomeView extends GetView<HomeController> {
                           const SizedBox(height: 4),
                         ],
                       );
-
-                      // return ListTile(
-                      //   title: Text(booking.rideId!),
-                      //   subtitle: Text(booking.status!),
-                      // );
                     }).toList(),
                   ),
                 );

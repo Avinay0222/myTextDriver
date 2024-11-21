@@ -328,7 +328,6 @@ class Driver {
       };
 }
 
-
 class RideResponse {
   final bool status;
   final String msg;
@@ -426,7 +425,8 @@ class RideData {
       paymentStatus: json['payment_status'],
       paymentMode: json['payment_mode'],
       startTime: DateTime.parse(json['start_time']),
-      endTime: json['end_time'] != null ? DateTime.parse(json['end_time']) : null,
+      endTime:
+          json['end_time'] != null ? DateTime.parse(json['end_time']) : null,
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
       user: User.fromJson(json['user']),
@@ -460,30 +460,6 @@ class RideData {
     };
   }
 }
-
-// class Location {
-//   final String type;
-//   final List<double> coordinates;
-
-//   Location({
-//     required this.type,
-//     required this.coordinates,
-//   });
-
-//   factory Location.fromJson(Map<String, dynamic> json) {
-//     return Location(
-//       type: json['type'],
-//       coordinates: List<double>.from(json['coordinates']),
-//     );
-//   }
-
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'type': type,
-//       'coordinates': coordinates,
-//     };
-//   }
-// }
 
 class FareAmount {
   final String numberDecimal;
