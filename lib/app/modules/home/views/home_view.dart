@@ -312,61 +312,119 @@ class HomeView extends GetView<HomeController> {
                                                                   controller
                                                                       .isOnline
                                                                       .value,
-                                                              child: FutureBuilder<
-                                                                      List<
-                                                                          BookingModel>>(
-                                                                  future:
-                                                                      getRequest(),
-                                                                  builder: (context,
-                                                                      snapshot) {
-                                                                    log("State : ${snapshot.connectionState}");
-                                                                    if (snapshot
-                                                                            .connectionState ==
-                                                                        ConnectionState
-                                                                            .waiting) {
-                                                                      return Constant
-                                                                          .loader();
-                                                                    }
-                                                                    if (!snapshot
-                                                                            .hasData ||
-                                                                        (snapshot.data?.isEmpty ??
-                                                                            true)) {
-                                                                      return Container();
-                                                                    } else {
-                                                                      BookingModel
-                                                                          bookingModel =
-                                                                          snapshot
-                                                                              .data!
-                                                                              .first;
-                                                                      return Column(
-                                                                        crossAxisAlignment:
-                                                                            CrossAxisAlignment.start,
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.start,
-                                                                        children: [
-                                                                          Text(
-                                                                            'New Ride'.tr,
-                                                                            style:
-                                                                                GoogleFonts.inter(
-                                                                              color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
-                                                                              fontSize: 18,
-                                                                              fontWeight: FontWeight.w600,
-                                                                              height: 0.08,
-                                                                            ),
-                                                                          ),
-                                                                          const SizedBox(
-                                                                              height: 20),
-                                                                          NewRideView(
-                                                                            bookingModel:
-                                                                                bookingModel,
-                                                                          ),
-                                                                          const SizedBox(
-                                                                              height: 4),
-                                                                        ],
+                                                              child: StreamBuilder<
+                                                                  List<
+                                                                      BookingModel>>(
+                                                                stream:
+                                                                    getRequest(),
+                                                                builder: (context,
+                                                                    snapshot) {
+                                                                  if (snapshot
+                                                                          .connectionState ==
+                                                                      ConnectionState
+                                                                          .waiting) {
+                                                                    return Center(
+                                                                        child:
+                                                                            CircularProgressIndicator());
+                                                                  } else if (snapshot
+                                                                      .hasError) {
+                                                                    return Text(
+                                                                        'Error: ${snapshot.error}');
+                                                                  } else if (snapshot
+                                                                      .hasData) {
+                                                                    List<BookingModel>
+                                                                        bookings =
+                                                                        snapshot
+                                                                            .data!;
+                                                                    if (bookings
+                                                                        .isNotEmpty) {
+                                                                      return ListView
+                                                                          .builder(
+                                                                        itemCount:
+                                                                            bookings.length,
+                                                                        itemBuilder:
+                                                                            (context,
+                                                                                index) {
+                                                                          return ListTile(
+                                                                            title:
+                                                                                Text(bookings[index].rideId!),
+                                                                            subtitle:
+                                                                                Text(bookings[index].status!),
+                                                                          );
+                                                                        },
                                                                       );
+                                                                    } else {
+                                                                      return Center(
+                                                                          child:
+                                                                              Text('No bookings available'));
                                                                     }
-                                                                  }),
+                                                                  }
+                                                                  return Container();
+                                                                },
+                                                              ),
                                                             ),
+
+                                                            // Visibility(
+                                                            //   visible:
+                                                            //       controller
+                                                            //           .isOnline
+                                                            //           .value,
+                                                            //   child: StreamBuilder<
+                                                            //           List<
+                                                            //               BookingModel>>(
+                                                            //       future:
+                                                            //           getRequest(),
+                                                            //       builder: (context,
+                                                            //           snapshot) {
+                                                            //         log("State : ${snapshot.connectionState}");
+                                                            //         if (snapshot
+                                                            //                 .connectionState ==
+                                                            //             ConnectionState
+                                                            //                 .waiting) {
+                                                            //           return Constant
+                                                            //               .loader();
+                                                            //         }
+                                                            //         if (!snapshot
+                                                            //                 .hasData ||
+                                                            //             (snapshot.data?.isEmpty ??
+                                                            //                 true)) {
+                                                            //           return Container();
+                                                            //         } else {
+                                                            //           BookingModel
+                                                            //               bookingModel =
+                                                            //               snapshot
+                                                            //                   .data!
+                                                            //                   .first;
+                                                            //           return Column(
+                                                            //             crossAxisAlignment:
+                                                            //                 CrossAxisAlignment.start,
+                                                            //             mainAxisAlignment:
+                                                            //                 MainAxisAlignment.start,
+                                                            //             children: [
+                                                            //               Text(
+                                                            //                 'New Ride'.tr,
+                                                            //                 style:
+                                                            //                     GoogleFonts.inter(
+                                                            //                   color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                                                            //                   fontSize: 18,
+                                                            //                   fontWeight: FontWeight.w600,
+                                                            //                   height: 0.08,
+                                                            //                 ),
+                                                            //               ),
+                                                            //               const SizedBox(
+                                                            //                   height: 20),
+                                                            //               NewRideView(
+                                                            //                 bookingModel:
+                                                            //                     bookingModel,
+                                                            //               ),
+                                                            //               const SizedBox(
+                                                            //                   height: 4),
+                                                            //             ],
+                                                            //           );
+                                                            //         }
+                                                            //       }),
+                                                            // ),
+
                                                             Obx(
                                                               () => Visibility(
                                                                 visible:

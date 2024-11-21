@@ -1,4 +1,3 @@
-import 'package:driver/app/modules/create_drive_screen/views/create_driver_view.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/country_code_selector_view.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
@@ -254,17 +253,7 @@ class SignupView extends StatelessWidget {
                                   }
                                 }),
                           ),
-                          Center(
-                            child: RoundShapeButton(
-                                size: const Size(200, 45),
-                                title: "Regisrer as an owner".tr,
-                                buttonColor: AppThemData.blueLight01,
-                                buttonTextColor: AppThemData.black,
-                                onTap: () {
-                                  Get.to(() => const CreateDriverView());
-                                }),
-                          ),
-                        ],
+                          ],
                       ),
                     ),
                   ),
