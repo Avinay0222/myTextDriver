@@ -16,6 +16,7 @@ const String getDriveModel = "/driver/preview/vehicle_docs"; //GET
 const String setDriveModel = "/driver/vehicle/docs/save"; //POST
 const String driveOnlineStatus = "/driver/ride_status"; //PUT
 const String getRideRequest = "/driver/passenger/ride/request"; //GET
+const String getActiveRides = "/driver/ride/accepted/list"; //GET
 const String acceptRide = "/driver/ride/request/accepted"; //PUT
 const String createDriverAcc = "/driver/owner/driver/create"; //POST
 const String verifyDriverOTP = "/driver/owner/confirmation"; //POST

@@ -372,9 +372,32 @@ Stream<List<BookingModel>> getRequest() async* {
     );
 
     if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
-      List<BookingModel> listModel = List<BookingModel>.from(
-          jsonDecode(response.body)["data"]
-              .map((e) => BookingModel.fromJson(e)));
+      List<BookingModel> listModel = (jsonDecode(response.body)["data"] as List)
+          .map((e) => BookingModel.fromJson(e))
+          .toList();
+      yield listModel; // {{ edit_1 }}
+    } else {
+      yield []; // {{ edit_2 }}
+    }
+    await Future.delayed(Duration(
+        seconds: 5)); // Delay for 5 seconds before making the next request
+  }
+}
+
+Stream<List<RideData>> getActiveRidesRequest() async* {
+  while (true) {
+    final response = await http.get(
+      Uri.parse(baseURL + getActiveRides),
+      headers: {
+        "Content-Type": "application/json",
+        "token": await Preferences.getFcmToken()
+      },
+    );
+
+    if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
+      List<RideData> listModel = (jsonDecode(response.body)["data"] as List)
+          .map((e) => RideData.fromJson(e))
+          .toList();
       yield listModel; // {{ edit_1 }}
     } else {
       yield []; // {{ edit_2 }}

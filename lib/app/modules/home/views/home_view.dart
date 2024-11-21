@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:driver/app/models/booking_model.dart';
 import 'package:driver/app/models/user_model.dart';
+import 'package:driver/app/modules/home/views/widgets/active_ride_view.dart';
 import 'package:driver/app/modules/home/views/widgets/chart_view.dart';
 import 'package:driver/app/modules/home/views/widgets/drawer_view.dart';
 import 'package:driver/app/modules/home/views/widgets/new_ride_view.dart';
@@ -133,6 +134,7 @@ class HomeView extends GetView<HomeController> {
           children: [
             buildEarningsContainer(controller, themeChange),
             const SizedBox(height: 16),
+            buildActiveBookingStream(controller),
             buildBookingStream(controller),
             // ... other widgets ...
           ],
@@ -199,36 +201,96 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  Widget buildBookingStream(HomeController controller) {
-    return Visibility(
-      visible: controller.isOnline.value,
-      child: StreamBuilder<List<BookingModel>>(
-        stream: getRequest(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (snapshot.hasData) {
-            List<BookingModel> bookings = snapshot.data!;
-            if (bookings.isNotEmpty) {
-              return ListView.builder(
-                itemCount: bookings.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(bookings[index].rideId!),
-                    subtitle: Text(bookings[index].status!),
-                  );
-                },
-              );
-            } else {
-              return Center(child: Text('No bookings available'));
+  Widget buildActiveBookingStream(HomeController controller) {
+    return Column(children: [
+      const Text("Active Rides"),
+      Visibility(
+        visible: controller.isOnline.value,
+        child: StreamBuilder<List<RideData>>(
+          stream: getActiveRidesRequest(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (snapshot.hasData) {
+              List<RideData> bookings = snapshot.data!;
+              if (bookings.isNotEmpty) {
+                return Row(
+                  children: bookings.map((booking) {
+                    RideData bookingModel = snapshot.data!.first;
+                    return ActiveRideView(
+                      bookingModel: bookingModel,
+                    );
+
+                    // return ListTile(
+                    //   title: Text(booking.rideId!),
+                    //   subtitle: Text(booking.status!),
+                    // );
+                  }).toList(),
+                );
+              } else {
+                return Center(child: Text('No bookings available'));
+              }
             }
-          }
-          return Container();
-        },
-      ),
-    );
+            return Container();
+          },
+        ),
+      )
+    ]);
+  }
+
+  Widget buildBookingStream(HomeController controller) {
+    return Column(children: [
+      const Text("New Rides"),
+      Visibility(
+        visible: controller.isOnline.value,
+        child: StreamBuilder<List<BookingModel>>(
+          stream: getRequest(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (snapshot.hasData) {
+              List<BookingModel> bookings = snapshot.data!;
+              if (bookings.isNotEmpty) {
+                return SingleChildScrollView(
+                  child: Column(
+                    children: bookings.map((booking) {
+                      BookingModel bookingModel = snapshot.data!.first;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            'New Ride'.tr,
+                            style: GoogleFonts.inter(
+                              // color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              height: 0.08,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          NewRideView(
+                            bookingModel: bookingModel,
+                          ),
+                          const SizedBox(height: 4),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                );
+              } else {
+                return Center(child: Text('No bookings available'));
+              }
+            }
+            return Container();
+          },
+        ),
+      )
+    ]);
   }
 }
 

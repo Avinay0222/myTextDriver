@@ -17,14 +17,20 @@ class BookingDetailsController extends GetxController {
   Rx<BookingModel> bookingModel = BookingModel().obs;
 
   getBookingDetails() async {
-    bookingModel.value = (await FireStoreUtils.getRideDetails(bookingId.value))!;
+    bookingModel.value =
+        (await FireStoreUtils.getRideDetails(bookingId.value)) as BookingModel;
   }
 
   Future<String> getDistanceInKm() async {
     String km = '';
-    LatLng departureLatLong = LatLng(bookingModel.value.ride?.pickupLocation?.coordinates?[1] ?? 0.0, bookingModel.value.ride?.pickupLocation?.coordinates?[0] ?? 0.0);
-    LatLng destinationLatLong = LatLng(bookingModel.value.ride?.dropoffLocation?.coordinates?[1] ?? 0.0, bookingModel.value.ride?.dropoffLocation?.coordinates?[0] ?? 0.0);
-    MapModel? mapModel = await Constant.getDurationDistance(departureLatLong, destinationLatLong);
+    LatLng departureLatLong = LatLng(
+        bookingModel.value.ride?.pickupLocation?.coordinates?[1] ?? 0.0,
+        bookingModel.value.ride?.pickupLocation?.coordinates?[0] ?? 0.0);
+    LatLng destinationLatLong = LatLng(
+        bookingModel.value.ride?.dropoffLocation?.coordinates?[1] ?? 0.0,
+        bookingModel.value.ride?.dropoffLocation?.coordinates?[0] ?? 0.0);
+    MapModel? mapModel = await Constant.getDurationDistance(
+        departureLatLong, destinationLatLong);
     if (mapModel != null) {
       print("KM : ${mapModel.toJson()}");
       km = mapModel.rows!.first.elements!.first.distance!.text!;
@@ -40,8 +46,11 @@ class BookingDetailsController extends GetxController {
     bool? isStarted = await FireStoreUtils.setBooking(bookingModel);
     ShowToastDialog.showToast("Your ride is completed....");
 
-    UserModel? receiverUserModel = await FireStoreUtils.getUserProfile(bookingModel.rideId.toString());
-    Map<String, dynamic> playLoad = <String, dynamic>{"bookingId": bookingModel.id};
+    UserModel? receiverUserModel =
+        await FireStoreUtils.getUserProfile(bookingModel.rideId.toString());
+    Map<String, dynamic> playLoad = <String, dynamic>{
+      "bookingId": bookingModel.id
+    };
 
     await SendNotification.sendOneNotification(
         type: "order",
@@ -51,7 +60,8 @@ class BookingDetailsController extends GetxController {
         senderId: FireStoreUtils.getCurrentUid(),
         bookingId: bookingModel.id.toString(),
         driverId: bookingModel.driverId.toString(),
-        body: 'Your ride has been successfully completed. Please take a moment to review your experience.',
+        body:
+            'Your ride has been successfully completed. Please take a moment to review your experience.',
         payload: playLoad);
 
     // Get.offAll(const HomeView());
