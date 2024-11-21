@@ -1,3 +1,4 @@
+import 'package:driver/app/modules/create_drive_screen/views/create_driver_view.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/theme/app_them_data.dart';
@@ -162,8 +163,6 @@ class LoginView extends StatelessWidget {
                                   Get.to(() => const CreateDriverView());
                                 }),
                           ),
-                        
-
                       // Padding(
                       //   padding: const EdgeInsets.only(top: 20, bottom: 20),
                       //   child: Row(
