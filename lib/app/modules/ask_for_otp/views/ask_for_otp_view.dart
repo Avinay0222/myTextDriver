@@ -1,3 +1,4 @@
+import 'package:driver/app/models/booking_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:driver/app/modules/otp_screen/views/otp_screen_view.dart';
@@ -12,32 +13,37 @@ import 'package:provider/provider.dart';
 import '../controllers/ask_for_otp_controller.dart';
 
 class AskForOtpView extends StatelessWidget {
-  const AskForOtpView({super.key});
+  final RideData rideData;
+  AskForOtpView({super.key, required this.rideData});
 
   @override
   Widget build(BuildContext context) {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     return GetX(
         init: AskForOtpController(),
-        builder: (controller) {
+        builder: (controllrrer) {
           return Scaffold(
-            backgroundColor: themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
+            backgroundColor: themeChange.isDarkTheme()
+                ? AppThemData.black
+                : AppThemData.white,
             body: Stack(
               children: [
                 SizedBox(
                   height: Responsive.height(80, context),
                   child: GoogleMap(
                     initialCameraPosition: CameraPosition(
-                      target: LatLng(controller.bookingModel.value.ride?.pickupLocation?.coordinates?[1] ?? 0.0, controller.bookingModel.value.ride?.pickupLocation?.coordinates?[0] ?? 0.0),
+                      target: LatLng(
+                          rideData.pickupLocation?.coordinates?[1] ?? 0.0,
+                          rideData.pickupLocation?.coordinates?[0] ?? 0.0),
                       zoom: 5,
                     ),
                     padding: const EdgeInsets.only(
                       top: 22.0,
                     ),
-                    polylines: Set<Polyline>.of(controller.polyLines.values),
-                    markers: Set<Marker>.of(controller.markers.values),
+                    polylines: Set<Polyline>.of(controllrrer.polyLines.values),
+                    markers: Set<Marker>.of(controllrrer.markers.values),
                     onMapCreated: (GoogleMapController mapController) {
-                      controller.mapController = mapController;
+                      controllrrer.mapController = mapController;
                     },
                   ),
                 ),
@@ -54,13 +60,15 @@ class AskForOtpView extends StatelessWidget {
                   snapSizes: const [0.31, 0.32, 0.34, 0.36, 0.38, 0.40, 0.42],
                   maxChildSize: 0.42,
                   minChildSize: 0.31,
-                  builder: (BuildContext context, ScrollController scrollController) {
+                  builder: (BuildContext context,
+                      ScrollController scrollController) {
                     return Container(
                       decoration: BoxDecoration(
                         color: AppThemData.white,
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      padding: const EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+                      padding: const EdgeInsets.only(
+                          top: 10, left: 20, right: 20, bottom: 20),
                       child: SingleChildScrollView(
                         controller: scrollController,
                         child: Column(
@@ -86,7 +94,8 @@ class AskForOtpView extends StatelessWidget {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(top: 16, bottom: 16),
+                              padding:
+                                  const EdgeInsets.only(top: 16, bottom: 16),
                               child: Text(
                                 'Do you want to start this Ride?'.tr,
                                 textAlign: TextAlign.center,
@@ -98,7 +107,8 @@ class AskForOtpView extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              'Ask the customer for an OTP so that you can start this ride'.tr,
+                              'Ask the customer for an OTP so that you can start this ride'
+                                  .tr,
                               textAlign: TextAlign.center,
                               style: GoogleFonts.inter(
                                 color: AppThemData.grey950,
@@ -124,7 +134,7 @@ class AskForOtpView extends StatelessWidget {
                                   buttonTextColor: AppThemData.black,
                                   onTap: () {
                                     Get.to(OtpScreenView(
-                                      bookingModel: controller.bookingModel.value,
+                                      bookingModel: rideData,
                                     ));
                                   },
                                   size: Size(Responsive.width(43, context), 42),

@@ -241,8 +241,19 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget buildBookingStream(HomeController controller) {
-    return Column(children: [
-      const Text("New Rides"),
+    return Column(
+      children: [
+      const SizedBox(height: 20),
+      Text(
+        'New Ride'.tr,
+        style: GoogleFonts.inter(
+          // color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          height: 0.08,
+        ),
+      ),
+      const SizedBox(height: 20),
       Visibility(
         visible: controller.isOnline.value,
         child: StreamBuilder<List<BookingModel>>(
@@ -263,16 +274,6 @@ class HomeView extends GetView<HomeController> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                            'New Ride'.tr,
-                            style: GoogleFonts.inter(
-                              // color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              height: 0.08,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
                           NewRideView(
                             bookingModel: bookingModel,
                           ),

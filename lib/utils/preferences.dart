@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:driver/app/models/booking_model.dart';
 import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,7 +13,9 @@ class Preferences {
   static const isFinishOnBoardingKey = "isFinishOnBoardingKey";
   static const String userLoginStatus = "USER_LOGIN_STATUS";
   static const String fcmToken = "FCM_TOKEN";
-  
+
+  static RideData? rideModule;
+
   static DriverUserModel? userModel;
 
   static Future<bool> getBoolean(String key) async {
@@ -57,7 +60,7 @@ class Preferences {
 
   static Future<String> getFcmToken() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    globalToken=pref.getString(fcmToken) ?? "";
+    globalToken = pref.getString(fcmToken) ?? "";
     return globalToken;
   }
 

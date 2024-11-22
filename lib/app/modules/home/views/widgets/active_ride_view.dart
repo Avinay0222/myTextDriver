@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/app/models/booking_model.dart';
+import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/models/user_model.dart';
 import 'package:driver/app/modules/booking_details/controllers/booking_details_controller.dart';
 import 'package:driver/app/modules/booking_details/views/booking_details_view.dart';
@@ -19,6 +20,7 @@ import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/theme/responsive.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
 import 'package:driver/utils/fire_store_utils.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -39,8 +41,9 @@ class ActiveRideView extends StatelessWidget {
         //     Get.put(BookingDetailsController());
         // detailsController.bookingId.value = bookingModel!.id ?? '';
         // detailsController.bookingModel.value = bookingModel!;
-        Get.to(() => const BookingDetailsView());
-     
+        Get.to(() => BookingDetailsView(
+              rideData: bookingModel!,
+            ));
       },
       child: Container(
         width: MediaQuery.of(context).size.width - 40,
@@ -50,9 +53,9 @@ class ActiveRideView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildHeader(themeChange),
-            const SizedBox(height: 12),
-            _buildActionRow(context, themeChange),
+            // _buildHeader(themeChange),
+            // const SizedBox(height: 12),
+            // _buildActionRow(context, themeChange),
             PickDropPointView(
               pickUpAddress: bookingModel?.pickupAddress ?? '',
               dropAddress: bookingModel?.dropoffAddress ?? '',
@@ -190,8 +193,7 @@ class ActiveRideView extends StatelessWidget {
       BuildContext context, DarkThemeProvider themeChange) {
     if ((bookingModel?.status ?? '') == BookingStatus.bookingPlaced) {
       return _buildBookingPlacedButtons(context, themeChange);
-    } else if ((bookingModel?.status ?? '') == BookingStatus.bookingAccepted &&
-        !bookingModel!.driverId!.contains(FireStoreUtils.getCurrentUid())) {
+    } else if (bookingModel!.driverId == Preferences.userModel!.id!) {
       return _buildBookingAcceptedButtons(context, themeChange);
     }
     return SizedBox.shrink(); // Return an empty widget if no buttons are needed
@@ -308,21 +310,22 @@ class ActiveRideView extends StatelessWidget {
           buttonTextColor:
               themeChange.isDarkTheme() ? AppThemData.white : AppThemData.black,
           onTap: () {
-            // Get.to(() => ReasonForCancelView(
-            //       bookingModel: bookingModel ?? RideData(),
-            //     ));
+            Get.to(() => ReasonForCancelView(
+                  bookingModel: bookingModel!,
+                ));
           },
-          size: Size(50, 42),
+          size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
         ),
         RoundShapeButton(
           title: "Pickup",
           buttonColor: AppThemData.primary500,
           buttonTextColor: AppThemData.black,
           onTap: () {
+            Preferences.rideModule = bookingModel;
             Get.toNamed(Routes.ASK_FOR_OTP,
                 arguments: {"bookingModel": bookingModel!});
           },
-          size: Size(50, 42),
+          size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
         )
       ],
     );
@@ -330,83 +333,61 @@ class ActiveRideView extends StatelessWidget {
 
   void _showCancelDialog(BuildContext context, DarkThemeProvider themeChange) {
     showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return CustomDialogBox(
-            themeChange: themeChange,
-            title: "Cancel Ride".tr,
-            negativeButtonColor: themeChange.isDarkTheme()
-                ? AppThemData.grey950
-                : AppThemData.grey50,
-            negativeButtonTextColor: themeChange.isDarkTheme()
-                ? AppThemData.grey50
-                : AppThemData.grey950,
-            positiveButtonColor: AppThemData.danger500,
-            positiveButtonTextColor: AppThemData.grey25,
-            descriptions: "Are you sure you want cancel this ride?".tr,
-            positiveString: "Cancel Ride".tr,
-            negativeString: "Cancel".tr,
-            positiveClick: () async {
-              // Navigator.pop(context);
-              // List rejectedId =
-              //     bookingModel!.rejectedDriverId ?? [];
-              // rejectedId
-              //     .add(FireStoreUtils.getCurrentUid());
-              // bookingModel!.status =
-              //     BookingStatus.bookingRejected;
-              // // bookingModel!.rejectedDriverId = rejectedId;
-              // bookingModel!.updatedAt =
-              //     Timestamp.now().toString();
-              // FireStoreUtils.setBooking(bookingModel!)
-              //     .then((value) async {
-              //   if (value == true) {
-              //     ShowToastDialog.showToast(
-              //         "Ride cancelled successfully!");
-              //     // DriverUserModel? driverModel =
-              //     //     await FireStoreUtils.getDriverUserProfile(bookingModel!.driverId.toString());
-              //     UserModel? receiverUserModel =
-              //         await FireStoreUtils.getUserProfile(
-              //             bookingModel!.rideId.toString());
-              //     Map<String, dynamic> playLoad =
-              //         <String, dynamic>{
-              //       "bookingId": bookingModel!.id
-              //     };
+        context: context,
+        builder: (BuildContext context) {
+          return CustomDialogBox(
+              themeChange: themeChange,
+              title: "Cancel Ride".tr,
+              negativeButtonColor: themeChange.isDarkTheme()
+                  ? AppThemData.grey950
+                  : AppThemData.grey50,
+              negativeButtonTextColor: themeChange.isDarkTheme()
+                  ? AppThemData.grey50
+                  : AppThemData.grey950,
+              positiveButtonColor: AppThemData.danger500,
+              positiveButtonTextColor: AppThemData.grey25,
+              descriptions: "Are you sure you want cancel this ride?".tr,
+              positiveString: "Cancel Ride".tr,
+              negativeString: "Cancel".tr,
+              positiveClick: () async {
+                Navigator.pop(context);
+                bool value = await cancelRide(bookingModel!.id!);
 
-              //     await SendNotification
-              //         .sendOneNotification(
-              //             type: "order",
-              //             token: receiverUserModel!.fcmToken
-              //                 .toString(),
-              //             title: 'Your Ride is Rejected',
-              //             customerId: receiverUserModel.id,
-              //             senderId: FireStoreUtils
-              //                 .getCurrentUid(),
-              //             bookingId:
-              //                 bookingModel!.id.toString(),
-              //             driverId: bookingModel!.driverId
-              //                 .toString(),
-              //             body:
-              //                 'Your ride #${bookingModel!.id.toString().substring(0, 4)} has been Rejected by Driver.',
-              //             // body: 'Your ride has been rejected by ${driverModel!.fullName}.',
-              //             payload: playLoad);
+                if (value == true) {
+                  ShowToastDialog.showToast("Ride cancelled successfully!");
 
-              //     Navigator.pop(context);
-              //   } else {
-              //     ShowToastDialog.showToast(
-              //         "Something went wrong!");
-              //     Navigator.pop(context);
-              //   }
-              // });
-            },
-            negativeClick: () {
-              Navigator.pop(context);
-            },
-            img: Image.asset(
-              "assets/icon/ic_close.png",
-              height: 58,
-              width: 58,
-            ));
-      },
-    );
+                  // await SendNotification
+                  //     .sendOneNotification(
+                  //         type: "order",
+                  //         token: bookingModel!.tok
+                  //             .toString(),
+                  //         title: 'Your Ride is Rejected',
+                  //         customerId: receiverUserModel.id,
+                  //         senderId: FireStoreUtils
+                  //             .getCurrentUid(),
+                  //         bookingId:
+                  //             bookingModel!.id.toString(),
+                  //         driverId: bookingModel!.driverId
+                  //             .toString(),
+                  //         body:
+                  //             'Your ride #${bookingModel!.id.toString().substring(0, 4)} has been Rejected by Driver.',
+                  //         // body: 'Your ride has been rejected by ${driverModel!.fullName}.',
+                  //         payload: playLoad);
+
+                  Navigator.pop(context);
+                } else {
+                  ShowToastDialog.showToast("Something went wrong!");
+                  Navigator.pop(context);
+                }
+              },
+              negativeClick: () {
+                Navigator.pop(context);
+              },
+              img: Image.asset(
+                "assets/icon/ic_close.png",
+                height: 58,
+                width: 58,
+              ));
+        });
   }
 }

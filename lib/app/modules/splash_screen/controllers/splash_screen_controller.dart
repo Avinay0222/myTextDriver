@@ -38,7 +38,9 @@ class SplashScreenController extends GetxController {
       bool isLogin = await Preferences.getUserLoginStatus();
 
       if (isLogin == true) {
-        DriverUserModel? userModel = await Preferences.getDriverUserModel();
+        DriverUserModel? userModel = await getOnlineUserModel();
+
+        await Preferences.setDriverUserModel(userModel);
 
         if (userModel != null && userModel.isVerified == true) {
           try {
@@ -54,7 +56,7 @@ class SplashScreenController extends GetxController {
         } else {
           if (userModel != null && userModel.fullName == null) {
             Get.offAll(const LoginView());
-          }else{
+          } else {
             Get.offAll(const VerifyDocumentsView(isFromDrawer: false));
           }
         }

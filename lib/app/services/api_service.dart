@@ -322,12 +322,34 @@ Future<DriverUserModel> getOnlineUserModel() async {
 
   if (response.statusCode == 200) {
     if (jsonDecode(response.body)["status"]) {
-      return DriverUserModel.fromJson(
-          jsonDecode(response.body.toString())["data"]);
+      return DriverUserModel.fromAnotherJson(jsonDecode(response.body)["data"]);
     }
     return DriverUserModel();
   } else {
     return DriverUserModel();
+  }
+}
+
+Future<bool> cancelRide(String rideId) async {
+  final Map<String, dynamic> body = {
+    "ride_id": rideId,
+  };
+
+  final response = await http.put(
+    Uri.parse(baseURL + rideCancel),
+    body: jsonEncode(body),
+    headers: {
+      "Content-Type": "application/json",
+      "token": await Preferences.getFcmToken()
+    },
+  );
+  if (response.statusCode == 200) {
+    if (jsonDecode(response.body)["status"]) {
+      return true;
+    }
+    return false;
+  } else {
+    return false;
   }
 }
 
@@ -355,7 +377,30 @@ Future<bool> acceptRideAPI(String ride_id) async {
       body: jsonEncode(map));
 
   if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
+    ShowToastDialog.showToast("Ride Assigned");
     return jsonDecode(response.body)["data"] == "offline" ? false : true;
+  } else {
+    return false;
+  }
+}
+
+Future<bool> verifyOtpRequest(RideData rideData) async {
+  final Map<String, dynamic> body = {
+    "ride_id": rideData.id,
+    "otp": rideData.otp
+  };
+
+  final response = await http.put(
+    Uri.parse(baseURL + OtpVerify),
+    body: jsonEncode(body),
+    headers: {
+      "Content-Type": "application/json",
+      "token": await Preferences.getFcmToken()
+    },
+  );
+
+  if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
+    return true;
   } else {
     return false;
   }

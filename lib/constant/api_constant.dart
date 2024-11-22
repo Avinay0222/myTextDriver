@@ -22,3 +22,5 @@ const String createDriverAcc = "/driver/owner/driver/create"; //POST
 const String verifyDriverOTP = "/driver/owner/confirmation"; //POST
 const String getDriverListAPI = "/driver/owner/driver/list"; //GET
 const String OwnerSignUP = "/driver/owner/registration";
+const String OtpVerify = "/driver/ride/request/inprogress";
+const String rideCancel = "/driver/ride/request/canceled";

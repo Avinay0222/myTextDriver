@@ -1,8 +1,8 @@
 import 'dart:ui';
 
 class BookingStatus {
-  static const String bookingPlaced = "booking_placed";
-  static const String bookingAccepted = "booking_accepted";
+  static const String bookingPlaced = "requested";
+  static const String bookingAccepted = " accepted";
   static const String bookingOngoing = "booking_ongoing";
   static const String bookingCancelled = "booking_cancelled";
   static const String bookingCompleted = "booking_completed";

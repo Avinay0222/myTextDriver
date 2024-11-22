@@ -25,6 +25,7 @@ import 'package:driver/app/models/withdraw_model.dart';
 import 'package:driver/constant/booking_status.dart';
 import 'package:driver/constant/collection_name.dart';
 import 'package:driver/constant/constant.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geoflutterfire2/geoflutterfire2.dart';
 
@@ -165,19 +166,7 @@ class FireStoreUtils {
   }
 
   static Future<UserModel?> getUserProfile(String uuid) async {
-    UserModel? userModel;
-    await fireStore
-        .collection(CollectionName.users)
-        .doc(uuid)
-        .get()
-        .then((value) {
-      if (value.exists) {
-        userModel = UserModel.fromJson(value.data()!);
-      }
-    }).catchError((error) {
-      log("Failed to update user: $error");
-      userModel = null;
-    });
+    UserModel? userModel = await Preferences.getDriverUserModel() as UserModel?;
     return userModel;
   }
 
@@ -572,10 +561,10 @@ class FireStoreUtils {
         StreamController<List<BookingModel>>.broadcast();
     List<BookingModel> bookingsList = [];
     Query query = fireStore
-     .collection(CollectionName.bookings)
+        .collection(CollectionName.bookings)
         .where('bookingStatus', isEqualTo: BookingStatus.bookingPlaced)
         .where('vehicleType.id',
-            isEqualTo: Constant.userModel!.driverVehicleDetails!.vehicleTypeId);   
+            isEqualTo: Constant.userModel!.driverVehicleDetails!.vehicleTypeId);
     GeoFirePoint center = GeoFlutterFire()
         .point(latitude: latitude ?? 0.0, longitude: longLatitude ?? 0.0);
     Stream<List<DocumentSnapshot>> stream = GeoFlutterFire()
