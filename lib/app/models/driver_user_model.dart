@@ -97,6 +97,34 @@ class DriverUserModel {
               })).toList()
             : [],
       );
+  factory DriverUserModel.fromAnotherJson(Map<String, dynamic> json) =>
+      DriverUserModel(
+        fullName: json['fullName'],
+        id: json['_id'],
+        profilePic: json['profilePic'],
+        countryCode: json['countryCode'],
+        phoneNumber: json['phoneNumber'],
+        walletAmount: json['walletAmount'] ?? "0",
+        totalEarning: json['totalEarning'] ?? "0",
+        gender: json['gender'],
+        isActive: json['isActive'] ?? false,
+        isOnline: json['isOnline'] ?? true,
+        isVerified: json['isVerified'] ?? false,
+        createdAt: json['createdAt'] != null ? null : null,
+        driverVehicleDetails: json['driverVehicleDetails'] != null
+            ? DriverVehicleDetails.fromJson(json["driverVehicleDetails"])
+            : null,
+        rotation: json['rotation'],
+        reviewsCount: json['reviewsCount'],
+        reviewsSum: json['reviewsSum'],
+        driverdDocs: json['driverdDocs'] != null
+            ? (json['driverdDocs'] as List<dynamic>).map(((e) {
+                DocsModel model = DocsModel.fromJson(e);
+
+                return model;
+              })).toList()
+            : [],
+      );
 
   Map<String, dynamic> toJson() => {
         'fullName': fullName,

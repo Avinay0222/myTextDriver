@@ -35,11 +35,11 @@ class NewRideView extends StatelessWidget {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     return InkWell(
       onTap: () {
-        BookingDetailsController detailsController =
-            Get.put(BookingDetailsController());
-        detailsController.bookingId.value = bookingModel!.id ?? '';
-        detailsController.bookingModel.value = bookingModel!;
-        Get.to(() => const BookingDetailsView());
+        // BookingDetailsController detailsController =
+        //     Get.put(BookingDetailsController());
+        // detailsController.bookingId.value = bookingModel!.id ?? '';
+        // detailsController.bookingModel.value = bookingModel!;
+        // Get.to(() => const BookingDetailsView());
       },
       child: Container(
         // width: Responsive.width(100, context),
@@ -60,164 +60,7 @@ class NewRideView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  bookingModel == null
-                      ? ""
-                      : bookingModel!.ride?.createdAt ?? "",
-                  style: GoogleFonts.inter(
-                    color: themeChange.isDarkTheme()
-                        ? AppThemData.grey400
-                        : AppThemData.grey500,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  height: 15,
-                  decoration: ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                        width: 1,
-                        strokeAlign: BorderSide.strokeAlignCenter,
-                        color: themeChange.isDarkTheme()
-                            ? AppThemData.grey800
-                            : AppThemData.grey100,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    // bookingModel == null ? "" : bookingModel!.bookingTime!.toDate().time(),
-                    bookingModel == null
-                        ? ""
-                        : bookingModel!.ride?.createdAt ?? "",
-                    style: GoogleFonts.inter(
-                      color: themeChange.isDarkTheme()
-                          ? AppThemData.grey400
-                          : AppThemData.grey500,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Icon(
-                  Icons.keyboard_arrow_right_sharp,
-                  color: themeChange.isDarkTheme()
-                      ? AppThemData.grey400
-                      : AppThemData.grey500,
-                )
-              ],
-            ),
             const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // CachedNetworkImage(
-                  //   imageUrl: bookingModel == null ? Constant.profileConstant :" bookingModel!.vehicleType!.image",
-                  // ),
-                  RoundShapeButton(
-                    title: "Accept Ride",
-                    buttonColor: AppThemData.blueLight01,
-                    buttonTextColor: AppThemData.black,
-                    onTap: () {
-                      acceptRideAPI(bookingModel?.rideId ?? "");
-                    },
-                    size: Size(Responsive.width(40, context), 42),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          bookingModel == null
-                              ? ""
-                              : bookingModel!.ride?.vehicleId ?? "",
-                          style: GoogleFonts.inter(
-                            color: themeChange.isDarkTheme()
-                                ? AppThemData.grey25
-                                : AppThemData.grey950,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          // (bookingModel!.ride?.paymentStatus="approved" ?? false) ? 'Payment is Completed'.tr : 'Payment is Pending'.tr,
-                          "Payment is Completed".tr,
-                          style: GoogleFonts.inter(
-                            color: themeChange.isDarkTheme()
-                                ? AppThemData.grey25
-                                : AppThemData.grey950,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        bookingModel == null
-                            ? ""
-                            : Constant.amountShow(
-                                amount:
-                                    Constant.calculateFinalAmount(bookingModel!)
-                                        .toStringAsFixed(2)),
-                        textAlign: TextAlign.right,
-                        style: GoogleFonts.inter(
-                          color: themeChange.isDarkTheme()
-                              ? AppThemData.grey25
-                              : AppThemData.grey950,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SvgPicture.asset("assets/icon/ic_multi_person.svg"),
-                          const SizedBox(width: 6),
-                          Text(
-                            bookingModel == null
-                                ? ""
-                                : bookingModel!.ride?.vehicleTypeId ?? "",
-                            style: GoogleFonts.inter(
-                              color: AppThemData.primary500,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
             PickDropPointView(
                 pickUpAddress: bookingModel == null
                     ? ""
@@ -227,6 +70,7 @@ class NewRideView extends StatelessWidget {
                     : bookingModel!.ride?.dropoffAddress ?? ''),
             // if ((bookingModel!.status ?? '') == BookingStatus.bookingPlaced &&
             //     !bookingModel!.!.contains(FireStoreUtils.getCurrentUid())) ...{
+
             if ((bookingModel!.status ?? '') ==
                 BookingStatus.bookingPlaced) ...{
               const SizedBox(height: 16),
@@ -261,55 +105,19 @@ class NewRideView extends StatelessWidget {
                                 negativeString: "Cancel".tr,
                                 positiveClick: () async {
                                   Navigator.pop(context);
-                                  List rejectedId =
-                                      bookingModel!.rejectedDriverId ?? [];
-                                  rejectedId
-                                      .add(FireStoreUtils.getCurrentUid());
-                                  bookingModel!.status =
-                                      BookingStatus.bookingRejected;
-                                  // bookingModel!.rejectedDriverId = rejectedId;
-                                  bookingModel!.updatedAt =
-                                      Timestamp.now().toString();
-                                  FireStoreUtils.setBooking(bookingModel!)
-                                      .then((value) async {
-                                    if (value == true) {
-                                      ShowToastDialog.showToast(
-                                          "Ride cancelled successfully!");
-                                      // DriverUserModel? driverModel =
-                                      //     await FireStoreUtils.getDriverUserProfile(bookingModel!.driverId.toString());
-                                      UserModel? receiverUserModel =
-                                          await FireStoreUtils.getUserProfile(
-                                              bookingModel!.rideId.toString());
-                                      Map<String, dynamic> playLoad =
-                                          <String, dynamic>{
-                                        "bookingId": bookingModel!.id
-                                      };
+                                  bool value =
+                                      await cancelRide(bookingModel!.rideId!);
 
-                                      await SendNotification
-                                          .sendOneNotification(
-                                              type: "order",
-                                              token: receiverUserModel!.fcmToken
-                                                  .toString(),
-                                              title: 'Your Ride is Rejected',
-                                              customerId: receiverUserModel.id,
-                                              senderId: FireStoreUtils
-                                                  .getCurrentUid(),
-                                              bookingId:
-                                                  bookingModel!.id.toString(),
-                                              driverId: bookingModel!.driverId
-                                                  .toString(),
-                                              body:
-                                                  'Your ride #${bookingModel!.id.toString().substring(0, 4)} has been Rejected by Driver.',
-                                              // body: 'Your ride has been rejected by ${driverModel!.fullName}.',
-                                              payload: playLoad);
+                                  if (value == true) {
+                                    // ShowToastDialog.showToast(
+                                    //     "Ride cancelled successfully!");
 
-                                      Navigator.pop(context);
-                                    } else {
-                                      ShowToastDialog.showToast(
-                                          "Something went wrong!");
-                                      Navigator.pop(context);
-                                    }
-                                  });
+                                    Navigator.pop(context);
+                                  } else {
+                                    ShowToastDialog.showToast(
+                                        "Something went wrong!");
+                                    Navigator.pop(context);
+                                  }
                                 },
                                 negativeClick: () {
                                   Navigator.pop(context);
@@ -324,86 +132,14 @@ class NewRideView extends StatelessWidget {
                     size: Size(Responsive.width(40, context), 42),
                   ),
                   RoundShapeButton(
-                    title: "Accept".tr,
-                    buttonColor: AppThemData.primary500,
+                    title: "Accept",
+                    buttonColor: AppThemData.blueLight01,
                     buttonTextColor: AppThemData.black,
                     onTap: () {
-                      if (double.parse(
-                              Constant.userModel!.walletAmount.toString()) >
-                          double.parse(
-                              Constant.minimumAmountToAcceptRide.toString())) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return CustomDialogBox(
-                                title: "Confirm Ride Request",
-                                descriptions:
-                                    "Are you sure you want to accept this ride request? Once confirmed, you will be directed to the next step to proceed with the ride.",
-                                img: Image.asset(
-                                  "assets/icon/ic_green_right.png",
-                                  height: 58,
-                                  width: 58,
-                                ),
-                                positiveClick: () {
-                                  bookingModel!.driverId =
-                                      FireStoreUtils.getCurrentUid();
-                                  bookingModel!.status =
-                                      BookingStatus.bookingAccepted;
-                                  bookingModel!.updatedAt =
-                                      Timestamp.now().toString();
-                                  FireStoreUtils.setBooking(bookingModel!)
-                                      .then((value) async {
-                                    if (value == true) {
-                                      ShowToastDialog.showToast(
-                                          "Ride accepted successfully!");
-
-                                      UserModel? receiverUserModel =
-                                          await FireStoreUtils.getUserProfile(
-                                              bookingModel!.rideId.toString());
-                                      Map<String, dynamic> playLoad =
-                                          <String, dynamic>{
-                                        "bookingId": bookingModel!.id
-                                      };
-
-                                      await SendNotification.sendOneNotification(
-                                          type: "order",
-                                          token: receiverUserModel!.fcmToken
-                                              .toString(),
-                                          title: 'Your Ride is Accepted',
-                                          customerId: receiverUserModel.id,
-                                          senderId:
-                                              FireStoreUtils.getCurrentUid(),
-                                          bookingId:
-                                              bookingModel!.id.toString(),
-                                          driverId:
-                                              bookingModel!.driverId.toString(),
-                                          body:
-                                              'Your ride #${bookingModel!.id.toString().substring(0, 4)} has been confirmed.',
-                                          payload: playLoad);
-                                      Navigator.pop(context);
-                                    } else {
-                                      ShowToastDialog.showToast(
-                                          "Something went wrong!");
-                                      Navigator.pop(context);
-                                    }
-                                  });
-                                  Navigator.pop(context);
-                                },
-                                negativeClick: () {
-                                  Navigator.pop(context);
-                                },
-                                positiveString: "Confirm",
-                                negativeString: "Cancel",
-                                themeChange: themeChange);
-                          },
-                        );
-                      } else {
-                        ShowToastDialog.showToast(
-                            "You do not have sufficient wallet balance to accept the ride, as the minimum amount required is ${Constant.amountShow(amount: Constant.minimumAmountToAcceptRide)}.");
-                      }
+                      acceptRideAPI(bookingModel?.rideId ?? "");
                     },
                     size: Size(Responsive.width(40, context), 42),
-                  )
+                  ),
                 ],
               )
             },
@@ -426,9 +162,9 @@ class NewRideView extends StatelessWidget {
                         ? AppThemData.white
                         : AppThemData.black,
                     onTap: () {
-                      Get.to(() => ReasonForCancelView(
-                            bookingModel: bookingModel ?? BookingModel(),
-                          ));
+                      // Get.to(() => ReasonForCancelView(
+                      //       bookingModel: ,
+                      //     ));
                     },
                     size: Size(Responsive.width(40, context), 42),
                   ),

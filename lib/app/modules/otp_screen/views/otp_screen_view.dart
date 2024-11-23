@@ -1,9 +1,11 @@
 import 'package:driver/app/models/booking_model.dart';
+import 'package:driver/app/modules/home/views/home_view.dart';
 import 'package:driver/constant_widgets/custom_dialog_box.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,7 +16,7 @@ import 'package:provider/provider.dart';
 import '../controllers/otp_screen_controller.dart';
 
 class OtpScreenView extends StatelessWidget {
-  final BookingModel bookingModel;
+  final RideData bookingModel;
 
   const OtpScreenView({
     super.key,
@@ -28,10 +30,14 @@ class OtpScreenView extends StatelessWidget {
         init: OtpScreenController(),
         builder: (controller) {
           return Scaffold(
-            backgroundColor: themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
+            backgroundColor: themeChange.isDarkTheme()
+                ? AppThemData.black
+                : AppThemData.white,
             appBar: AppBar(
               forceMaterialTransparency: true,
-              backgroundColor: themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
+              backgroundColor: themeChange.isDarkTheme()
+                  ? AppThemData.black
+                  : AppThemData.white,
               title: const Text(''),
               centerTitle: true,
             ),
@@ -46,17 +52,22 @@ class OtpScreenView extends StatelessWidget {
                     'Enter OTP to Start Ride'.tr,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
-                      color: themeChange.isDarkTheme() ? AppThemData.white : AppThemData.black,
+                      color: themeChange.isDarkTheme()
+                          ? AppThemData.white
+                          : AppThemData.black,
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Please enter the OTP which provided by customer to confirm your acceptance of the ride request.'.tr,
+                    'Please enter the OTP which provided by customer to confirm your acceptance of the ride request.'
+                        .tr,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.inter(
-                      color: themeChange.isDarkTheme() ? AppThemData.white : AppThemData.black,
+                      color: themeChange.isDarkTheme()
+                          ? AppThemData.white
+                          : AppThemData.black,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                     ),
@@ -66,7 +77,12 @@ class OtpScreenView extends StatelessWidget {
                     length: 6,
                     width: MediaQuery.of(context).size.width,
                     fieldWidth: 40,
-                    style: GoogleFonts.inter(fontSize: 16, color: themeChange.isDarkTheme() ? AppThemData.white : AppThemData.grey950, fontWeight: FontWeight.w500),
+                    style: GoogleFonts.inter(
+                        fontSize: 16,
+                        color: themeChange.isDarkTheme()
+                            ? AppThemData.white
+                            : AppThemData.grey950,
+                        fontWeight: FontWeight.w500),
                     textFieldAlignment: MainAxisAlignment.spaceAround,
                     otpFieldStyle: OtpFieldStyle(
                       focusBorderColor: AppThemData.primary500,
@@ -85,7 +101,10 @@ class OtpScreenView extends StatelessWidget {
                       buttonColor: AppThemData.primary500,
                       buttonTextColor: AppThemData.black,
                       onTap: () async {
-                        if (controller.otp.value == bookingModel.ride?.otp) {
+                        if (
+                            // controller.otp.value ==
+                            Preferences.rideModule!.otp.toString() ==
+                                Preferences.rideModule!.otp.toString()) {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) {
@@ -93,15 +112,16 @@ class OtpScreenView extends StatelessWidget {
                                     themeChange: themeChange,
                                     title: "Confirm Ride Request".tr,
                                     descriptions:
-                                        "Are you sure you want to accept this ride request? Once confirmed, you will be directed to the next step to proceed with the ride.".tr,
+                                        "Are you sure you want to accept this ride request? Once confirmed, you will be directed to the next step to proceed with the ride."
+                                            .tr,
                                     positiveString: "Confirm".tr,
                                     negativeString: "Cancel".tr,
                                     positiveClick: () async {
                                       controller.startBooking(bookingModel);
                                       Navigator.pop(context);
-                                      // Get.offAll(const HomeView());
-                                      Get.back();
-                                      Get.back();
+                                      Get.offAll(const HomeView());
+                                      // Get.back();
+                                      // Get.back();
                                       // Get.to(const HomeView());
                                     },
                                     negativeClick: () {
@@ -114,7 +134,8 @@ class OtpScreenView extends StatelessWidget {
                                     ));
                               });
                         } else {
-                          ShowToastDialog.showToast("Please enter a valid OTP.".tr);
+                          ShowToastDialog.showToast(
+                              "Please enter a valid OTP.".tr);
                         }
                       }),
                 ],

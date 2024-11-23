@@ -299,6 +299,10 @@ class HomeController extends GetxController {
   void setLocation() async {
     Location location = Location();
     LocationData data = await location.getLocation();
+
+    Preferences.driverLat = data.latitude as double;
+    Preferences.driverLong = data.longitude as double;
+
     try {
       await updateCurrentLocationAPI(
           data.latitude.toString(), data.longitude.toString());

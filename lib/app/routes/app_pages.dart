@@ -4,6 +4,7 @@ import 'package:driver/app/modules/support_screen/bindings/support_screen_bindin
 import 'package:driver/app/modules/support_screen/views/support_screen_view.dart';
 import 'package:driver/app/modules/support_ticket_details/bindings/support_ticket_details_binding.dart';
 import 'package:driver/app/modules/support_ticket_details/views/support_ticket_details_view.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:get/get.dart';
 
 import '../models/booking_model.dart';
@@ -126,25 +127,72 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.ASK_FOR_OTP,
-      page: () => const AskForOtpView(),
+      page: () => AskForOtpView(rideData: Preferences.rideModule!),
       binding: AskForOtpBinding(),
     ),
     GetPage(
       name: _Paths.OTP_SCREEN,
       page: () => OtpScreenView(
-        bookingModel: BookingModel(),
+        bookingModel: RideData.fromJson({}),
       ),
       binding: OtpScreenBinding(),
     ),
     GetPage(
       name: _Paths.BOOKING_DETAILS,
-      page: () => const BookingDetailsView(),
+      page: () => BookingDetailsView(
+        rideData: RideData(
+          id: '',
+          passengerId: '',
+          driverId: '',
+          vehicleId: '',
+          vehicleTypeId: "",
+          pickupLocation: Location(),
+          pickupAddress: "",
+          dropoffLocation: Location(),
+          dropoffAddress: "",
+          distance: "",
+          fareAmount: FareAmount(numberDecimal: ''),
+          durationInMinutes: 0,
+          status: "",
+          otp: "",
+          paymentMode: "",
+          startTime: DateTime.now(),
+          createdAt: 0,
+          updatedAt: 0,
+          user: User(
+            id: '',
+            name: '',
+            countryCode: '',
+            phone: '',
+            referralCode: '',
+            referralCodeBy: '',
+            verified: false,
+            otp: '',
+            otpForgetPassword: '',
+            role: '',
+            rideStatus: '',
+            ownerId: '',
+            languages: [],
+            location: Location(),
+            profile: '',
+            token: '',
+            pushNotification: '',
+            status: '',
+            suspend: '',
+            yearOfExperience: 0,
+            education: '',
+            createdAt: 0,
+            updatedAt: 0,
+            gender: '',
+          ),
+        ),
+      ),
       binding: BookingDetailsBinding(),
     ),
     GetPage(
       name: _Paths.REASON_FOR_CANCEL,
       page: () => ReasonForCancelView(
-        bookingModel: BookingModel(),
+        bookingModel: RideData.fromJson({}),
       ),
       binding: ReasonForCancelBinding(),
     ),
@@ -158,11 +206,11 @@ class AppPages {
       page: () => const EditProfileView(),
       binding: EditProfileBinding(),
     ),
-    GetPage(
-      name: _Paths.MY_WALLET,
-      page: () => const MyWalletView(),
-      binding: MyWalletBinding(),
-    ),
+    // GetPage(
+    //   name: _Paths.MY_WALLET,
+    //   page: () => const MyWalletView(),
+    //   binding: MyWalletBinding(),
+    // ),
     GetPage(
       name: _Paths.LANGUAGE,
       page: () => const LanguageView(),
