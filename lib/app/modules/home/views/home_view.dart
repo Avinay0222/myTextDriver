@@ -134,6 +134,7 @@ class HomeView extends GetView<HomeController> {
           children: [
             buildEarningsContainer(controller, themeChange),
             const SizedBox(height: 16),
+            buildLiveBookingStream(controller),
             buildActiveBookingStream(controller),
             buildBookingStream(controller),
             // ... other widgets ...
@@ -201,6 +202,45 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
+  Widget buildLiveBookingStream(HomeController controller) {
+    return Column(children: [
+      const Text("inProgress Rides"),
+      Visibility(
+        visible: controller.isOnline.value,
+        child: StreamBuilder<List<RideData>>(
+          stream: getLiveRidesRequest(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (snapshot.hasData) {
+              List<RideData> bookings = snapshot.data!;
+              if (bookings.isNotEmpty) {
+                return Row(
+                  children: bookings.map((booking) {
+                    RideData bookingModel = snapshot.data!.first;
+                    return ActiveRideView(
+                      bookingModel: bookingModel,
+                    );
+
+                    // return ListTile(
+                    //   title: Text(booking.rideId!),
+                    //   subtitle: Text(booking.status!),
+                    // );
+                  }).toList(),
+                );
+              } else {
+                return Center(child: Text('No bookings available'));
+              }
+            }
+            return Container();
+          },
+        ),
+      )
+    ]);
+  }
+
   Widget buildActiveBookingStream(HomeController controller) {
     return Column(children: [
       const Text("Active Rides"),
@@ -241,8 +281,7 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget buildBookingStream(HomeController controller) {
-    return Column(
-      children: [
+    return Column(children: [
       const SizedBox(height: 20),
       Text(
         'New Ride'.tr,

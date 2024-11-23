@@ -1,4 +1,7 @@
 import 'package:driver/app/models/booking_model.dart';
+import 'package:driver/app/services/api_service.dart';
+import 'package:driver/constant_widgets/custom_dialog_box.dart';
+import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:driver/app/modules/otp_screen/views/otp_screen_view.dart';
@@ -125,7 +128,74 @@ class AskForOtpView extends StatelessWidget {
                                   title: "Cancel".tr,
                                   buttonColor: AppThemData.grey50,
                                   buttonTextColor: AppThemData.black,
-                                  onTap: () {},
+                                  onTap: () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return CustomDialogBox(
+                                              themeChange: themeChange,
+                                              title: "Cancel Ride".tr,
+                                              negativeButtonColor:
+                                                  themeChange.isDarkTheme()
+                                                      ? AppThemData.grey950
+                                                      : AppThemData.grey50,
+                                              negativeButtonTextColor:
+                                                  themeChange.isDarkTheme()
+                                                      ? AppThemData.grey50
+                                                      : AppThemData.grey950,
+                                              positiveButtonColor:
+                                                  AppThemData.danger500,
+                                              positiveButtonTextColor:
+                                                  AppThemData.grey25,
+                                              descriptions:
+                                                  "Are you sure you want cancel this ride?"
+                                                      .tr,
+                                              positiveString: "Cancel Ride".tr,
+                                              negativeString: "Cancel".tr,
+                                              positiveClick: () async {
+                                                Navigator.pop(context);
+                                                bool value = await cancelRide(
+                                                    rideData.id!);
+
+                                                if (value == true) {
+                                                  ShowToastDialog.showToast(
+                                                      "Ride cancelled successfully!");
+
+                                                  // await SendNotification
+                                                  //     .sendOneNotification(
+                                                  //         type: "order",
+                                                  //         token: bookingModel!.tok
+                                                  //             .toString(),
+                                                  //         title: 'Your Ride is Rejected',
+                                                  //         customerId: receiverUserModel.id,
+                                                  //         senderId: FireStoreUtils
+                                                  //             .getCurrentUid(),
+                                                  //         bookingId:
+                                                  //             bookingModel!.id.toString(),
+                                                  //         driverId: bookingModel!.driverId
+                                                  //             .toString(),
+                                                  //         body:
+                                                  //             'Your ride #${bookingModel!.id.toString().substring(0, 4)} has been Rejected by Driver.',
+                                                  //         // body: 'Your ride has been rejected by ${driverModel!.fullName}.',
+                                                  //         payload: playLoad);
+
+                                                  Navigator.pop(context);
+                                                } else {
+                                                  ShowToastDialog.showToast(
+                                                      "Something went wrong!");
+                                                  Navigator.pop(context);
+                                                }
+                                              },
+                                              negativeClick: () {
+                                                Navigator.pop(context);
+                                              },
+                                              img: Image.asset(
+                                                "assets/icon/ic_close.png",
+                                                height: 58,
+                                                width: 58,
+                                              ));
+                                        });
+                                  },
                                   size: Size(Responsive.width(43, context), 42),
                                 ),
                                 RoundShapeButton(

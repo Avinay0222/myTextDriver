@@ -9,10 +9,13 @@ import 'package:driver/constant/booking_status.dart';
 import 'package:driver/constant/collection_name.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/theme/app_them_data.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart' as loc;
 
 class AskForOtpController extends GetxController {
   GoogleMapController? mapController;
@@ -20,6 +23,7 @@ class AskForOtpController extends GetxController {
   @override
   void onInit() {
     // TODO: implement onInit
+    getLocation();
     addMarkerSetup();
     getArgument();
     // playSound();
@@ -35,36 +39,21 @@ class AskForOtpController extends GetxController {
   getArgument() async {
     dynamic argumentData = Get.arguments;
     if (argumentData != null) {
-      bookingModel.value = argumentData['bookingModel'];
+      // bookingModel.value = argumentData['bookingModel'];
 
-      FirebaseFirestore.instance.collection(CollectionName.bookings).doc(bookingModel.value.id).snapshots().listen((event) {
-        if (event.data() != null) {
-          BookingModel orderModelStream = BookingModel.fromJson(event.data()!);
-          bookingModel.value = orderModelStream;
-          FirebaseFirestore.instance.collection(CollectionName.drivers).doc(bookingModel.value.driverId).snapshots().listen((event) {
-            if (event.data() != null) {
-              driverUserModel.value = DriverUserModel.fromJson(event.data()!);
-              if (bookingModel.value.status == BookingStatus.bookingOngoing) {
-                getPolyline(
-                    sourceLatitude: driverUserModel.value.location!.latitude,
-                    sourceLongitude: driverUserModel.value.location!.longitude,
-                    destinationLatitude: bookingModel.value.ride?.dropoffLocation?.coordinates?[1]??0,
-                    destinationLongitude: bookingModel.value.ride?.dropoffLocation?.coordinates?[0]??0);
-              } else {
-                getPolyline(
-                    sourceLatitude: driverUserModel.value.location!.latitude,
-                    sourceLongitude: driverUserModel.value.location!.longitude,
-                    destinationLatitude: bookingModel.value.ride?.dropoffLocation?.coordinates?[1]??0,
-                    destinationLongitude: bookingModel.value.ride?.dropoffLocation?.coordinates?[0]??0);
-              }
-            }
-          });
+      getPolyline(
+          sourceLatitude:
+              Preferences.rideModule!.pickupLocation.coordinates?[0] ?? 0,
+          sourceLongitude:
+              Preferences.rideModule!.dropoffLocation.coordinates?[1] ?? 0,
+          destinationLatitude:
+              Preferences.rideModule!.dropoffLocation.coordinates?[0] ?? 0,
+          destinationLongitude:
+              Preferences.rideModule!.dropoffLocation.coordinates?[1] ?? 0);
 
-          if (bookingModel.value.status == BookingStatus.bookingCompleted) {
-            Get.back();
-          }
-        }
-      });
+      if (Preferences.rideModule!.status == BookingStatus.bookingCompleted) {
+        Get.back();
+      }
     }
     isLoading.value = false;
     update();
@@ -74,68 +63,105 @@ class AskForOtpController extends GetxController {
   BitmapDescriptor? destinationIcon;
   BitmapDescriptor? driverIcon;
 
-  void getPolyline({required double? sourceLatitude, required double? sourceLongitude, required double? destinationLatitude, required double? destinationLongitude}) async {
-    if (sourceLatitude != null && sourceLongitude != null && destinationLatitude != null && destinationLongitude != null) {
-      List<LatLng> polylineCoordinates = [];
+  void getPolyline(
+      {required double? sourceLatitude,
+      required double? sourceLongitude,
+      required double? destinationLatitude,
+      required double? destinationLongitude}) async {
+    try {
+      if (sourceLatitude != null &&
+          sourceLongitude != null &&
+          destinationLatitude != null &&
+          destinationLongitude != null) {
+        List<LatLng> polylineCoordinates = [];
+        PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+          googleApiKey: Constant.mapAPIKey,
+          request: PolylineRequest(
+            origin: PointLatLng(sourceLatitude, sourceLongitude),
+            destination: PointLatLng(destinationLatitude, destinationLongitude),
+            mode: TravelMode.driving,
+            alternatives:
+                true, // Enable alternative routes to increase the chances of getting a route
+          ),
+        );
 
-      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        googleApiKey: Constant.mapAPIKey,
-        request: PolylineRequest(
-          origin: PointLatLng(sourceLatitude, sourceLongitude),
-          destination: PointLatLng(destinationLatitude, destinationLongitude),
-          mode: TravelMode.driving,
-          // wayPoints: [PolylineWayPoint(location: "Sabo, Yaba Lagos Nigeria")],
-        ),
-      );
-      // PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      //   Constant.mapAPIKey,
-      //   PointLatLng(sourceLatitude, sourceLongitude),
-      //   PointLatLng(destinationLatitude, destinationLongitude),
-      //   travelMode: TravelMode.driving,
-      // );
-      if (result.points.isNotEmpty) {
-        for (var point in result.points) {
-          polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+        if (result.status == "OK") {
+          if (result.points.isNotEmpty) {
+            for (var point in result.points) {
+              polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+            }
+          } else {
+            log("No points found in the route.");
+          }
+        } else if (result.status == "ZERO_RESULTS") {
+          log("Unable to get route: Response ---> ZERO_RESULTS");
+        } else {
+          log(result.errorMessage.toString());
         }
-      } else {
-        log(result.errorMessage.toString());
+
+        addMarker(
+            latitude:
+                Preferences.rideModule!.pickupLocation.coordinates?[0] ?? 0,
+            longitude:
+                Preferences.rideModule!.pickupLocation.coordinates?[1] ?? 0,
+            id: "Departure",
+            descriptor: departureIcon!,
+            rotation: 0.0);
+        addMarker(
+            latitude:
+                Preferences.rideModule!.dropoffLocation.coordinates?[0] ?? 0,
+            longitude:
+                Preferences.rideModule!.dropoffLocation.coordinates?[1] ?? 0,
+            id: "Destination",
+            descriptor: destinationIcon!,
+            rotation: 0.0);
+        addMarker(
+            latitude: Preferences.driverLat,
+            longitude: Preferences.driverLong,
+            id: "Driver",
+            descriptor: driverIcon!,
+            rotation: driverUserModel.value.rotation);
+
+        _addPolyLine(polylineCoordinates);
       }
-
-      addMarker(
-          latitude: bookingModel.value.ride?.pickupLocation?.coordinates?[1]??0,
-          longitude: bookingModel.value.ride?.dropoffLocation?.coordinates?[0]??0,
-          id: "Departure",
-          descriptor: departureIcon!,
-          rotation: 0.0);
-      addMarker(
-          latitude: bookingModel.value.ride?.dropoffLocation?.coordinates?[1]??0,
-          longitude: bookingModel.value.ride?.dropoffLocation?.coordinates?[0]??0,
-          id: "Destination",
-          descriptor: destinationIcon!,
-          rotation: 0.0);
-      addMarker(
-          latitude: driverUserModel.value.location!.latitude,
-          longitude: driverUserModel.value.location!.longitude,
-          id: "Driver",
-          descriptor: driverIcon!,
-          rotation: driverUserModel.value.rotation);
-
-      _addPolyLine(polylineCoordinates);
+    } catch (e) {
+      e.printError();
     }
+  }
+
+  double lat = 0, long = 0;
+
+  void getLocation() async {
+    loc.Location location = loc.Location();
+    loc.LocationData data = await location.getLocation();
+    lat = data.latitude!;
+    long = data.longitude!;
   }
 
   RxMap<MarkerId, Marker> markers = <MarkerId, Marker>{}.obs;
 
-  addMarker({required double? latitude, required double? longitude, required String id, required BitmapDescriptor descriptor, required double? rotation}) {
+  addMarker(
+      {required double? latitude,
+      required double? longitude,
+      required String id,
+      required BitmapDescriptor descriptor,
+      required double? rotation}) {
     MarkerId markerId = MarkerId(id);
-    Marker marker = Marker(markerId: markerId, icon: descriptor, position: LatLng(latitude ?? 0.0, longitude ?? 0.0), rotation: rotation ?? 0.0);
+    Marker marker = Marker(
+        markerId: markerId,
+        icon: descriptor,
+        position: LatLng(latitude ?? 0.0, longitude ?? 0.0),
+        rotation: rotation ?? 0.0);
     markers[markerId] = marker;
   }
 
   addMarkerSetup() async {
-    final Uint8List departure = await Constant().getBytesFromAsset('assets/icon/ic_pick_up_map.png', 100);
-    final Uint8List destination = await Constant().getBytesFromAsset('assets/icon/ic_drop_in_map.png', 100);
-    final Uint8List driver = await Constant().getBytesFromAsset('assets/icon/ic_car.png', 50);
+    final Uint8List departure = await Constant()
+        .getBytesFromAsset('assets/icon/ic_pick_up_map.png', 100);
+    final Uint8List destination = await Constant()
+        .getBytesFromAsset('assets/icon/ic_drop_in_map.png', 100);
+    final Uint8List driver =
+        await Constant().getBytesFromAsset('assets/icon/ic_car.png', 50);
     departureIcon = BitmapDescriptor.fromBytes(departure);
     destinationIcon = BitmapDescriptor.fromBytes(destination);
     driverIcon = BitmapDescriptor.fromBytes(driver);
@@ -146,9 +172,16 @@ class AskForOtpController extends GetxController {
 
   _addPolyLine(List<LatLng> polylineCoordinates) {
     PolylineId id = const PolylineId("poly");
-    Polyline polyline = Polyline(polylineId: id, points: polylineCoordinates, consumeTapEvents: true, startCap: Cap.roundCap, width: 6, color: AppThemData.primary500);
+    Polyline polyline = Polyline(
+        polylineId: id,
+        points: polylineCoordinates,
+        consumeTapEvents: true,
+        startCap: Cap.roundCap,
+        width: 6,
+        color: Colors.blue);
     polyLines[id] = polyline;
-    updateCameraLocation(polylineCoordinates.first, polylineCoordinates.last, mapController);
+    updateCameraLocation(
+        polylineCoordinates.first, polylineCoordinates.last, mapController);
   }
 
   Future<void> updateCameraLocation(
@@ -160,12 +193,17 @@ class AskForOtpController extends GetxController {
 
     LatLngBounds bounds;
 
-    if (source.latitude > destination.latitude && source.longitude > destination.longitude) {
+    if (source.latitude > destination.latitude &&
+        source.longitude > destination.longitude) {
       bounds = LatLngBounds(southwest: destination, northeast: source);
     } else if (source.longitude > destination.longitude) {
-      bounds = LatLngBounds(southwest: LatLng(source.latitude, destination.longitude), northeast: LatLng(destination.latitude, source.longitude));
+      bounds = LatLngBounds(
+          southwest: LatLng(source.latitude, destination.longitude),
+          northeast: LatLng(destination.latitude, source.longitude));
     } else if (source.latitude > destination.latitude) {
-      bounds = LatLngBounds(southwest: LatLng(destination.latitude, source.longitude), northeast: LatLng(source.latitude, destination.longitude));
+      bounds = LatLngBounds(
+          southwest: LatLng(destination.latitude, source.longitude),
+          northeast: LatLng(source.latitude, destination.longitude));
     } else {
       bounds = LatLngBounds(southwest: source, northeast: destination);
     }
@@ -175,7 +213,8 @@ class AskForOtpController extends GetxController {
     return checkCameraLocation(cameraUpdate, mapController);
   }
 
-  Future<void> checkCameraLocation(CameraUpdate cameraUpdate, GoogleMapController mapController) async {
+  Future<void> checkCameraLocation(
+      CameraUpdate cameraUpdate, GoogleMapController mapController) async {
     mapController.animateCamera(cameraUpdate);
     LatLngBounds l1 = await mapController.getVisibleRegion();
     LatLngBounds l2 = await mapController.getVisibleRegion();

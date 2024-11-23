@@ -13,7 +13,7 @@ class Preferences {
   static const isFinishOnBoardingKey = "isFinishOnBoardingKey";
   static const String userLoginStatus = "USER_LOGIN_STATUS";
   static const String fcmToken = "FCM_TOKEN";
-
+  static double driverLat = 0, driverLong = 0;
   static RideData? rideModule;
 
   static DriverUserModel? userModel;

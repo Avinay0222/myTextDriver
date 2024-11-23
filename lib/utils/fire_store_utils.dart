@@ -397,7 +397,7 @@ class FireStoreUtils {
         .get()
         .then((value) {
       if (value.exists) {
-        Constant.mapAPIKey = value.data()!["googleMapKey"];
+        // Constant.mapAPIKey = value.data()!["googleMapKey"];
         Constant.senderId = value.data()!["notification_senderId"];
         Constant.jsonFileURL = value.data()!["jsonFileURL"];
         Constant.minimumAmountToWithdrawal =
