@@ -174,8 +174,9 @@ class Location {
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
         type: json["type"],
-        coordinates:
-            List<double>.from(json["coordinates"].map((x) => x.toDouble())),
+        coordinates: (json["coordinates"] == null)
+            ? null
+            : List<double>.from(json["coordinates"].map((x) => x.toDouble())),
       );
 
   Map<String, dynamic> toJson() => {

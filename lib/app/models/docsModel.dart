@@ -28,12 +28,12 @@ class DocsModel {
 
   factory DocsModel.fromJson(Map<String, dynamic> json) => DocsModel(
         id: json["id"],
-        type: json["type"],
-        document_number: json["document_number"],
-        name: json["name"],
-        date_of_birth: json["date_of_birth"],
-        isVerify: json["isVerify"] ?? true,
-        image: List<String>.from(json["image"]),
+        type: json["documentType"],
+        document_number: json["documentNumber"],
+        name: "",
+        date_of_birth: json["dateOfBirth"],
+        isVerify: json["isVerified"] ?? true,
+        image: List<String>.from(json["images"]),
       );
 
   Map<String, dynamic> toJson() => {
