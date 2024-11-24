@@ -67,7 +67,7 @@ class DriverVerifyOtpView extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      "Verify Your Phone Number".tr,
+                      "Verify Your Email".tr,
                       style: GoogleFonts.inter(
                           fontSize: 24,
                           color: themeChange.isDarkTheme()

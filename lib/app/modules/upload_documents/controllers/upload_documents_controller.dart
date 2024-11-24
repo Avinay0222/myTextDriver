@@ -144,7 +144,6 @@ class UploadDocumentsController extends GetxController {
         id: document.id);
 
     bool isUpdated = await uploadDriverDocumentImageToStorage(docsModel);
-
     ShowToastDialog.closeLoader();
     if (isUpdated) {
       ShowToastDialog.showToast(
