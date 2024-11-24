@@ -78,7 +78,7 @@ class DriverVerifyOtpView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 8, bottom: 33),
                       child: Text(
-                        "Enter  6-digit code sent to your mobile number to complete verification."
+                        "Enter  6-digit code sent to your email to complete verification."
                             .tr,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(
