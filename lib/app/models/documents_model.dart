@@ -10,7 +10,7 @@ class DocumentsModel {
   final String status;
   final int side;
   final int createdAt;
-  final int updatedAt;
+  final int? updatedAt;
 
   DocumentsModel({
     required this.id,
