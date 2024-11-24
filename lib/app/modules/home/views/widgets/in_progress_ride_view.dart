@@ -5,6 +5,7 @@ import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/models/user_model.dart';
 import 'package:driver/app/modules/booking_details/controllers/booking_details_controller.dart';
 import 'package:driver/app/modules/booking_details/views/booking_details_view.dart';
+import 'package:driver/app/modules/home/views/widgets/collect_money_popup.dart';
 import 'package:driver/app/modules/reason_for_cancel/views/reason_for_cancel_view.dart';
 import 'package:driver/app/routes/app_pages.dart';
 import 'package:driver/app/services/api_service.dart';
@@ -210,13 +211,12 @@ class InProgressRideView extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             Preferences.openMapWithDirections(
-              destinationLatitude: bookingModel!.dropoffLocation
-                  .coordinates![0], // Example latitude (San Francisco)
-              destinationLongitude:
-                  bookingModel!.dropoffLocation.coordinates![1],
-                      startLatitude: Preferences.driverLat,
-                      startLongitude: Preferences.driverLong
-            );
+                destinationLatitude: bookingModel!.dropoffLocation
+                    .coordinates![0], // Example latitude (San Francisco)
+                destinationLongitude:
+                    bookingModel!.dropoffLocation.coordinates![1],
+                startLatitude: Preferences.driverLat,
+                startLongitude: Preferences.driverLong);
           },
           child: const Text('Open Drop Location in Map'),
         ),
@@ -256,16 +256,27 @@ class InProgressRideView extends StatelessWidget {
                           width: 58,
                         ),
                         positiveClick: () async {
+                          // Navigator.pop(context);
+
                           bool canceled = await completeRide(bookingModel!.id);
 
                           if (canceled) {
+                            Navigator.pop(context);
                             ShowToastDialog.showToast('Ride Completed');
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CollectMoneyPopup(
+                                      amount:
+                                          bookingModel!.fareAmount.toString());
+                                });
                           } else {
                             ShowToastDialog.showToast(
                                 'Failed to Complete Rided');
+                            Navigator.pop(context);
                           }
 
-                          Navigator.pop(context);
+                          // Navigator.pop(context);
                         },
                         negativeClick: () {
                           Navigator.pop(context);
@@ -350,13 +361,12 @@ class InProgressRideView extends StatelessWidget {
         ElevatedButton(
           onPressed: () {
             Preferences.openMapWithDirections(
-              destinationLatitude: bookingModel!.dropoffLocation
-                  .coordinates![0], // Example latitude (San Francisco)
-              destinationLongitude:
-                  bookingModel!.dropoffLocation.coordinates![1],
-                      startLatitude: Preferences.driverLat,
-                      startLongitude: Preferences.driverLong
-            );
+                destinationLatitude: bookingModel!.dropoffLocation
+                    .coordinates![0], // Example latitude (San Francisco)
+                destinationLongitude:
+                    bookingModel!.dropoffLocation.coordinates![1],
+                startLatitude: Preferences.driverLat,
+                startLongitude: Preferences.driverLong);
           },
           child: const Text('Open PickUp Location in Map'),
         ),
