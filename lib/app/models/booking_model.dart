@@ -10,8 +10,8 @@ class BookingModel {
   String? updatedAt; // Corresponds to updatedAt
   int? version; // Corresponds to __v
   Ride? ride; // Corresponds to ride
-  List<Passenger>? passengers; // Corresponds to passenger
-  List<Driver>? drivers; // Corresponds to driver
+  Passenger? passengers; // Corresponds to passenger
+  Driver? drivers; // Corresponds to driver
   String? dropTime; // Corresponds to dropTime
   List<String>? rejectedDriverId; // Add this line
   String? cancelledBy; // Add this line
@@ -35,24 +35,21 @@ class BookingModel {
 
   factory BookingModel.fromJson(Map<String, dynamic> json) => BookingModel(
         id: json["_id"],
-        rideId: json["ride_id"],
+        rideId: json["ride"]['_id'],
         driverId: json["driver_id"],
         notes: json["notes"],
         status: json["status"],
         createdAt: json["createdAt"].toString(),
         updatedAt: json["updatedAt"].toString(),
-        version: json["__v"],
+        version: 0,
         ride: json["ride"] != null ? Ride.fromJson(json["ride"]) : null,
-        passengers: json["passenger"] != null
-            ? List<Passenger>.from(
-                json["passenger"].map((x) => Passenger.fromJson(x)))
-            : [],
-        drivers: json["driver"] != null
-            ? List<Driver>.from(json["driver"].map((x) => Driver.fromJson(x)))
-            : [],
+        passengers: (json["passenger"] != null)
+            ? Passenger.fromJson(json["passenger"])
+            : Passenger.fromJson(json["user"]),
+        drivers:
+            (json['driver'] == null) ? null : Driver.fromJson(json['driver']),
         dropTime: json["dropTime"],
-        rejectedDriverId:
-            List<String>.from(json['rejectedDriverId'] ?? []), // Add this line
+        rejectedDriverId: json['rejectedDriverId'] ?? [], // Add this line
         cancelledBy: json["cancelledBy"], // Add this line
       );
 
@@ -66,8 +63,8 @@ class BookingModel {
         "updatedAt": updatedAt,
         "__v": version,
         "ride": ride?.toJson(),
-        "passenger": passengers?.map((x) => x.toJson()).toList(),
-        "driver": drivers?.map((x) => x.toJson()).toList(),
+        "passenger": passengers,
+        "driver": drivers,
         "dropTime": dropTime,
         "rejectedDriverId": rejectedDriverId, // Add this line
         "cancelledBy": cancelledBy, // Add this line
@@ -86,7 +83,7 @@ class Ride {
   String? dropoffAddress; // Corresponds to dropoff_address
   String? distance; // Corresponds to distance
   String? fareAmount; // Corresponds to fare_amount
-  int? durationInMinutes; // Corresponds to duration_in_minutes
+  String? durationInMinutes; // Corresponds to duration_in_minutes
   String? rideStatus; // Corresponds to status
   String? couponId; // Corresponds to coupon_id
   String? otp; // Corresponds to otp
@@ -120,31 +117,30 @@ class Ride {
   });
 
   factory Ride.fromJson(Map<String, dynamic> json) => Ride(
-        id: json["_id"],
-        passengerId: json["passenger_id"],
-        driverId: json["driver_id"],
-        vehicleId: json["vehicle_id"],
-        vehicleTypeId: json["vehicle_type_id"],
-        pickupLocation: json["pickup_location"] != null
-            ? Location.fromJson(json["pickup_location"])
-            : null,
-        pickupAddress: json["pickup_address"],
-        dropoffLocation: json["dropoff_location"] != null
-            ? Location.fromJson(json["dropoff_location"])
-            : null,
-        dropoffAddress: json["dropoff_address"],
-        distance: json["distance"],
-        fareAmount: json["fare_amount"]?["\$numberDecimal"],
-        durationInMinutes: json["duration_in_minutes"],
-        rideStatus: json["status"],
-        couponId: json["coupon_id"],
-        otp: json["otp"],
-        paymentStatus: json["payment_status"],
-        paymentMode: json["payment_mode"],
-        createdAt: json["createdAt"].toString(),
-        updatedAt: json["updatedAt"].toString(),
-        version: json["__v"],
-      );
+      id: json["_id"],
+      passengerId: json["passenger_id"],
+      driverId: json["driver_id"],
+      vehicleId: json["vehicle_id"],
+      vehicleTypeId: json["vehicle_type_id"],
+      pickupLocation: json["pickup_location"] != null
+          ? Location.fromJson(json["pickup_location"])
+          : null,
+      pickupAddress: json["pickup_address"],
+      dropoffLocation: json["dropoff_location"] != null
+          ? Location.fromJson(json["dropoff_location"])
+          : null,
+      dropoffAddress: json["dropoff_address"],
+      distance: json["distance"],
+      fareAmount: json["fare_amount"],
+      durationInMinutes: json["duration_in_minutes"],
+      rideStatus: json["status"],
+      couponId: json["coupon_id"],
+      otp: json["otp"],
+      paymentStatus: json["payment_status"],
+      paymentMode: json["payment_mode"],
+      createdAt: json["createdAt"].toString(),
+      updatedAt: json["updatedAt"].toString(),
+      version: 0);
 
   Map<String, dynamic> toJson() => {
         "_id": id,
@@ -198,7 +194,7 @@ class Passenger {
   String? referralCodeBy; // Corresponds to referral_code_by
   String? role; // Corresponds to role
   String? rideStatus; // Corresponds to ride_status
-  List<String>? languages; // Corresponds to languages
+  String? languages; // Corresponds to languages
   Location? location; // Corresponds to location
   String? createdAt; // Corresponds to createdAt
   String? updatedAt; // Corresponds to updatedAt
@@ -223,7 +219,7 @@ class Passenger {
 
   factory Passenger.fromJson(Map<String, dynamic> json) => Passenger(
         id: json["_id"],
-        name: json["name"],
+        name: json["name"] ?? '',
         countryCode: json["country_code"],
         phone: json["phone"],
         verified: json["verified"],
@@ -231,13 +227,13 @@ class Passenger {
         referralCodeBy: json["referral_code_by"],
         role: json["role"],
         rideStatus: json["ride_status"],
-        languages: List<String>.from(json["languages"].map((x) => x)),
+        languages: json["languages"] ?? '',
         location: json["location"] != null
             ? Location.fromJson(json["location"])
             : null,
         createdAt: json["createdAt"].toString(),
         updatedAt: json["updatedAt"].toString(),
-        gender: json["gender"],
+        gender: json["gender"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -301,7 +297,7 @@ class Driver {
         referralCodeBy: json["referral_code_by"],
         role: json["role"],
         rideStatus: json["ride_status"],
-        languages: List<String>.from(json["languages"].map((x) => x)),
+        languages: null,
         location: json["location"] != null
             ? Location.fromJson(json["location"])
             : null,
@@ -367,8 +363,8 @@ class RideData {
   final Location dropoffLocation;
   final String dropoffAddress;
   final String distance;
-  final FareAmount fareAmount;
-  final int durationInMinutes;
+  final String fareAmount;
+  final String durationInMinutes;
   final String status;
   final String? couponId;
   final String otp;
@@ -407,29 +403,30 @@ class RideData {
 
   factory RideData.fromJson(Map<String, dynamic> json) {
     return RideData(
-      id: json['_id'],
-      passengerId: json['passenger_id'],
-      driverId: json['driver_id'],
-      vehicleId: json['vehicle_id'],
-      vehicleTypeId: json['vehicle_type_id'],
-      pickupLocation: Location.fromJson(json['pickup_location']),
-      pickupAddress: json['pickup_address'],
-      dropoffLocation: Location.fromJson(json['dropoff_location']),
-      dropoffAddress: json['dropoff_address'],
-      distance: json['distance'],
-      fareAmount: FareAmount.fromJson(json['fare_amount']),
-      durationInMinutes: json['duration_in_minutes'],
+      id: json['ride']['_id'],
+      passengerId: json['passenger']['_id'],
+      driverId: json['driver']['_id'],
+      vehicleId: json['vehicle']['name'],
+      vehicleTypeId: json['vehicle']['name'],
+      pickupLocation: Location.fromJson(json['ride']['pickup_location']),
+      pickupAddress: json['ride']['pickup_address'],
+      dropoffLocation: Location.fromJson(json['ride']['dropoff_location']),
+      dropoffAddress: json['ride']['dropoff_address'],
+      distance: json['ride']['distance'],
+      fareAmount: json['ride']['fare_amount'],
+      durationInMinutes: json['ride']['duration_in_minutes'],
       status: json['status'],
-      couponId: json['coupon_id'],
-      otp: json['otp'],
-      paymentStatus: json['payment_status'],
-      paymentMode: json['payment_mode'],
-      startTime: DateTime.parse(json['start_time']),
-      endTime:
-          json['end_time'] != null ? DateTime.parse(json['end_time']) : null,
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
-      user: User.fromJson(json['user']),
+      couponId: json['ride']['coupon_id'],
+      otp: json['ride']['otp'],
+      paymentStatus: json['ride']['payment_status'],
+      paymentMode: json['ride']['payment_mode'],
+      startTime: DateTime.parse(json['ride']['start_time']),
+      endTime: json['ride']['end_time'] != null
+          ? DateTime.parse(json['ride']['end_time'])
+          : null,
+      createdAt: json['ride']['createdAt'],
+      updatedAt: 0,
+      user: User.fromJson(json['passenger']),
     );
   }
 
@@ -445,8 +442,7 @@ class RideData {
       'dropoff_location': dropoffLocation.toJson(),
       'dropoff_address': dropoffAddress,
       'distance': distance,
-      'fare_amount': fareAmount.toJson(),
-      'duration_in_minutes': durationInMinutes,
+      'duration_in_minutes': durationInMinutes!,
       'status': status,
       'coupon_id': couponId,
       'otp': otp,
@@ -492,7 +488,7 @@ class User {
   final String role;
   final String rideStatus;
   final String? ownerId;
-  final List<String> languages;
+  final String languages;
   final Location location;
   final String profile;
   final String token;
@@ -535,29 +531,29 @@ class User {
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['_id'],
-      name: json['name'],
-      countryCode: json['country_code'],
-      phone: json['phone'],
-      referralCode: json['referral_code'],
-      referralCodeBy: json['referral_code_by'],
-      verified: json['verified'],
-      otp: json['otp'],
-      otpForgetPassword: json['otpForgetPassword'],
-      role: json['role'],
-      rideStatus: json['ride_status'],
-      ownerId: json['owner_id'],
-      languages: List<String>.from(json['languages']),
+      name: json['name'] ?? '',
+      countryCode: json['country_code'] ?? '',
+      phone: json['phone'] ?? '',
+      referralCode: json['referral_code'] ?? '',
+      referralCodeBy: json['referral_code_by'] ?? '',
+      verified: json['verified'] ?? true,
+      otp: json['otp'] ?? '',
+      otpForgetPassword: '',
+      role: json['role'] ?? '',
+      rideStatus: json['status'] ?? '',
+      ownerId: json['owner_id'] ?? '',
+      languages: '',
+      profile: json['profile'] ?? '',
+      token: json['token'] ?? '',
+      pushNotification: json['push_notification'] ?? '',
+      status: json['status'] ?? '',
+      suspend: json['suspend'] ?? '',
+      yearOfExperience: json['year_of_experience'] ?? 0,
+      education: json['education'] ?? '',
+      createdAt: json['createdAt'] ?? 0,
+      updatedAt: json['updatedAt'] ?? 0,
+      gender: json['gender'] ?? '',
       location: Location.fromJson(json['location']),
-      profile: json['profile'],
-      token: json['token'],
-      pushNotification: json['push_notification'],
-      status: json['status'],
-      suspend: json['suspend'],
-      yearOfExperience: json['year_of_experience'],
-      education: json['education'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
-      gender: json['gender'],
     );
   }
 

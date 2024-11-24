@@ -4,6 +4,7 @@ class BookingStatus {
   static const String bookingPlaced = "requested";
   static const String bookingAccepted = " accepted";
   static const String bookingOngoing = "booking_ongoing";
+  static const String bookingInProgress = "in_progress";
   static const String bookingCancelled = "booking_cancelled";
   static const String bookingCompleted = "booking_completed";
   static const String bookingRejected = "booking_rejected";

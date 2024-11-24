@@ -5,6 +5,7 @@ import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/models/user_model.dart';
 import 'package:driver/app/modules/booking_details/controllers/booking_details_controller.dart';
 import 'package:driver/app/modules/booking_details/views/booking_details_view.dart';
+import 'package:driver/app/modules/home/views/widgets/collect_money_popup.dart';
 import 'package:driver/app/modules/reason_for_cancel/views/reason_for_cancel_view.dart';
 import 'package:driver/app/routes/app_pages.dart';
 import 'package:driver/app/services/api_service.dart';
@@ -27,10 +28,10 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-class ActiveRideView extends StatelessWidget {
+class InProgressRideView extends StatelessWidget {
   final RideData? bookingModel;
 
-  const ActiveRideView({super.key, this.bookingModel});
+  const InProgressRideView({super.key, this.bookingModel});
 
   @override
   Widget build(BuildContext context) {
@@ -59,18 +60,6 @@ class ActiveRideView extends StatelessWidget {
             PickDropPointView(
               pickUpAddress: bookingModel?.pickupAddress ?? '',
               dropAddress: bookingModel?.dropoffAddress ?? '',
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Preferences.openMapWithDirections(
-                    destinationLatitude: bookingModel!.pickupLocation
-                        .coordinates![0], // Example latitude (San Francisco)
-                    destinationLongitude:
-                        bookingModel!.pickupLocation.coordinates![1],
-                    startLatitude: Preferences.driverLat,
-                    startLongitude: Preferences.driverLong);
-              },
-              child: const Text('Open PickUp Location in Map'),
             ),
             _buildStatusButtons(context, themeChange),
           ],
@@ -161,7 +150,7 @@ class ActiveRideView extends StatelessWidget {
           onTap: () {
             acceptRideAPI(bookingModel?.id ?? "");
           },
-          size: Size(50, 42),
+          size: const Size(50, 42),
         ),
         const SizedBox(width: 12),
         _buildVehicleInfo(themeChange),
@@ -205,10 +194,109 @@ class ActiveRideView extends StatelessWidget {
       BuildContext context, DarkThemeProvider themeChange) {
     if ((bookingModel?.status ?? '') == BookingStatus.bookingPlaced) {
       return _buildBookingPlacedButtons(context, themeChange);
+    } else if ((bookingModel?.status ?? '') ==
+        BookingStatus.bookingInProgress) {
+      return _buildInProgressPlacedButtons(context, themeChange);
     } else if (bookingModel!.driverId == Preferences.userModel!.id!) {
       return _buildBookingAcceptedButtons(context, themeChange);
     }
-    return SizedBox.shrink(); // Return an empty widget if no buttons are needed
+    return const SizedBox
+        .shrink(); // Return an empty widget if no buttons are needed
+  }
+
+  Widget _buildInProgressPlacedButtons(
+      BuildContext context, DarkThemeProvider themeChange) {
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            Preferences.openMapWithDirections(
+                destinationLatitude: bookingModel!.dropoffLocation
+                    .coordinates![0], // Example latitude (San Francisco)
+                destinationLongitude:
+                    bookingModel!.dropoffLocation.coordinates![1],
+                startLatitude: Preferences.driverLat,
+                startLongitude: Preferences.driverLong);
+          },
+          child: const Text('Open Drop Location in Map'),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            RoundShapeButton(
+              title: "Cancel Ride",
+              buttonColor: themeChange.isDarkTheme()
+                  ? AppThemData.grey900
+                  : AppThemData.grey50,
+              buttonTextColor: themeChange.isDarkTheme()
+                  ? AppThemData.white
+                  : AppThemData.black,
+              onTap: () {
+                Get.to(() => ReasonForCancelView(
+                      bookingModel: bookingModel!,
+                    ));
+              },
+              size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
+            ),
+            RoundShapeButton(
+              title: "Complete Ride",
+              buttonColor: AppThemData.primary500,
+              buttonTextColor: AppThemData.black,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CustomDialogBox(
+                        title: "Complete Ride",
+                        descriptions:
+                            "Are you sure you want to complete this ride request?",
+                        img: Image.asset(
+                          "assets/icon/ic_green_right.png",
+                          height: 58,
+                          width: 58,
+                        ),
+                        positiveClick: () async {
+                          // Navigator.pop(context);
+
+                          bool canceled = await completeRide(bookingModel!.id);
+
+                          if (canceled) {
+                            Navigator.pop(context);
+                            ShowToastDialog.showToast('Ride Completed');
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return CollectMoneyPopup(
+                                      amount:
+                                          bookingModel!.fareAmount.toString());
+                                });
+                          } else {
+                            ShowToastDialog.showToast(
+                                'Failed to Complete Rided');
+                            Navigator.pop(context);
+                          }
+
+                          // Navigator.pop(context);
+                        },
+                        negativeClick: () {
+                          Navigator.pop(context);
+                        },
+                        positiveString: "Confirm",
+                        negativeString: "Cancel",
+                        themeChange: themeChange);
+                  },
+                );
+
+                // Preferences.rideModule = bookingModel;
+                // Get.toNamed(Routes.ASK_FOR_OTP,
+                //     arguments: {"bookingModel": bookingModel!});
+              },
+              size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
+            )
+          ],
+        ),
+      ],
+    );
   }
 
   Widget _buildBookingPlacedButtons(
@@ -223,7 +311,7 @@ class ActiveRideView extends StatelessWidget {
           onTap: () {
             _showCancelDialog(context, themeChange);
           },
-          size: Size(10, 42),
+          size: const Size(10, 42),
         ),
         RoundShapeButton(
           title: "Accept".tr,
@@ -245,49 +333,6 @@ class ActiveRideView extends StatelessWidget {
                         width: 58,
                       ),
                       positiveClick: () {
-                        // bookingModel!.driverId =
-                        //     FireStoreUtils.getCurrentUid();
-                        // bookingModel!.status =
-                        //     BookingStatus.bookingAccepted;
-                        // bookingModel!.updatedAt =
-                        //     Timestamp.now().toString();
-                        // FireStoreUtils.setBooking(bookingModel!)
-                        //     .then((value) async {
-                        //   if (value == true) {
-                        //     ShowToastDialog.showToast(
-                        //         "Ride accepted successfully!");
-
-                        //     UserModel? receiverUserModel =
-                        //         await FireStoreUtils.getUserProfile(
-                        //             bookingModel!.rideId.toString());
-                        //     Map<String, dynamic> playLoad =
-                        //         <String, dynamic>{
-                        //       "bookingId": bookingModel!.id
-                        //     };
-
-                        //     await SendNotification.sendOneNotification(
-                        //         type: "order",
-                        //         token: receiverUserModel!.fcmToken
-                        //             .toString(),
-                        //         title: 'Your Ride is Accepted',
-                        //         customerId: receiverUserModel.id,
-                        //         senderId:
-                        //             FireStoreUtils.getCurrentUid(),
-                        //         bookingId:
-                        //             bookingModel!.id.toString(),
-                        //         driverId:
-                        //             bookingModel!.driverId.toString(),
-                        //         body:
-                        //             'Your ride #${bookingModel!.id.toString().substring(0, 4)} has been confirmed.',
-                        //         payload: playLoad);
-                        //     Navigator.pop(context);
-                        //   } else {
-                        //     ShowToastDialog.showToast(
-                        //         "Something went wrong!");
-                        //     Navigator.pop(context);
-                        //   }
-                        // });
-
                         Navigator.pop(context);
                       },
                       negativeClick: () {
@@ -303,7 +348,7 @@ class ActiveRideView extends StatelessWidget {
                   "You do not have sufficient wallet balance to accept the ride, as the minimum amount required is ${Constant.amountShow(amount: Constant.minimumAmountToAcceptRide)}.");
             }
           },
-          size: Size(50, 42),
+          size: const Size(50, 42),
         )
       ],
     );
@@ -311,33 +356,50 @@ class ActiveRideView extends StatelessWidget {
 
   Widget _buildBookingAcceptedButtons(
       BuildContext context, DarkThemeProvider themeChange) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: [
-        RoundShapeButton(
-          title: "Cancel Ride",
-          buttonColor: themeChange.isDarkTheme()
-              ? AppThemData.grey900
-              : AppThemData.grey50,
-          buttonTextColor:
-              themeChange.isDarkTheme() ? AppThemData.white : AppThemData.black,
-          onTap: () {
-            Get.to(() => ReasonForCancelView(
-                  bookingModel: bookingModel!,
-                ));
+        ElevatedButton(
+          onPressed: () {
+            Preferences.openMapWithDirections(
+                destinationLatitude: bookingModel!.dropoffLocation
+                    .coordinates![0], // Example latitude (San Francisco)
+                destinationLongitude:
+                    bookingModel!.dropoffLocation.coordinates![1],
+                startLatitude: Preferences.driverLat,
+                startLongitude: Preferences.driverLong);
           },
-          size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
+          child: const Text('Open PickUp Location in Map'),
         ),
-        RoundShapeButton(
-          title: "Pickup",
-          buttonColor: AppThemData.primary500,
-          buttonTextColor: AppThemData.black,
-          onTap: () {
-            Preferences.rideModule = bookingModel;
-            Get.toNamed(Routes.ASK_FOR_OTP,
-                arguments: {"bookingModel": bookingModel!});
-          },
-          size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            RoundShapeButton(
+              title: "Cancel Ride",
+              buttonColor: themeChange.isDarkTheme()
+                  ? AppThemData.grey900
+                  : AppThemData.grey50,
+              buttonTextColor: themeChange.isDarkTheme()
+                  ? AppThemData.white
+                  : AppThemData.black,
+              onTap: () {
+                Get.to(() => ReasonForCancelView(
+                      bookingModel: bookingModel!,
+                    ));
+              },
+              size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
+            ),
+            RoundShapeButton(
+              title: "Pickup",
+              buttonColor: AppThemData.primary500,
+              buttonTextColor: AppThemData.black,
+              onTap: () {
+                Preferences.rideModule = bookingModel;
+                Get.toNamed(Routes.ASK_FOR_OTP,
+                    arguments: {"bookingModel": bookingModel!});
+              },
+              size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
+            )
+          ],
         )
       ],
     );
@@ -367,24 +429,6 @@ class ActiveRideView extends StatelessWidget {
 
                 if (value == true) {
                   ShowToastDialog.showToast("Ride cancelled successfully!");
-
-                  // await SendNotification
-                  //     .sendOneNotification(
-                  //         type: "order",
-                  //         token: bookingModel!.tok
-                  //             .toString(),
-                  //         title: 'Your Ride is Rejected',
-                  //         customerId: receiverUserModel.id,
-                  //         senderId: FireStoreUtils
-                  //             .getCurrentUid(),
-                  //         bookingId:
-                  //             bookingModel!.id.toString(),
-                  //         driverId: bookingModel!.driverId
-                  //             .toString(),
-                  //         body:
-                  //             'Your ride #${bookingModel!.id.toString().substring(0, 4)} has been Rejected by Driver.',
-                  //         // body: 'Your ride has been rejected by ${driverModel!.fullName}.',
-                  //         payload: playLoad);
 
                   Navigator.pop(context);
                 } else {

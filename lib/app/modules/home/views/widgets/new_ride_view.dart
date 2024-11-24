@@ -19,6 +19,7 @@ import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/theme/responsive.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
 import 'package:driver/utils/fire_store_utils.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -70,7 +71,23 @@ class NewRideView extends StatelessWidget {
                     : bookingModel!.ride?.dropoffAddress ?? ''),
             // if ((bookingModel!.status ?? '') == BookingStatus.bookingPlaced &&
             //     !bookingModel!.!.contains(FireStoreUtils.getCurrentUid())) ...{
-
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Preferences.openMapWithDirections(
+                    destinationLatitude: bookingModel!.ride!.dropoffLocation!
+                        .coordinates![0], // Example latitude (San Francisco)
+                    destinationLongitude:
+                        bookingModel!.ride!.dropoffLocation!.coordinates![1],
+                    startLatitude:
+                        bookingModel!.ride!.pickupLocation!.coordinates![0],
+                    startLongitude:
+                        bookingModel!.ride!.pickupLocation!.coordinates![1],
+                  );
+                },
+                child: const Text('Open Location in Map'),
+              ),
+            ),
             if ((bookingModel!.status ?? '') ==
                 BookingStatus.bookingPlaced) ...{
               const SizedBox(height: 16),
@@ -136,7 +153,7 @@ class NewRideView extends StatelessWidget {
                     buttonColor: AppThemData.blueLight01,
                     buttonTextColor: AppThemData.black,
                     onTap: () {
-                      acceptRideAPI(bookingModel?.rideId ?? "");
+                      acceptRideAPI(bookingModel?.ride!.id ?? "");
                     },
                     size: Size(Responsive.width(40, context), 42),
                   ),
@@ -148,7 +165,6 @@ class NewRideView extends StatelessWidget {
                     .contains(FireStoreUtils.getCurrentUid()) &&
                 bookingModel!.driverId!
                     .contains(FireStoreUtils.getCurrentUid())) ...{
-              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,

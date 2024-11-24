@@ -26,7 +26,9 @@ const String OwnerSignUP = "/driver/owner/registration";
 const String loginOwnerSignUP = "/driver/owner/login_with_password"; //POST
 const String OtpVerify = "/driver/ride/request/inprogress";
 const String rideCancel = "/driver/ride/request/canceled";
-const String liveRides = "/driver/ride/request/inprogress";
 const String getOwnerTicketList = "/driver/owner/support/ticket/list";
 const String createOwnerSupportTicket =
     "/driver/owner/support/ticket/create"; //POST
+const String rideComplete = "/driver/ride/request/complete";
+const String liveRides = "/driver/ride/request/inprogress";
+const String inProgressRides = "/driver/ride/inprogress/list";

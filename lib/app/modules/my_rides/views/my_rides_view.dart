@@ -14,6 +14,7 @@ import 'package:driver/utils/fire_store_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/my_rides_controller.dart';
@@ -36,7 +37,9 @@ class MyRidesView extends GetView<MyRidesController> {
         },
         builder: (controller) {
           return Scaffold(
-            backgroundColor: themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
+            backgroundColor: themeChange.isDarkTheme()
+                ? AppThemData.black
+                : AppThemData.white,
             // appBar: AppBarWithBorder(
             //   title: "My Rides".tr,
             //   bgColor: themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
@@ -62,11 +65,12 @@ class MyRidesView extends GetView<MyRidesController> {
                                   : themeChange.isDarkTheme()
                                       ? AppThemData.black
                                       : AppThemData.white,
-                              buttonTextColor: controller.selectedType.value == 0
-                                  ? AppThemData.black
-                                  : themeChange.isDarkTheme()
-                                      ? AppThemData.white
-                                      : AppThemData.black,
+                              buttonTextColor:
+                                  controller.selectedType.value == 0
+                                      ? AppThemData.black
+                                      : themeChange.isDarkTheme()
+                                          ? AppThemData.white
+                                          : AppThemData.black,
                               onTap: () {
                                 controller.selectedType.value = 0;
                               },
@@ -81,11 +85,12 @@ class MyRidesView extends GetView<MyRidesController> {
                                   : themeChange.isDarkTheme()
                                       ? AppThemData.black
                                       : AppThemData.white,
-                              buttonTextColor: controller.selectedType.value == 1
-                                  ? AppThemData.black
-                                  : themeChange.isDarkTheme()
-                                      ? AppThemData.white
-                                      : AppThemData.black,
+                              buttonTextColor:
+                                  controller.selectedType.value == 1
+                                      ? AppThemData.black
+                                      : themeChange.isDarkTheme()
+                                          ? AppThemData.white
+                                          : AppThemData.black,
                               onTap: () {
                                 controller.selectedType.value = 1;
                               },
@@ -100,7 +105,12 @@ class MyRidesView extends GetView<MyRidesController> {
                                   : themeChange.isDarkTheme()
                                       ? AppThemData.black
                                       : AppThemData.white,
-                              buttonTextColor: controller.selectedType.value == 2 ? AppThemData.black : (themeChange.isDarkTheme() ? AppThemData.white : AppThemData.black),
+                              buttonTextColor:
+                                  controller.selectedType.value == 2
+                                      ? AppThemData.black
+                                      : (themeChange.isDarkTheme()
+                                          ? AppThemData.white
+                                          : AppThemData.black),
                               onTap: () {
                                 controller.selectedType.value = 2;
                               },
@@ -115,11 +125,12 @@ class MyRidesView extends GetView<MyRidesController> {
                                   : themeChange.isDarkTheme()
                                       ? AppThemData.black
                                       : AppThemData.white,
-                              buttonTextColor: controller.selectedType.value == 3
-                                  ? AppThemData.black
-                                  : themeChange.isDarkTheme()
-                                      ? AppThemData.white
-                                      : AppThemData.black,
+                              buttonTextColor:
+                                  controller.selectedType.value == 3
+                                      ? AppThemData.black
+                                      : themeChange.isDarkTheme()
+                                          ? AppThemData.white
+                                          : AppThemData.black,
                               onTap: () {
                                 controller.selectedType.value = 3;
                               },
@@ -134,11 +145,12 @@ class MyRidesView extends GetView<MyRidesController> {
                                   : themeChange.isDarkTheme()
                                       ? AppThemData.black
                                       : AppThemData.white,
-                              buttonTextColor: controller.selectedType.value == 4
-                                  ? AppThemData.black
-                                  : themeChange.isDarkTheme()
-                                      ? AppThemData.white
-                                      : AppThemData.black,
+                              buttonTextColor:
+                                  controller.selectedType.value == 4
+                                      ? AppThemData.black
+                                      : themeChange.isDarkTheme()
+                                          ? AppThemData.white
+                                          : AppThemData.black,
                               onTap: () {
                                 controller.selectedType.value = 4;
                               },
@@ -154,23 +166,29 @@ class MyRidesView extends GetView<MyRidesController> {
                   if (controller.selectedType.value == 0) ...{
                     if (homeController.isOnline.value == true) ...{
                       StreamBuilder<List<BookingModel>>(
-                          stream: FireStoreUtils().getBookings(Constant.currentLocation!.latitude, Constant.currentLocation!.longitude),
+                          stream: FireStoreUtils().getBookings(
+                              Constant.currentLocation!.latitude,
+                              Constant.currentLocation!.longitude),
                           builder: (context, snapshot) {
                             log("State Ride: ${snapshot.connectionState}");
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return Constant.loader();
                             }
-                            if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true)) {
+                            if (!snapshot.hasData ||
+                                (snapshot.data?.isEmpty ?? true)) {
                               return NoRidesView(themeChange: themeChange);
                             } else {
                               return Container(
                                 height: Responsive.height(80, context),
-                                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                                padding:
+                                    const EdgeInsets.fromLTRB(16, 16, 16, 0),
                                 child: ListView.builder(
                                   itemCount: snapshot.data!.length,
                                   shrinkWrap: true,
                                   itemBuilder: (context, index) {
-                                    BookingModel bookingModel = snapshot.data![index];
+                                    BookingModel bookingModel =
+                                        snapshot.data![index];
                                     return NewRideView(
                                       bookingModel: bookingModel,
                                     );
@@ -186,14 +204,17 @@ class MyRidesView extends GetView<MyRidesController> {
                             children: [
                               goOnlineDialog(
                                 title: "You're Now Offline".tr,
-                                descriptions: "Please change your status to online to access all features. When offline, you won't be able to access any functionalities.".tr,
+                                descriptions:
+                                    "Please change your status to online to access all features. When offline, you won't be able to access any functionalities."
+                                        .tr,
                                 img: SvgPicture.asset(
                                   "assets/icon/ic_offline.svg",
                                   height: 58,
                                   width: 58,
                                 ),
                                 onClick: () async {
-                                  await FireStoreUtils.updateDriverUserOnline(true);
+                                  await FireStoreUtils.updateDriverUserOnline(
+                                      true);
                                   homeController.isOnline.value = true;
                                   homeController.updateCurrentLocation();
                                 },
@@ -210,10 +231,12 @@ class MyRidesView extends GetView<MyRidesController> {
                         stream: FireStoreUtils().getOngoingBookings(),
                         builder: (context, snapshot) {
                           log("State Ongoing: ${snapshot.connectionState}");
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return Constant.loader();
                           }
-                          if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true)) {
+                          if (!snapshot.hasData ||
+                              (snapshot.data?.isEmpty ?? true)) {
                             return NoRidesView(themeChange: themeChange);
                           } else {
                             return Container(
@@ -223,7 +246,8 @@ class MyRidesView extends GetView<MyRidesController> {
                                 itemCount: snapshot.data!.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
-                                  BookingModel bookingModel = snapshot.data![index];
+                                  BookingModel bookingModel =
+                                      snapshot.data![index];
                                   return NewRideView(
                                     bookingModel: bookingModel,
                                   );
@@ -238,10 +262,12 @@ class MyRidesView extends GetView<MyRidesController> {
                         builder: (context, snapshot) {
                           log("State Completed: ${snapshot.connectionState}");
                           log("State Completed: ${snapshot.data!.length}");
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return Constant.loader();
                           }
-                          if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true)) {
+                          if (!snapshot.hasData ||
+                              (snapshot.data?.isEmpty ?? true)) {
                             return NoRidesView(themeChange: themeChange);
                           } else {
                             return Container(
@@ -251,7 +277,8 @@ class MyRidesView extends GetView<MyRidesController> {
                                 itemCount: snapshot.data!.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
-                                  BookingModel bookingModel = snapshot.data![index];
+                                  BookingModel bookingModel =
+                                      snapshot.data![index];
                                   return NewRideView(
                                     bookingModel: bookingModel,
                                   );
@@ -265,10 +292,12 @@ class MyRidesView extends GetView<MyRidesController> {
                         stream: FireStoreUtils().getCancelledBookings(),
                         builder: (context, snapshot) {
                           log("State Cancelled: ${snapshot.connectionState}");
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return Constant.loader();
                           }
-                          if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true)) {
+                          if (!snapshot.hasData ||
+                              (snapshot.data?.isEmpty ?? true)) {
                             return NoRidesView(themeChange: themeChange);
                           } else {
                             return Container(
@@ -278,7 +307,8 @@ class MyRidesView extends GetView<MyRidesController> {
                                 itemCount: snapshot.data!.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
-                                  BookingModel bookingModel = snapshot.data![index];
+                                  BookingModel bookingModel =
+                                      snapshot.data![index];
                                   return NewRideView(
                                     bookingModel: bookingModel,
                                   );
@@ -292,10 +322,12 @@ class MyRidesView extends GetView<MyRidesController> {
                         stream: FireStoreUtils().getRejectedBookings(),
                         builder: (context, snapshot) {
                           log("State Rejected: ${snapshot.connectionState}");
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return Constant.loader();
                           }
-                          if (!snapshot.hasData || (snapshot.data?.isEmpty ?? true)) {
+                          if (!snapshot.hasData ||
+                              (snapshot.data?.isEmpty ?? true)) {
                             return NoRidesView(themeChange: themeChange);
                           } else {
                             return Container(
@@ -305,7 +337,8 @@ class MyRidesView extends GetView<MyRidesController> {
                                 itemCount: snapshot.data!.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
-                                  BookingModel bookingModel = snapshot.data![index];
+                                  BookingModel bookingModel =
+                                      snapshot.data![index];
                                   return NewRideView(
                                     bookingModel: bookingModel,
                                   );
@@ -321,4 +354,102 @@ class MyRidesView extends GetView<MyRidesController> {
           );
         });
   }
+}
+
+goOnlineDialog({
+  required BuildContext context,
+  required String title,
+  required descriptions,
+  required string,
+  required Widget img,
+  required Function() onClick,
+  required DarkThemeProvider themeChange,
+  Color? buttonColor,
+  Color? buttonTextColor,
+}) {
+  return Container(
+    padding: const EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 20),
+    decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        color: themeChange.isDarkTheme() ? Colors.black : Colors.white,
+        borderRadius: BorderRadius.circular(20)),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        img,
+        const SizedBox(
+          height: 20,
+        ),
+        Visibility(
+          visible: title.isNotEmpty,
+          child: Text(
+            title,
+            style: GoogleFonts.inter(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: themeChange.isDarkTheme()
+                  ? AppThemData.grey25
+                  : AppThemData.grey950,
+            ),
+          ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Visibility(
+          visible: descriptions.isNotEmpty,
+          child: Text(
+            descriptions,
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: themeChange.isDarkTheme()
+                  ? AppThemData.grey25
+                  : AppThemData.grey950,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: InkWell(
+                onTap: () {
+                  onClick();
+                },
+                child: Container(
+                  width: Responsive.width(100, context),
+                  height: 45,
+                  decoration: ShapeDecoration(
+                    color: buttonColor ?? AppThemData.primary500,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(200),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        string.toString(),
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                          color: buttonTextColor ?? AppThemData.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+      ],
+    ),
+  );
 }
