@@ -136,7 +136,7 @@ class NewRideView extends StatelessWidget {
                     buttonColor: AppThemData.blueLight01,
                     buttonTextColor: AppThemData.black,
                     onTap: () {
-                      acceptRideAPI(bookingModel?.rideId ?? "");
+                      acceptRideAPI(bookingModel?.ride!.id ?? "");
                     },
                     size: Size(Responsive.width(40, context), 42),
                   ),

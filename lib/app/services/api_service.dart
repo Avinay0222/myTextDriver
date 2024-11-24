@@ -274,8 +274,6 @@ Future<bool> updateCurrentLocationAPI(String latitude, String longitude) async {
     "fcmToken": await Preferences.getFcmToken(),
   };
 
- 
-
   final response = await http.put(
     Uri.parse(baseURL + setCurrentLocation),
     headers: {
@@ -388,7 +386,7 @@ Future<bool> acceptRideAPI(String ride_id) async {
 
 Future<bool> verifyOtpRequest(RideData rideData) async {
   final Map<String, dynamic> body = {
-    "ride_id": rideData.id,
+    "ride_id": "6742d43fae992b07dce93cfd",
     "otp": rideData.otp
   };
 
@@ -410,8 +408,11 @@ Future<bool> verifyOtpRequest(RideData rideData) async {
 
 Stream<List<BookingModel>> getRequest() async* {
   while (true) {
-    final response = await http.get(
+    final Map<String, dynamic> body = {"startValue": 0, "lastValue": 10};
+
+    final response = await http.post(
       Uri.parse(baseURL + getRideRequest),
+      body: jsonEncode(body),
       headers: {
         "Content-Type": "application/json",
         "token": await Preferences.getFcmToken()
@@ -433,8 +434,37 @@ Stream<List<BookingModel>> getRequest() async* {
 
 Stream<List<RideData>> getLiveRidesRequest() async* {
   while (true) {
-    final response = await http.get(
-      Uri.parse(baseURL + liveRides),
+    final Map<String, dynamic> body = {"startValue": 0, "lastValue": 10};
+
+    final response = await http.post(
+      Uri.parse(baseURL + inProgressRides),
+      body: jsonEncode(body),
+      headers: {
+        "Content-Type": "application/json",
+        "token": await Preferences.getFcmToken()
+      },
+    );
+
+    if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
+      List<RideData> listModel = (jsonDecode(response.body)["data"] as List)
+          .map((e) => RideData.fromJson(e))
+          .toList();
+      yield listModel; // {{ edit_1 }}
+    } else {
+      yield []; // {{ edit_2 }}
+    }
+    await Future.delayed(Duration(
+        seconds: 5)); // Delay for 5 seconds before making the next request
+  }
+}
+
+Stream<List<RideData>> getInProgressRequest() async* {
+  while (true) {
+    final Map<String, dynamic> body = {"startValue": 0, "lastValue": 10};
+
+    final response = await http.post(
+      Uri.parse(baseURL + inProgressRides),
+      body: jsonEncode(body),
       headers: {
         "Content-Type": "application/json",
         "token": await Preferences.getFcmToken()
@@ -456,8 +486,11 @@ Stream<List<RideData>> getLiveRidesRequest() async* {
 
 Stream<List<RideData>> getActiveRidesRequest() async* {
   while (true) {
-    final response = await http.get(
+    final Map<String, dynamic> body = {"startValue": 0, "lastValue": 10};
+
+    final response = await http.post(
       Uri.parse(baseURL + getActiveRides),
+      body: jsonEncode(body),
       headers: {
         "Content-Type": "application/json",
         "token": await Preferences.getFcmToken()

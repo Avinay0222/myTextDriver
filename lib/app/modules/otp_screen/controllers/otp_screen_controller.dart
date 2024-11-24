@@ -29,17 +29,17 @@ class OtpScreenController extends GetxController {
   RxString otp = ''.obs;
 
   Future<bool> startBooking(RideData bookingModels) async {
-    BookingModel bookingModel = BookingModel.fromJson(bookingModels.toJson());
-    bookingModel.status = BookingStatus.bookingOngoing;
-    bookingModel.updatedAt = Timestamp.now().toString();
-    bookingModel.createdAt = Timestamp.now().toString();
+    // RideData bookingModel = BookingModel.fromJson(bookingModels.toJson());
+    // bookingModel.status = BookingStatus.bookingOngoing;
+    // bookingModel.updatedAt = Timestamp.now().toString();
+    // bookingModel.createdAt = Timestamp.now().toString();
     bool? isStarted = await verifyOtpRequest(bookingModels);
 
     ShowToastDialog.showToast("Your ride started....");
     UserModel? receiverUserModel =
-        await FireStoreUtils.getUserProfile(bookingModel.rideId.toString());
+        await FireStoreUtils.getUserProfile(bookingModels.driverId.toString());
     Map<String, dynamic> playLoad = <String, dynamic>{
-      "bookingId": bookingModel.id
+      "bookingId": bookingModels.id
     };
 
     if (isStarted) {
@@ -49,10 +49,10 @@ class OtpScreenController extends GetxController {
           title: 'Your Ride is Started',
           customerId: receiverUserModel.id,
           senderId: FireStoreUtils.getCurrentUid(),
-          bookingId: bookingModel.id.toString(),
-          driverId: bookingModel.driverId.toString(),
+          bookingId: bookingModels.id.toString(),
+          driverId: bookingModels.driverId.toString(),
           body:
-              'Your Ride is Started From ${bookingModel.ride?.pickupAddress.toString()} to ${bookingModel.ride?.dropoffAddress.toString()}.',
+              'Your Ride is Started From ${bookingModels.pickupAddress.toString()} to ${bookingModels.dropoffAddress.toString()}.',
           payload: playLoad);
     }
 

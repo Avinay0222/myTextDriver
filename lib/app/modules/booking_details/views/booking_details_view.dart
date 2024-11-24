@@ -343,7 +343,7 @@ class BookingDetailsView extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    rideData.fareAmount.numberDecimal,
+                                    rideData.fareAmount,
                                     textAlign: TextAlign.right,
                                     style: GoogleFonts.inter(
                                       color: themeChange.isDarkTheme()

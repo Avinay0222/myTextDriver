@@ -85,7 +85,7 @@ class HomeView extends GetView<HomeController> {
       children: [
         InkWell(
           onTap: () async {
-            await getRequest();
+            // await getRequest();
           },
           child: SvgPicture.asset("assets/icon/logo_only.svg"),
         ),

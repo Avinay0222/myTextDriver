@@ -15,7 +15,7 @@ class Preferences {
   static const String fcmToken = "FCM_TOKEN";
   static double driverLat = 0, driverLong = 0;
   static RideData? rideModule;
-
+  static Driver? driverModel;
   static DriverUserModel? userModel;
 
   static Future<bool> getBoolean(String key) async {
@@ -83,6 +83,7 @@ class Preferences {
     SharedPreferences pref = await SharedPreferences.getInstance();
     Preferences.userModel = userModel;
     String jsonString = json.encode(userModel.toJson());
+    driverModel = Driver.fromJson(userModel.toJson());
     await saveUserModelOnline(userModel);
     await pref.setString('driverUserModel', jsonString);
   }
