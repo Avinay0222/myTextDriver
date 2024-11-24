@@ -403,7 +403,7 @@ class RideData {
 
   factory RideData.fromJson(Map<String, dynamic> json) {
     return RideData(
-      id: json['_id'],
+      id: json['ride']['_id'],
       passengerId: json['passenger']['_id'],
       driverId: json['driver']['_id'],
       vehicleId: json['vehicle']['name'],
