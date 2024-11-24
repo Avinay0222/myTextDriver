@@ -359,6 +359,23 @@ Future<DriverUserModel> getOnlineUserModel() async {
   }
 }
 
+Future<DriverUserModel> updateOnlineUserModel(
+    Map<String, dynamic> params) async {
+  String token = await Preferences.getFcmToken();
+  final response = await http.put(Uri.parse(baseURL + updatePofileEndpoint),
+      headers: {"Content-Type": "application/json", "token": token},
+      body: jsonEncode(params));
+
+  if (response.statusCode == 200) {
+    if (jsonDecode(response.body)["status"]) {
+      return DriverUserModel.fromAnotherJson(jsonDecode(response.body)["data"]);
+    }
+    return DriverUserModel();
+  } else {
+    return DriverUserModel();
+  }
+}
+
 Future<bool> cancelRide(String rideId) async {
   final Map<String, dynamic> body = {
     "ride_id": rideId,

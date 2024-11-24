@@ -99,6 +99,8 @@ class HomeController extends GetxController {
   Future<void> getRideRequestt() async {
     DriverUserModel model =
         await Preferences.getDriverUserModel() ?? DriverUserModel();
+    name.value = model.fullName ?? "";
+    phoneNumber.value = model.phoneNumber ?? "";
   }
 
   getUserData() async {
