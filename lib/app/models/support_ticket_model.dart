@@ -40,8 +40,12 @@ class SupportTicketModel {
     status = json['status'] ?? "";
     notes = json['notes'] ?? "";
     userId = json['userId'] ?? "";
-    createAt = json['createAt'] ?? "";
-    updateAt = json['updateAt'] ?? "";
+    createAt = json['createAt'] is String
+        ? Timestamp.fromMillisecondsSinceEpoch(int.parse(json['createAt']))
+        : json['createAt'];
+    updateAt = json['updateAt'] is String
+        ? Timestamp.fromMillisecondsSinceEpoch(int.parse(json['updateAt']))
+        : json['updateAt'];
     attachments = json['attachments'].cast<String>() ?? [];
   }
 

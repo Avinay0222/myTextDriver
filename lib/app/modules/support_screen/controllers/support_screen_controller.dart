@@ -1,11 +1,11 @@
-
+import 'package:driver/app/models/owner_support_ticket_modal.dart';
 import 'package:driver/app/models/support_ticket_model.dart';
-import 'package:driver/utils/fire_store_utils.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:driver/app/services/api_service.dart';
 import 'package:get/get.dart';
 
 class SupportScreenController extends GetxController {
-  RxList<SupportTicketModel> supportTicketList = <SupportTicketModel>[].obs;
+  RxList<SupportTicketDataModel> supportTicketList =
+      <SupportTicketDataModel>[].obs;
   RxBool isLoading = true.obs;
 
   @override
@@ -15,9 +15,17 @@ class SupportScreenController extends GetxController {
   }
 
   getData() async {
-    await FireStoreUtils.getSupportTicket(FirebaseAuth.instance.currentUser!.uid).then((value) {
-      supportTicketList.value = value;
+    isLoading(true);
+    try {
+      final tickets = await getDriverSupportTickList();
+      supportTicketList.assignAll(tickets
+          .map((ticket) => SupportTicketDataModel.fromJson(ticket.toJson()))
+          .toList());
+      print(supportTicketList);
+    } catch (e) {
+      // Handle error
+    } finally {
       isLoading(false);
-    });
+    }
   }
 }

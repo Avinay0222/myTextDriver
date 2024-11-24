@@ -11,6 +11,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:driver/app/services/api_service.dart';
+import 'dart:convert';
 
 class CreateSupportTicketController extends GetxController {
   Rx<GlobalKey<FormState>> formKey = GlobalKey<FormState>().obs;
@@ -19,6 +21,7 @@ class CreateSupportTicketController extends GetxController {
   Rx<SupportReasonModel> selectedSupportTitle = SupportReasonModel().obs;
 
   Rx<TextEditingController> subjectController = TextEditingController().obs;
+  Rx<TextEditingController> titleController = TextEditingController().obs;
   Rx<TextEditingController> descriptionController = TextEditingController().obs;
 
   @override
@@ -108,6 +111,32 @@ class CreateSupportTicketController extends GetxController {
       }
     } on PlatformException catch (e) {
       ShowToastDialog.showToast("Failed to Pick : \n $e");
+    }
+  }
+
+  Future<void> createSupportTicket() async {
+    Map<String, dynamic> params = {
+      "title": selectedSupportTitle.value.reason,
+      "subject": subjectController.value.text,
+      "description": descriptionController.value.text,
+      "image": supportImages
+          .map((image) =>
+              "data:image/jpeg;base64,${base64Encode(File(image).readAsBytesSync())}")
+          .toList(),
+    };
+
+    try {
+      ShowToastDialog.showLoader("Creating ticket...".tr);
+      final response = await createSupportTicketAPI(params);
+      if (response["status"] == true) {
+        Get.back();
+      }
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast("Support Ticket Created".tr);
+      // Handle success (e.g., navigate back or clear fields)
+    } catch (e) {
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast("Error: ${e.toString()}");
     }
   }
 }

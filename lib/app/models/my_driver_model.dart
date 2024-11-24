@@ -4,25 +4,27 @@ class MyDriverModel {
   String? id; // Corresponds to _id
   Location? location; // Corresponds to location
   String? name; // Corresponds to name
+  String? email; // Corresponds to email
+  String? password; // Corresponds to password
   String? countryCode; // Corresponds to country_code
   String? phone; // Corresponds to phone
   String? referralCode; // Corresponds to referral_code
   String? referralCodeBy; // Corresponds to referral_code_by
   bool? verified; // Corresponds to verified
-  int? otpForgetPassword; // Corresponds to otpForgetPassword
+  String? otpForgetPassword; // Corresponds to otpForgetPassword
   String? role; // Corresponds to role
   String? rideStatus; // Corresponds to ride_status
   String? ownerId; // Corresponds to owner_id
   List<String>? languages; // Corresponds to languages
   String? gender; // Corresponds to gender
   DateTime? dateOfBirth; // Corresponds to date_of_birth
-  int? profile; // Corresponds to profile
-  int? token; // Corresponds to token
-  int? pushNotification; // Corresponds to push_notification
+  String? profile; // Corresponds to profile
+  String? token; // Corresponds to token
+  String? pushNotification; // Corresponds to push_notification
   String? status; // Corresponds to status
   String? suspend; // Corresponds to suspend
   int? yearOfExperience; // Corresponds to year_of_experience
-  int? education; // Corresponds to education
+  String? education; // Corresponds to education
   DateTime? createdAt; // Corresponds to createdAt
   DateTime? updatedAt; // Corresponds to updatedAt
   int? version; // Corresponds to __v
@@ -31,6 +33,8 @@ class MyDriverModel {
     this.id,
     this.location,
     this.name,
+    this.email,
+    this.password,
     this.countryCode,
     this.phone,
     this.referralCode,
@@ -58,6 +62,8 @@ class MyDriverModel {
   factory MyDriverModel.fromJson(Map<String, dynamic> json) => MyDriverModel(
         id: json["_id"],
         name: json["name"],
+        email: json["email"],
+        password: json["password"],
         countryCode: json["country_code"],
         phone: json["phone"],
         referralCode: json["referral_code"],
@@ -89,6 +95,8 @@ class MyDriverModel {
         "_id": id,
         "location": location?.toJson(),
         "name": name,
+        "email": email,
+        "password": password,
         "country_code": countryCode,
         "phone": phone,
         "referral_code": referralCode,
