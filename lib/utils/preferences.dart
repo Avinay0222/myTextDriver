@@ -16,6 +16,7 @@ class Preferences {
   static const String userLoginStatus = "USER_LOGIN_STATUS";
   static const String ownerLoginStatus = "OWNER_LOGIN_STATUS";
   static const String fcmToken = "FCM_TOKEN";
+  static String globalToken = "";
   static double driverLat = 0, driverLong = 0;
   static RideData? rideModule;
   static Driver? driverModel;
@@ -69,6 +70,7 @@ class Preferences {
 
   static Future<void> setFcmToken(String token) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
+    globalToken = token;
     await pref.setString(fcmToken, token);
   }
 
@@ -87,7 +89,7 @@ class Preferences {
     await pref.setBool(ownerLoginStatus, value);
   }
 
-  static Future<bool> isOwnerLogin() async{
+  static Future<bool> isOwnerLogin() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getBool(ownerLoginStatus) ?? false;
   }

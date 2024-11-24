@@ -467,7 +467,7 @@ Stream<List<BookingModel>> getRequest() async* {
       body: jsonEncode(body),
       headers: {
         "Content-Type": "application/json",
-        "token": await Preferences.getFcmToken()
+        "token": Preferences.globalToken,
       },
     );
 
