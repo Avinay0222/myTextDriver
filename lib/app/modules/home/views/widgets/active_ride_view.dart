@@ -60,6 +60,18 @@ class ActiveRideView extends StatelessWidget {
               pickUpAddress: bookingModel?.pickupAddress ?? '',
               dropAddress: bookingModel?.dropoffAddress ?? '',
             ),
+            ElevatedButton(
+              onPressed: () {
+                Preferences.openMapWithDirections(
+                    destinationLatitude: bookingModel!.pickupLocation
+                        .coordinates![0], // Example latitude (San Francisco)
+                    destinationLongitude:
+                        bookingModel!.pickupLocation.coordinates![1],
+                    startLatitude: Preferences.driverLat,
+                    startLongitude: Preferences.driverLong);
+              },
+              child: const Text('Open PickUp Location in Map'),
+            ),
             _buildStatusButtons(context, themeChange),
           ],
         ),

@@ -352,6 +352,7 @@ Future<bool> cancelRide(String rideId) async {
     return false;
   }
 }
+
 Future<bool> completeRide(String rideId) async {
   final Map<String, dynamic> body = {
     "ride_id": rideId,

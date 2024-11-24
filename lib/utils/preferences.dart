@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:driver/app/models/booking_model.dart';
 import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/services/api_service.dart';
+import 'package:location/location.dart' as loc;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 String globalToken = '';
 
@@ -96,5 +98,39 @@ class Preferences {
       return userModel;
     }
     return null;
+  }
+
+  static Future<void> openMapWithDirections({
+    required double destinationLatitude,
+    required double destinationLongitude,
+    double startLatitude = 0,
+    double startLongitude = 0,
+  }) async {
+    try {
+      if (startLatitude == 0) {
+        loc.LocationData? currentLocation = await loc.Location().getLocation();
+        if (currentLocation == null) {
+          throw 'Unable to get current location.';
+        }
+
+        startLatitude = currentLocation.latitude!;
+        startLongitude = currentLocation.longitude!;
+      }
+
+      final googleMapsUrl =
+          'https://www.google.com/maps/dir/?api=1&origin=$startLatitude,$startLongitude&destination=$destinationLatitude,$destinationLongitude';
+      final appleMapsUrl =
+          'https://maps.apple.com/?saddr=$startLatitude,$startLongitude&daddr=$destinationLatitude,$destinationLongitude';
+
+      if (await canLaunch(googleMapsUrl)) {
+        await launch(googleMapsUrl); // Open in Google Maps
+      } else if (await canLaunch(appleMapsUrl)) {
+        await launch(appleMapsUrl); // Open in Apple Maps
+      } else {
+        throw 'Could not launch map.';
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 }

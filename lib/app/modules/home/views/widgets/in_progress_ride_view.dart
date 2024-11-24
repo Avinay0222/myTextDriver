@@ -149,7 +149,7 @@ class InProgressRideView extends StatelessWidget {
           onTap: () {
             acceptRideAPI(bookingModel?.id ?? "");
           },
-          size: Size(50, 42),
+          size: const Size(50, 42),
         ),
         const SizedBox(width: 12),
         _buildVehicleInfo(themeChange),
@@ -199,71 +199,91 @@ class InProgressRideView extends StatelessWidget {
     } else if (bookingModel!.driverId == Preferences.userModel!.id!) {
       return _buildBookingAcceptedButtons(context, themeChange);
     }
-    return SizedBox.shrink(); // Return an empty widget if no buttons are needed
+    return const SizedBox
+        .shrink(); // Return an empty widget if no buttons are needed
   }
 
   Widget _buildInProgressPlacedButtons(
       BuildContext context, DarkThemeProvider themeChange) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: [
-        RoundShapeButton(
-          title: "Cancel Ride",
-          buttonColor: themeChange.isDarkTheme()
-              ? AppThemData.grey900
-              : AppThemData.grey50,
-          buttonTextColor:
-              themeChange.isDarkTheme() ? AppThemData.white : AppThemData.black,
-          onTap: () {
-            Get.to(() => ReasonForCancelView(
-                  bookingModel: bookingModel!,
-                ));
-          },
-          size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
-        ),
-        RoundShapeButton(
-          title: "Complete Ride",
-          buttonColor: AppThemData.primary500,
-          buttonTextColor: AppThemData.black,
-          onTap: () {
-            showDialog(
-              context: context,
-              builder: (context) {
-                return CustomDialogBox(
-                    title: "Complete Ride",
-                    descriptions:
-                        "Are you sure you want to complete this ride request?",
-                    img: Image.asset(
-                      "assets/icon/ic_green_right.png",
-                      height: 58,
-                      width: 58,
-                    ),
-                    positiveClick: () async {
-                      bool canceled = await completeRide(bookingModel!.id);
-
-                      if (canceled) {
-                        ShowToastDialog.showToast('Ride Completed');
-                      } else {
-                        ShowToastDialog.showToast('Failed to Complete Rided');
-                      }
-
-                      Navigator.pop(context);
-                    },
-                    negativeClick: () {
-                      Navigator.pop(context);
-                    },
-                    positiveString: "Confirm",
-                    negativeString: "Cancel",
-                    themeChange: themeChange);
-              },
+        ElevatedButton(
+          onPressed: () {
+            Preferences.openMapWithDirections(
+              destinationLatitude: bookingModel!.dropoffLocation
+                  .coordinates![0], // Example latitude (San Francisco)
+              destinationLongitude:
+                  bookingModel!.dropoffLocation.coordinates![1],
+                      startLatitude: Preferences.driverLat,
+                      startLongitude: Preferences.driverLong
             );
-
-            // Preferences.rideModule = bookingModel;
-            // Get.toNamed(Routes.ASK_FOR_OTP,
-            //     arguments: {"bookingModel": bookingModel!});
           },
-          size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
-        )
+          child: const Text('Open Drop Location in Map'),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            RoundShapeButton(
+              title: "Cancel Ride",
+              buttonColor: themeChange.isDarkTheme()
+                  ? AppThemData.grey900
+                  : AppThemData.grey50,
+              buttonTextColor: themeChange.isDarkTheme()
+                  ? AppThemData.white
+                  : AppThemData.black,
+              onTap: () {
+                Get.to(() => ReasonForCancelView(
+                      bookingModel: bookingModel!,
+                    ));
+              },
+              size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
+            ),
+            RoundShapeButton(
+              title: "Complete Ride",
+              buttonColor: AppThemData.primary500,
+              buttonTextColor: AppThemData.black,
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return CustomDialogBox(
+                        title: "Complete Ride",
+                        descriptions:
+                            "Are you sure you want to complete this ride request?",
+                        img: Image.asset(
+                          "assets/icon/ic_green_right.png",
+                          height: 58,
+                          width: 58,
+                        ),
+                        positiveClick: () async {
+                          bool canceled = await completeRide(bookingModel!.id);
+
+                          if (canceled) {
+                            ShowToastDialog.showToast('Ride Completed');
+                          } else {
+                            ShowToastDialog.showToast(
+                                'Failed to Complete Rided');
+                          }
+
+                          Navigator.pop(context);
+                        },
+                        negativeClick: () {
+                          Navigator.pop(context);
+                        },
+                        positiveString: "Confirm",
+                        negativeString: "Cancel",
+                        themeChange: themeChange);
+                  },
+                );
+
+                // Preferences.rideModule = bookingModel;
+                // Get.toNamed(Routes.ASK_FOR_OTP,
+                //     arguments: {"bookingModel": bookingModel!});
+              },
+              size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
+            )
+          ],
+        ),
       ],
     );
   }
@@ -280,7 +300,7 @@ class InProgressRideView extends StatelessWidget {
           onTap: () {
             _showCancelDialog(context, themeChange);
           },
-          size: Size(10, 42),
+          size: const Size(10, 42),
         ),
         RoundShapeButton(
           title: "Accept".tr,
@@ -317,7 +337,7 @@ class InProgressRideView extends StatelessWidget {
                   "You do not have sufficient wallet balance to accept the ride, as the minimum amount required is ${Constant.amountShow(amount: Constant.minimumAmountToAcceptRide)}.");
             }
           },
-          size: Size(50, 42),
+          size: const Size(50, 42),
         )
       ],
     );
@@ -325,33 +345,51 @@ class InProgressRideView extends StatelessWidget {
 
   Widget _buildBookingAcceptedButtons(
       BuildContext context, DarkThemeProvider themeChange) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Column(
       children: [
-        RoundShapeButton(
-          title: "Cancel Ride",
-          buttonColor: themeChange.isDarkTheme()
-              ? AppThemData.grey900
-              : AppThemData.grey50,
-          buttonTextColor:
-              themeChange.isDarkTheme() ? AppThemData.white : AppThemData.black,
-          onTap: () {
-            Get.to(() => ReasonForCancelView(
-                  bookingModel: bookingModel!,
-                ));
+        ElevatedButton(
+          onPressed: () {
+            Preferences.openMapWithDirections(
+              destinationLatitude: bookingModel!.dropoffLocation
+                  .coordinates![0], // Example latitude (San Francisco)
+              destinationLongitude:
+                  bookingModel!.dropoffLocation.coordinates![1],
+                      startLatitude: Preferences.driverLat,
+                      startLongitude: Preferences.driverLong
+            );
           },
-          size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
+          child: const Text('Open PickUp Location in Map'),
         ),
-        RoundShapeButton(
-          title: "Pickup",
-          buttonColor: AppThemData.primary500,
-          buttonTextColor: AppThemData.black,
-          onTap: () {
-            Preferences.rideModule = bookingModel;
-            Get.toNamed(Routes.ASK_FOR_OTP,
-                arguments: {"bookingModel": bookingModel!});
-          },
-          size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            RoundShapeButton(
+              title: "Cancel Ride",
+              buttonColor: themeChange.isDarkTheme()
+                  ? AppThemData.grey900
+                  : AppThemData.grey50,
+              buttonTextColor: themeChange.isDarkTheme()
+                  ? AppThemData.white
+                  : AppThemData.black,
+              onTap: () {
+                Get.to(() => ReasonForCancelView(
+                      bookingModel: bookingModel!,
+                    ));
+              },
+              size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
+            ),
+            RoundShapeButton(
+              title: "Pickup",
+              buttonColor: AppThemData.primary500,
+              buttonTextColor: AppThemData.black,
+              onTap: () {
+                Preferences.rideModule = bookingModel;
+                Get.toNamed(Routes.ASK_FOR_OTP,
+                    arguments: {"bookingModel": bookingModel!});
+              },
+              size: Size(MediaQuery.of(context).size.width / 2 - 50, 42),
+            )
+          ],
         )
       ],
     );
