@@ -35,12 +35,17 @@ class VerifyDocumentsView extends GetView<VerifyDocumentsController> {
               automaticallyImplyLeading: true,
               shape: const Border(
                   bottom: BorderSide(color: AppThemData.grey100, width: 1)),
-              title: Text(
-                "Verify your details".tr,
-                style: GoogleFonts.inter(
-                  color: AppThemData.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
+              title: InkWell(
+                onTap: () {
+                  controller.getData();
+                },
+                child: Text(
+                  "Verify your details".tr,
+                  style: GoogleFonts.inter(
+                    color: AppThemData.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
