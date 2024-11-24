@@ -21,7 +21,12 @@ const String acceptRide = "/driver/ride/request/accepted"; //PUT
 const String createDriverAcc = "/driver/owner/driver/create"; //POST
 const String verifyDriverOTP = "/driver/owner/confirmation"; //POST
 const String getDriverListAPI = "/driver/owner/driver/list"; //GET
+const String getDriverSupportTicketAPI = "/driver/support/ticket/list"; //POST
 const String OwnerSignUP = "/driver/owner/registration";
+const String loginOwnerSignUP = "/driver/owner/login_with_password"; //POST
 const String OtpVerify = "/driver/ride/request/inprogress";
 const String rideCancel = "/driver/ride/request/canceled";
 const String liveRides = "/driver/ride/request/inprogress";
+const String getOwnerTicketList = "/driver/owner/support/ticket/list";
+const String createOwnerSupportTicket =
+    "/driver/owner/support/ticket/create"; //POST

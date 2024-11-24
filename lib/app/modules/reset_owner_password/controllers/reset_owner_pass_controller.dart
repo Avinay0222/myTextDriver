@@ -1,18 +1,18 @@
 import 'package:driver/app/services/api_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 
-class DriverVerifyOtpontroller extends GetxController {
-TextEditingController otpController = TextEditingController();
-
+class ResetOwnerPassController extends GetxController {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   RxString otpCode = "".obs;
   RxString countryCode = "".obs;
   RxString phoneNumber = "".obs;
   RxString verificationId = "".obs;
   RxInt resendToken = 0.obs;
   RxBool isLoading = true.obs;
+  var isOtpVisible = false.obs;
 
   @override
   void onInit() {
@@ -55,20 +55,6 @@ TextEditingController otpController = TextEditingController();
       ShowToastDialog.closeLoader();
       ShowToastDialog.showToast("something went wrong!".tr);
     }
-    // await FirebaseAuth.instance.verifyPhoneNumber(
-    //   phoneNumber: countryCode.value + phoneNumber.value,
-    //   verificationCompleted: (PhoneAuthCredential credential) {},
-    //   verificationFailed: (FirebaseAuthException e) {},
-    //   codeSent: (String verificationId0, int? resendToken0) async {
-    //     verificationId.value = verificationId0;
-    //     resendToken.value = resendToken0!;
-    //   },
-    //   timeout: const Duration(seconds: 25),
-    //   forceResendingToken: resendToken.value,
-    //   codeAutoRetrievalTimeout: (String verificationId0) {
-    //     verificationId0 = verificationId.value;
-    //   },
-    // );
     ShowToastDialog.closeLoader();
     return true;
   }

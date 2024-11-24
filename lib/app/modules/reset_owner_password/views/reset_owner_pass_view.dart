@@ -1,9 +1,4 @@
-import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/modules/create_own_driver/views/create_driver_view.dart';
-import 'package:driver/app/modules/home/views/home_view.dart';
-import 'package:driver/app/modules/home_owner_screen/views/home_owner_view.dart';
-import 'package:driver/app/modules/permission/views/permission_view.dart';
-import 'package:driver/app/modules/signup/views/signup_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
@@ -11,8 +6,6 @@ import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/constant_widgets/text_field_with_title.dart';
 import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
-import 'package:driver/utils/preferences.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,19 +13,16 @@ import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:provider/provider.dart';
 
-import '../controllers/verify_otp_controller.dart';
+import '../controllers/reset_owner_pass_controller.dart';
 
-class DriverVerifyOtpView extends StatelessWidget {
-  String email;
-
-  DriverVerifyOtpView({super.key, required this.email});
+class ResetOwnerPassView extends StatelessWidget {
+  const ResetOwnerPassView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    String otp = "";
     final themeChange = Provider.of<DarkThemeProvider>(context);
-    return GetBuilder<DriverVerifyOtpontroller>(
-        init: DriverVerifyOtpontroller(),
+    return GetBuilder<ResetOwnerPassController>(
+        init: ResetOwnerPassController(),
         builder: (controller) {
           return GestureDetector(
             onTap: () {
@@ -67,7 +57,7 @@ class DriverVerifyOtpView extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      "Verify Your Phone Number".tr,
+                      "Reset Account Password".tr,
                       style: GoogleFonts.inter(
                           fontSize: 24,
                           color: themeChange.isDarkTheme()
@@ -78,8 +68,7 @@ class DriverVerifyOtpView extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 8, bottom: 33),
                       child: Text(
-                        "Enter  6-digit code sent to your mobile number to complete verification."
-                            .tr,
+                        "Verify your account".tr,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.inter(
                             fontSize: 14,
@@ -90,13 +79,54 @@ class DriverVerifyOtpView extends StatelessWidget {
                       ),
                     ),
                     TextFieldWithTitle(
-                      title: "Enter OTP",
-                      hintText: "",
-                      maxLength: 6,
+                      title: "Email Address",
+                      hintText: "Enter registered email address",
                       prefixIcon: const Icon(Icons.email_outlined),
                       keyboardType: TextInputType.emailAddress,
-                      controller: controller.otpController,
-                      isEnable: true,
+                      controller: controller.emailController,
+                      isEnable: !controller.isOtpVisible.value,
+                      validator: (value) => Constant().validateEmail(value),
+                    ),
+                    Visibility(
+                      visible: controller.isOtpVisible.value,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          const Align(
+                              alignment: Alignment.topLeft,
+                              child: Text("Enter OTP")),
+                          OTPTextField(
+                            length: 6,
+                            width: MediaQuery.of(context).size.width,
+                            fieldWidth: 40,
+                            style: GoogleFonts.inter(
+                                fontSize: 16,
+                                color: themeChange.isDarkTheme()
+                                    ? AppThemData.white
+                                    : AppThemData.grey950,
+                                fontWeight: FontWeight.w500),
+                            textFieldAlignment: MainAxisAlignment.spaceAround,
+                            otpFieldStyle: OtpFieldStyle(
+                              focusBorderColor: AppThemData.primary500,
+                              borderColor: AppThemData.grey100,
+                              enabledBorderColor: AppThemData.grey100,
+                            ),
+                            fieldStyle: FieldStyle.underline,
+                          ),
+                          const SizedBox(height: 30),
+                          TextFieldWithTitle(
+                            title: "Password",
+                            hintText: "Enter your password",
+                            prefixIcon: const Icon(Icons.password),
+                            keyboardType: TextInputType.visiblePassword,
+                            controller: controller.passwordController,
+                            obscureText: true,
+                            isEnable: true,
+                            validator: (value) =>
+                                Constant().validateRequired(value, "Password"),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 90),
                     RoundShapeButton(
@@ -105,37 +135,30 @@ class DriverVerifyOtpView extends StatelessWidget {
                         buttonColor: AppThemData.primary500,
                         buttonTextColor: AppThemData.black,
                         onTap: () async {
-                          if (controller.otpController.text.length == 6) {
-                            ShowToastDialog.showLoader("verify_OTP".tr);
+                          try {
+                            ShowToastDialog.showLoader("please_wait".tr);
 
-                            try {
-                              ShowToastDialog.showLoader("please_wait".tr);
+                            final responseData =
+                                await verifyOwnerEmailResetPassword(
+                              controller.emailController.text,
+                            );
 
-                              final responseData = await verifyDriverOtp(
-                                controller.otpController.text.toString(),
-                                email,
-                              );
-
-                              if (responseData["status"] == true) {
-                                ShowToastDialog.showToast(
-                                    '${responseData["msg"]}');
-                                Preferences.setFcmToken(responseData["token"]);
-                                Preferences.setOwnerLoginStatus(true);
-                                Get.offAll(() => const HomeOwnerView());
-                              } else {
-                                ShowToastDialog.showToast(
-                                    'Failed to verify OTP: ${responseData["msg"]}');
-                              }
-
-                              ShowToastDialog.closeLoader();
-                            } catch (e) {
-                              // log(e.toString());
-                              ShowToastDialog.closeLoader();
+                            if (responseData["status"] == true) {
                               ShowToastDialog.showToast(
-                                  "something went wrong!".tr);
+                                  '${responseData["msg"]}');
+                              controller.isOtpVisible.value = true;
+                              controller.emailController.text =
+                                  controller.emailController.text;
+                            } else {
+                              ShowToastDialog.showToast(
+                                  'Failed to verify OTP: ${responseData["msg"]}');
                             }
-                          } else {
-                            ShowToastDialog.showToast('Enter valid OTP');
+
+                            ShowToastDialog.closeLoader();
+                          } catch (e) {
+                            // log(e.toString());
+                            ShowToastDialog.closeLoader();
+                            ShowToastDialog.showToast(e.toString());
                           }
                         }),
                     const SizedBox(height: 24),

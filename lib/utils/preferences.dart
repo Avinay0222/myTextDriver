@@ -12,6 +12,7 @@ class Preferences {
   static const themKey = "themKey";
   static const isFinishOnBoardingKey = "isFinishOnBoardingKey";
   static const String userLoginStatus = "USER_LOGIN_STATUS";
+  static const String ownerLoginStatus = "OWNER_LOGIN_STATUS";
   static const String fcmToken = "FCM_TOKEN";
   static double driverLat = 0, driverLong = 0;
   static RideData? rideModule;
@@ -77,6 +78,16 @@ class Preferences {
   static Future<bool> getUserLoginStatus() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getBool(userLoginStatus) ?? false;
+  }
+
+  static Future<void> setOwnerLoginStatus(bool value) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setBool(ownerLoginStatus, value);
+  }
+
+  static Future<bool> isOwnerLogin() async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getBool(ownerLoginStatus) ?? false;
   }
 
   static Future<void> setDriverUserModel(DriverUserModel userModel) async {
