@@ -272,7 +272,7 @@ class InProgressRideView extends StatelessWidget {
                                 });
                           } else {
                             ShowToastDialog.showToast(
-                                'Failed to Complete Rided');
+                                'Failed to Complete Ride');
                             Navigator.pop(context);
                           }
 

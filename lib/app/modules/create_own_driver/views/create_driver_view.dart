@@ -1,9 +1,8 @@
-import 'package:driver/app/modules/create_drive_screen/controllers/create_driver_controller.dart';
 import 'package:driver/app/modules/create_own_driver/controllers/create_driver_controller.dart';
-import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/country_code_selector_view.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
+import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/constant_widgets/text_field_with_title.dart';
 import 'package:driver/extension/date_time_extension.dart';
 import 'package:driver/theme/app_them_data.dart';
@@ -16,7 +15,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class CreateOwnDriver extends StatelessWidget {
@@ -81,8 +79,8 @@ class CreateOwnDriver extends StatelessWidget {
                           ),
                           const SizedBox(height: 36),
                           TextFieldWithTitle(
-                            title: "Full Name".tr,
-                            hintText: "Enter Full Name".tr,
+                            title: "Driverl Name".tr,
+                            hintText: "Enter driver full name".tr,
                             prefixIcon:
                                 const Icon(Icons.person_outline_rounded),
                             controller: controller.nameController,
@@ -93,8 +91,8 @@ class CreateOwnDriver extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           TextFieldWithTitle(
-                            title: "Phone Number".tr,
-                            hintText: "Enter Phone Number".tr,
+                            title: "Driver Phone Number".tr,
+                            hintText: "Enter driver phone number".tr,
                             maxLength: 10,
                             prefixIcon: CountryCodeSelectorView(
                               isCountryNameShow: false,
@@ -117,6 +115,16 @@ class CreateOwnDriver extends StatelessWidget {
                             controller: controller.phoneNumberController,
                             isEnable: controller.loginType.value !=
                                 Constant.phoneLoginType,
+                          ),
+                          TextFieldWithTitle(
+                            title: "Email Address",
+                            hintText: "Enter Email Address",
+                            prefixIcon: const Icon(Icons.email_outlined),
+                            keyboardType: TextInputType.emailAddress,
+                            controller: controller.emailController,
+                            isEnable: true,
+                            validator: (value) =>
+                                Constant().validateEmail(value),
                           ),
                           const SizedBox(height: 20),
                           InkWell(
@@ -142,6 +150,26 @@ class CreateOwnDriver extends StatelessWidget {
                                       ? null
                                       : 'This field required'.tr,
                             ),
+                          ),
+                          const SizedBox(height: 20),
+                          TextFieldWithTitle(
+                            title: "Password",
+                            hintText: "Enter Password".tr,
+                            prefixIcon:
+                                const Icon(Icons.person_outline_rounded),
+                            controller: controller.passwordController,
+                          ),
+                          const Text(
+                            "Password must contain atlest\n. 8 characters\n. 1 uppercase\n. 1 special character\n. 1 numeric",
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          const SizedBox(height: 20),
+                          TextFieldWithTitle(
+                            title: "Confirm Password",
+                            hintText: "Confirm your password",
+                            prefixIcon:
+                                const Icon(Icons.person_outline_rounded),
+                            controller: controller.confirmPassController,
                           ),
                           const SizedBox(height: 20),
                           Column(
@@ -230,19 +258,14 @@ class CreateOwnDriver extends StatelessWidget {
                                 onTap: () {
                                   if (controller.formKey.value.currentState!
                                       .validate()) {
-                                    controller.createyourDriverAccount();
+                                    if (controller.passwordController.text !=
+                                        controller.confirmPassController.text) {
+                                      ShowToastDialog.showToast(
+                                          "Passwords do not match".tr);
+                                    } else {
+                                      controller.createyourDriverAccount();
+                                    }
                                   }
-                                }),
-                          ),
-                          Center(
-                            child: RoundShapeButton(
-                                size: const Size(200, 45),
-                                title: "Get Drivers Details".tr,
-                                buttonColor: AppThemData.blueLight01,
-                                buttonTextColor: AppThemData.black,
-                                onTap: () async {
-                                  final model = await getDriverList();
-                                  print(model);
                                 }),
                           ),
                         ],

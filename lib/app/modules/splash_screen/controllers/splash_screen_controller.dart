@@ -2,6 +2,7 @@
 
 import 'dart:async';
 
+import 'package:driver/app/modules/home_owner_screen/views/home_owner_view.dart';
 import 'package:driver/app/modules/signup/views/signup_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:get/get.dart';
@@ -36,8 +37,12 @@ class SplashScreenController extends GetxController {
       Get.offAll(const IntroScreenView());
     } else {
       bool isLogin = await Preferences.getUserLoginStatus();
+      bool isOwnerLogin = await Preferences.isOwnerLogin();
 
-      if (isLogin == true) {
+      if(isOwnerLogin){
+        Get.offAll(const HomeOwnerView());
+      }
+      else if (isLogin == true) {
         DriverUserModel? userModel = await getOnlineUserModel();
 
         await Preferences.setDriverUserModel(userModel);

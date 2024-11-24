@@ -18,6 +18,7 @@ class TextFieldWithTitle extends StatelessWidget {
   final bool? readOnly;
   final GestureTapCallback? onTap;
   final int? maxLength;
+  final bool? obscureText;
 
   const TextFieldWithTitle(
       {super.key,
@@ -32,6 +33,7 @@ class TextFieldWithTitle extends StatelessWidget {
       this.validator,
       this.readOnly,
       this.onTap,
+      this.obscureText,
       this.maxLength});
 
   @override
@@ -60,6 +62,7 @@ class TextFieldWithTitle extends StatelessWidget {
               controller: controller,
               keyboardType: keyboardType,
               inputFormatters: inputFormatters,
+              obscureText: obscureText ?? false,
               maxLength: maxLength,
               enabled: isEnable,
               validator: validator,

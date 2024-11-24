@@ -26,6 +26,7 @@ class CreateDriverController extends GetxController {
   TextEditingController dobController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confrimpasswordController = TextEditingController();
   RxInt selectedGender = 1.obs;
   RxString loginType = "".obs;
 
@@ -60,7 +61,7 @@ class CreateDriverController extends GetxController {
       "phone": phoneNumberController.value.text,
       "email": emailController.text,
       "password": passwordController.text,
-      "gender": selectedGender.value == 1 ? "Male" : "Female"
+      "confirm_password": confrimpasswordController.text,
     };
 
     try {
@@ -70,7 +71,9 @@ class CreateDriverController extends GetxController {
 
       if (responseData["status"] == true) {
         List<String> otp = responseData["msg"].toString().split(" ");
-        Get.to(() =>  DriverVerifyOtpView(otp: otp.last, email: emailController.text,));
+        Get.to(() => DriverVerifyOtpView(
+              email: emailController.text,
+            ));
       }
 
       ShowToastDialog.closeLoader();
@@ -78,9 +81,9 @@ class CreateDriverController extends GetxController {
       ShowToastDialog.showToast(responseData['msg'].toString().split(",")[0]);
     } catch (e) {
       // log(e.toString());
-      bool permissionGiven = await Constant.isPermissionApplied();
+      // bool permissionGiven = await Constant.isPermissionApplied();
       ShowToastDialog.closeLoader();
-      ShowToastDialog.showToast("something went wrong!".tr);
+      ShowToastDialog.showToast(e.toString());
     }
   }
 }
