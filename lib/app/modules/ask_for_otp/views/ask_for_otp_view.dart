@@ -17,7 +17,7 @@ import '../controllers/ask_for_otp_controller.dart';
 
 class AskForOtpView extends StatelessWidget {
   final RideData rideData;
-  AskForOtpView({super.key, required this.rideData});
+  const AskForOtpView({super.key, required this.rideData});
 
   @override
   Widget build(BuildContext context) {

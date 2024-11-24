@@ -24,5 +24,6 @@ const String getDriverListAPI = "/driver/owner/driver/list"; //GET
 const String OwnerSignUP = "/driver/owner/registration";
 const String OtpVerify = "/driver/ride/request/inprogress";
 const String rideCancel = "/driver/ride/request/canceled";
+const String rideComplete = "/driver/ride/request/complete";
 const String liveRides = "/driver/ride/request/inprogress";
 const String inProgressRides = "/driver/ride/inprogress/list";

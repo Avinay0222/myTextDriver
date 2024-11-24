@@ -352,6 +352,28 @@ Future<bool> cancelRide(String rideId) async {
     return false;
   }
 }
+Future<bool> completeRide(String rideId) async {
+  final Map<String, dynamic> body = {
+    "ride_id": rideId,
+  };
+
+  final response = await http.put(
+    Uri.parse(baseURL + rideComplete),
+    body: jsonEncode(body),
+    headers: {
+      "Content-Type": "application/json",
+      "token": await Preferences.getFcmToken()
+    },
+  );
+  if (response.statusCode == 200) {
+    if (jsonDecode(response.body)["status"]) {
+      return true;
+    }
+    return false;
+  } else {
+    return false;
+  }
+}
 
 Future<bool> getDriverOnlineStatus() async {
   final response = await http.put(

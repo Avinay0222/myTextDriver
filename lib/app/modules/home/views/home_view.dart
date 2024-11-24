@@ -6,6 +6,7 @@ import 'package:driver/app/models/user_model.dart';
 import 'package:driver/app/modules/home/views/widgets/active_ride_view.dart';
 import 'package:driver/app/modules/home/views/widgets/chart_view.dart';
 import 'package:driver/app/modules/home/views/widgets/drawer_view.dart';
+import 'package:driver/app/modules/home/views/widgets/in_progress_ride_view.dart';
 import 'package:driver/app/modules/home/views/widgets/new_ride_view.dart';
 import 'package:driver/app/modules/html_view_screen/views/html_view_screen_view.dart';
 import 'package:driver/app/modules/language/views/language_view.dart';
@@ -211,23 +212,18 @@ class HomeView extends GetView<HomeController> {
           stream: getLiveRidesRequest(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (snapshot.hasData) {
               List<RideData> bookings = snapshot.data!;
               if (bookings.isNotEmpty) {
-                return Row(
+                return Column(
                   children: bookings.map((booking) {
                     RideData bookingModel = snapshot.data!.first;
-                    return ActiveRideView(
+                    return InProgressRideView(
                       bookingModel: bookingModel,
                     );
-
-                    // return ListTile(
-                    //   title: Text(booking.rideId!),
-                    //   subtitle: Text(booking.status!),
-                    // );
                   }).toList(),
                 );
               } else {
