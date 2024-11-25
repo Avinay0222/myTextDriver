@@ -13,6 +13,7 @@ import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
 import 'package:driver/utils/fire_store_utils.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -70,9 +71,9 @@ class DrawerView extends StatelessWidget {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(200),
                                     ),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          controller.profilePic.value),
+                                    image: const DecorationImage(
+                                      image: AssetImage(
+                                          "assets/images/driver.png"),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -231,104 +232,104 @@ class DrawerView extends StatelessWidget {
                         padding: EdgeInsets.only(left: 50),
                         child: Divider(),
                       ),
-                      ListTile(
-                        leading: SvgPicture.asset(
-                          "assets/icon/ic_my_wallet.svg",
-                          colorFilter: ColorFilter.mode(
-                              themeChange.isDarkTheme()
-                                  ? AppThemData.white
-                                  : AppThemData.black,
-                              BlendMode.srcIn),
-                        ),
-                        trailing: const Icon(Icons.keyboard_arrow_right_rounded,
-                            size: 30),
-                        title: Text(
-                          'My Wallet'.tr,
-                          style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: themeChange.isDarkTheme()
-                                  ? AppThemData.white
-                                  : AppThemData.black,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        onTap: () {
-                          Get.back();
-                          controller.drawerIndex.value = 2;
+                      // ListTile(
+                      //   leading: SvgPicture.asset(
+                      //     "assets/icon/ic_my_wallet.svg",
+                      //     colorFilter: ColorFilter.mode(
+                      //         themeChange.isDarkTheme()
+                      //             ? AppThemData.white
+                      //             : AppThemData.black,
+                      //         BlendMode.srcIn),
+                      //   ),
+                      //   trailing: const Icon(Icons.keyboard_arrow_right_rounded,
+                      //       size: 30),
+                      //   title: Text(
+                      //     'My Wallet'.tr,
+                      //     style: GoogleFonts.inter(
+                      //         fontSize: 16,
+                      //         color: themeChange.isDarkTheme()
+                      //             ? AppThemData.white
+                      //             : AppThemData.black,
+                      //         fontWeight: FontWeight.w400),
+                      //   ),
+                      //   onTap: () {
+                      //     Get.back();
+                      //     controller.drawerIndex.value = 2;
 
-                          // Get.to(() => const MyWalletView());
-                        },
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 50),
-                        child: Divider(),
-                      ),
-                      ListTile(
-                        leading: SvgPicture.asset(
-                          "assets/icon/ic_my_bank.svg",
-                          colorFilter: ColorFilter.mode(
-                              themeChange.isDarkTheme()
-                                  ? AppThemData.white
-                                  : AppThemData.black,
-                              BlendMode.srcIn),
-                        ),
-                        trailing: const Icon(Icons.keyboard_arrow_right_rounded,
-                            size: 30),
-                        title: Text(
-                          'My Bank'.tr,
-                          style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: themeChange.isDarkTheme()
-                                  ? AppThemData.white
-                                  : AppThemData.black,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        onTap: () {
-                          Get.back();
-                          controller.drawerIndex.value = 3;
+                      //     // Get.to(() => const MyWalletView());
+                      //   },
+                      // ),
+                      // const Padding(
+                      //   padding: EdgeInsets.only(left: 50),
+                      //   child: Divider(),
+                      // ),
+                      // ListTile(
+                      //   leading: SvgPicture.asset(
+                      //     "assets/icon/ic_my_bank.svg",
+                      //     colorFilter: ColorFilter.mode(
+                      //         themeChange.isDarkTheme()
+                      //             ? AppThemData.white
+                      //             : AppThemData.black,
+                      //         BlendMode.srcIn),
+                      //   ),
+                      //   trailing: const Icon(Icons.keyboard_arrow_right_rounded,
+                      //       size: 30),
+                      //   title: Text(
+                      //     'My Bank'.tr,
+                      //     style: GoogleFonts.inter(
+                      //         fontSize: 16,
+                      //         color: themeChange.isDarkTheme()
+                      //             ? AppThemData.white
+                      //             : AppThemData.black,
+                      //         fontWeight: FontWeight.w400),
+                      //   ),
+                      //   onTap: () {
+                      //     Get.back();
+                      //     controller.drawerIndex.value = 3;
 
-                          // Get.to(() => const MyBankView());
-                        },
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 50),
-                        child: Divider(),
-                      ),
-                      ListTile(
-                        leading: SvgPicture.asset(
-                          "assets/icon/ic_document_drawer.svg",
-                          colorFilter: ColorFilter.mode(
-                              themeChange.isDarkTheme()
-                                  ? AppThemData.white
-                                  : AppThemData.black,
-                              BlendMode.srcIn),
-                        ),
-                        trailing: const Icon(Icons.keyboard_arrow_right_rounded,
-                            size: 30),
-                        title: Text(
-                          'Document'.tr,
-                          style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: themeChange.isDarkTheme()
-                                  ? AppThemData.white
-                                  : AppThemData.black,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        onTap: () {
-                          Get.back();
-                          controller.drawerIndex.value = 4;
-                          // Get.to(() => const VerifyDocumentsView(
-                          //       isFromDrawer: true,
-                          //     ));
-                        },
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 50),
-                        child: Divider(),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 50),
-                        child: Divider(),
-                      ),
+                      //     // Get.to(() => const MyBankView());
+                      //   },
+                      // ),
+                      // const Padding(
+                      //   padding: EdgeInsets.only(left: 50),
+                      //   child: Divider(),
+                      // ),
+                      // ListTile(
+                      //   leading: SvgPicture.asset(
+                      //     "assets/icon/ic_document_drawer.svg",
+                      //     colorFilter: ColorFilter.mode(
+                      //         themeChange.isDarkTheme()
+                      //             ? AppThemData.white
+                      //             : AppThemData.black,
+                      //         BlendMode.srcIn),
+                      //   ),
+                      //   trailing: const Icon(Icons.keyboard_arrow_right_rounded,
+                      //       size: 30),
+                      //   title: Text(
+                      //     'Document'.tr,
+                      //     style: GoogleFonts.inter(
+                      //         fontSize: 16,
+                      //         color: themeChange.isDarkTheme()
+                      //             ? AppThemData.white
+                      //             : AppThemData.black,
+                      //         fontWeight: FontWeight.w400),
+                      //   ),
+                      //   onTap: () {
+                      //     Get.back();
+                      //     controller.drawerIndex.value = 4;
+                      //     // Get.to(() => const VerifyDocumentsView(
+                      //     //       isFromDrawer: true,
+                      //     //     ));
+                      //   },
+                      // ),
+                      // const Padding(
+                      //   padding: EdgeInsets.only(left: 50),
+                      //   child: Divider(),
+                      // ),
+                      // const Padding(
+                      //   padding: EdgeInsets.only(left: 50),
+                      //   child: Divider(),
+                      // ),
                       ListTile(
                         leading: SvgPicture.asset(
                           "assets/icon/ic_support.svg",
@@ -360,101 +361,101 @@ class DrawerView extends StatelessWidget {
                         padding: EdgeInsets.only(left: 50),
                         child: Divider(),
                       ),
-                      ListTile(
-                        onTap: () async {
-                          PackageInfo packageInfo =
-                              await PackageInfo.fromPlatform();
-                          String packageName = packageInfo.packageName;
-                          String appStoreUrl =
-                              'https://apps.apple.com/app/$packageName';
-                          String playStoreUrl =
-                              'https://play.google.com/store/apps/details?id=$packageName';
-                          if (await canLaunchUrl(Uri.parse(appStoreUrl)) &&
-                              !Platform.isAndroid) {
-                            await launchUrl(Uri.parse(appStoreUrl));
-                          } else if (await canLaunchUrl(
-                                  Uri.parse(playStoreUrl)) &&
-                              Platform.isAndroid) {
-                            await launchUrl(Uri.parse(playStoreUrl));
-                          } else {
-                            throw 'Could not launch store';
-                          }
-                        },
-                        leading: const Icon(Icons.star_border_rounded),
-                        trailing: const Icon(Icons.keyboard_arrow_right_rounded,
-                            size: 30),
-                        title: Text(
-                          'Rate Us'.tr,
-                          style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: themeChange.isDarkTheme()
-                                  ? AppThemData.white
-                                  : AppThemData.black,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 50),
-                        child: Divider(),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'About'.tr,
-                          style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: themeChange.isDarkTheme()
-                                  ? AppThemData.white
-                                  : AppThemData.black,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      ListTile(
-                        onTap: () {
-                          Get.back();
-                          controller.drawerIndex.value = 6;
-                          // Get.to(() => HtmlViewScreenView(title: "Privacy & Policy", htmlData: Constant.privacyPolicy));
-                        },
-                        leading: const Icon(Icons.privacy_tip_outlined),
-                        trailing: const Icon(Icons.keyboard_arrow_right_rounded,
-                            size: 30),
-                        title: Text(
-                          'Privacy & Policy'.tr,
-                          style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: themeChange.isDarkTheme()
-                                  ? AppThemData.white
-                                  : AppThemData.black,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 50),
-                        child: Divider(),
-                      ),
-                      ListTile(
-                        onTap: () {
-                          Get.back();
-                          controller.drawerIndex.value = 7;
-                          // Get.to(() => HtmlViewScreenView(title: "Terms & Condition", htmlData: Constant.termsAndConditions));
-                        },
-                        leading: const Icon(Icons.contact_support_outlined),
-                        trailing: const Icon(Icons.keyboard_arrow_right_rounded,
-                            size: 30),
-                        title: Text(
-                          'Terms & Condition'.tr,
-                          style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: themeChange.isDarkTheme()
-                                  ? AppThemData.white
-                                  : AppThemData.black,
-                              fontWeight: FontWeight.w400),
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 50),
-                        child: Divider(),
-                      ),
+                      // ListTile(
+                      //   onTap: () async {
+                      //     PackageInfo packageInfo =
+                      //         await PackageInfo.fromPlatform();
+                      //     String packageName = packageInfo.packageName;
+                      //     String appStoreUrl =
+                      //         'https://apps.apple.com/app/$packageName';
+                      //     String playStoreUrl =
+                      //         'https://play.google.com/store/apps/details?id=$packageName';
+                      //     if (await canLaunchUrl(Uri.parse(appStoreUrl)) &&
+                      //         !Platform.isAndroid) {
+                      //       await launchUrl(Uri.parse(appStoreUrl));
+                      //     } else if (await canLaunchUrl(
+                      //             Uri.parse(playStoreUrl)) &&
+                      //         Platform.isAndroid) {
+                      //       await launchUrl(Uri.parse(playStoreUrl));
+                      //     } else {
+                      //       throw 'Could not launch store';
+                      //     }
+                      //   },
+                      //   leading: const Icon(Icons.star_border_rounded),
+                      //   trailing: const Icon(Icons.keyboard_arrow_right_rounded,
+                      //       size: 30),
+                      //   title: Text(
+                      //     'Rate Us'.tr,
+                      //     style: GoogleFonts.inter(
+                      //         fontSize: 16,
+                      //         color: themeChange.isDarkTheme()
+                      //             ? AppThemData.white
+                      //             : AppThemData.black,
+                      //         fontWeight: FontWeight.w400),
+                      //   ),
+                      // ),
+                      // const Padding(
+                      //   padding: EdgeInsets.only(left: 50),
+                      //   child: Divider(),
+                      // ),
+                      // Padding(
+                      //   padding: const EdgeInsets.all(16.0),
+                      //   child: Text(
+                      //     'About'.tr,
+                      //     style: GoogleFonts.inter(
+                      //         fontSize: 16,
+                      //         color: themeChange.isDarkTheme()
+                      //             ? AppThemData.white
+                      //             : AppThemData.black,
+                      //         fontWeight: FontWeight.w600),
+                      //   ),
+                      // ),
+                      // ListTile(
+                      //   onTap: () {
+                      //     Get.back();
+                      //     controller.drawerIndex.value = 6;
+                      //     // Get.to(() => HtmlViewScreenView(title: "Privacy & Policy", htmlData: Constant.privacyPolicy));
+                      //   },
+                      //   leading: const Icon(Icons.privacy_tip_outlined),
+                      //   trailing: const Icon(Icons.keyboard_arrow_right_rounded,
+                      //       size: 30),
+                      //   title: Text(
+                      //     'Privacy & Policy'.tr,
+                      //     style: GoogleFonts.inter(
+                      //         fontSize: 16,
+                      //         color: themeChange.isDarkTheme()
+                      //             ? AppThemData.white
+                      //             : AppThemData.black,
+                      //         fontWeight: FontWeight.w400),
+                      //   ),
+                      // ),
+                      // const Padding(
+                      //   padding: EdgeInsets.only(left: 50),
+                      //   child: Divider(),
+                      // ),
+                      // ListTile(
+                      //   onTap: () {
+                      //     Get.back();
+                      //     controller.drawerIndex.value = 7;
+                      //     // Get.to(() => HtmlViewScreenView(title: "Terms & Condition", htmlData: Constant.termsAndConditions));
+                      //   },
+                      //   leading: const Icon(Icons.contact_support_outlined),
+                      //   trailing: const Icon(Icons.keyboard_arrow_right_rounded,
+                      //       size: 30),
+                      //   title: Text(
+                      //     'Terms & Condition'.tr,
+                      //     style: GoogleFonts.inter(
+                      //         fontSize: 16,
+                      //         color: themeChange.isDarkTheme()
+                      //             ? AppThemData.white
+                      //             : AppThemData.black,
+                      //         fontWeight: FontWeight.w400),
+                      //   ),
+                      // ),
+                      // const Padding(
+                      //   padding: EdgeInsets.only(left: 50),
+                      //   child: Divider(),
+                      // ),
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
@@ -491,36 +492,36 @@ class DrawerView extends StatelessWidget {
                         padding: EdgeInsets.only(left: 50),
                         child: Divider(),
                       ),
-                      ListTile(
-                        leading: SvgPicture.asset(
-                          "assets/icon/ic_language.svg",
-                          colorFilter: ColorFilter.mode(
-                              themeChange.isDarkTheme()
-                                  ? AppThemData.white
-                                  : AppThemData.black,
-                              BlendMode.srcIn),
-                        ),
-                        trailing: const Icon(Icons.keyboard_arrow_right_rounded,
-                            size: 30),
-                        title: Text(
-                          'Language'.tr,
-                          style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: themeChange.isDarkTheme()
-                                  ? AppThemData.white
-                                  : AppThemData.black,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        onTap: () {
-                          Get.back();
-                          controller.drawerIndex.value = 8;
-                          // Get.to(() => const LanguageView());
-                        },
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.only(left: 50),
-                        child: Divider(),
-                      ),
+                      // ListTile(
+                      //   leading: SvgPicture.asset(
+                      //     "assets/icon/ic_language.svg",
+                      //     colorFilter: ColorFilter.mode(
+                      //         themeChange.isDarkTheme()
+                      //             ? AppThemData.white
+                      //             : AppThemData.black,
+                      //         BlendMode.srcIn),
+                      //   ),
+                      //   trailing: const Icon(Icons.keyboard_arrow_right_rounded,
+                      //       size: 30),
+                      //   title: Text(
+                      //     'Language'.tr,
+                      //     style: GoogleFonts.inter(
+                      //         fontSize: 16,
+                      //         color: themeChange.isDarkTheme()
+                      //             ? AppThemData.white
+                      //             : AppThemData.black,
+                      //         fontWeight: FontWeight.w400),
+                      //   ),
+                      //   onTap: () {
+                      //     Get.back();
+                      //     controller.drawerIndex.value = 8;
+                      //     // Get.to(() => const LanguageView());
+                      //   },
+                      // ),
+                      // const Padding(
+                      //   padding: EdgeInsets.only(left: 50),
+                      //   child: Divider(),
+                      // ),
                     ],
                   ),
                 ),
@@ -540,6 +541,9 @@ class DrawerView extends StatelessWidget {
                               positiveString: "Log out".tr,
                               negativeString: "Cancel".tr,
                               positiveClick: () async {
+                                Preferences.setUserLoginStatus(false);
+                                Preferences.setOwnerLoginStatus(false);
+                                Preferences.setFcmToken("");
                                 await FirebaseAuth.instance.signOut();
                                 Navigator.pop(context);
                                 Get.offAll(const LoginView());

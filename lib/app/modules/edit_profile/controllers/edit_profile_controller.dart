@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:driver/app/models/driver_user_model.dart';
+import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/extension/string_extensions.dart';
@@ -44,8 +45,7 @@ class EditProfileController extends GetxController {
   }
 
   getUserData() async {
-    DriverUserModel? userModel = await FireStoreUtils.getDriverUserProfile(
-        FireStoreUtils.getCurrentUid());
+    DriverUserModel? userModel = await getOnlineUserModel();
     if (userModel != null) {
       profileImage.value = (userModel.profilePic ?? "").isNotEmpty
           ? userModel.profilePic ?? Constant.profileConstant
@@ -56,27 +56,32 @@ class EditProfileController extends GetxController {
           (userModel.countryCode ?? '') + (userModel.phoneNumber ?? '');
       phoneNumberController.text = (userModel.phoneNumber ?? '');
       emailController.text = (userModel.email ?? '');
-      selectedGender.value = (userModel.gender ?? '') == "Male" ? 1 : 2;
+      selectedGender.value = (userModel.gender ?? '') == "male" ? 1 : 2;
     }
   }
 
   saveUserData() async {
-    DriverUserModel? userModel = await FireStoreUtils.getDriverUserProfile(
-        FireStoreUtils.getCurrentUid());
-    userModel!.gender = selectedGender.value == 1 ? "Male" : "Female";
+    DriverUserModel? userModel = await getOnlineUserModel();
+    userModel!.gender = selectedGender.value == 1 ? "male" : "female";
     userModel.fullName = nameController.text;
     userModel.slug = nameController.text.toSlug(delimiter: "-");
     ShowToastDialog.showLoader("Please wait");
-    if (profileImage.value.isNotEmpty &&
-        Constant.hasValidUrl(profileImage.value) == false) {
-      // profileImage.value = await Constant.uploadUserImageToFireStorage(
-      //   File(profileImage.value),
-      //   "profileImage/${FireStoreUtils.getCurrentUid()}",
-      //   File(profileImage.value).path.split('/').last,
-      // );
-    }
-    userModel.profilePic = profileImage.value;
-    await FireStoreUtils.updateDriverUser(userModel);
+    // if (profileImage.value.isNotEmpty &&
+    //     Constant.hasValidUrl(profileImage.value) == false) {
+    // profileImage.value = await Constant.uploadUserImageToFireStorage(
+    //   File(profileImage.value),
+    //   "profileImage/${FireStoreUtils.getCurrentUid()}",
+    //   File(profileImage.value).path.split('/').last,
+    // );
+    //}
+    // userModel.profilePic = profileImage.value;
+    Map<String, dynamic> params = {
+      "name": nameController.text,
+      "date_of_birth": userModel.dateOfBirth,
+      "email": emailController.text,
+      "gender": selectedGender.value == 1 ? "Male" : "Female"
+    };
+    await updateOnlineUserModel(params);
     ShowToastDialog.closeLoader();
     Get.back(result: true);
   }
