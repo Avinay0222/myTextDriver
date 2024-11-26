@@ -72,7 +72,7 @@ class CreateOwnDriverController extends GetxController {
       // log(e.toString());
       bool permissionGiven = await Constant.isPermissionApplied();
       ShowToastDialog.closeLoader();
-      ShowToastDialog.showToast("something went wrong!".tr);
+      ShowToastDialog.showToast(e.toString());
     }
   }
 }

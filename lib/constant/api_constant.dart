@@ -3,6 +3,7 @@ const String imageBaseURL = "http://172.93.54.177:3002/uploads/";
 const String sendOtpEndpoint = "/driver/signin"; //POST
 const String veriftOtpEndpoint = "/driver/confirmation"; //POST
 const String resendOtpEndpoint = "/driver/resendotp"; //POST
+const String loginDriverWithEmail = "/driver/login_with_password"; //POST
 const String complpeteSignUpEndpoint = "/driver/complete"; //POST
 const String logOutEndpoint = "/driver/logout"; //POST
 const String getUserPofileEndpoint = "/driver/profile/preview"; //GET

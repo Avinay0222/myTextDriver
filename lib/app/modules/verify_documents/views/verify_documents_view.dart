@@ -60,39 +60,52 @@ class VerifyDocumentsView extends GetView<VerifyDocumentsController> {
                     buttonTextColor: AppThemData.black,
                     onTap: () async {
                       if (await Preferences.getUserLoginStatus()) {
+                        try {
+                          final response = await getCheckStatusAPi();
+                          if (response["status"]) {
+                            Preferences.setDocVerifyStatus(true);
+                            Get.offAll(const HomeView());
+                          } else {
+                            ShowToastDialog.showToast(response["msg"]);
+                          }
+                        } catch (e) {
+                          ShowToastDialog.showToast(e.toString());
+                        }
+                        
                         DriverUserModel? userModel = await getOnlineUserModel();
                         if (userModel!.driverVehicleDetails != null &&
                             userModel
                                 .driverVehicleDetails!.modelId!.isNotEmpty) {
-                          ShowToastDialog.showLoader("Please wait");
+                          Preferences.setDriverUserModel(userModel);
+                          // ShowToastDialog.showLoader("Please wait");
                           // await controller.getData();
 
-                          bool isUserVerified = userModel!.isVerified ?? false;
-                          bool isVehicleDetailsVerified =
-                              userModel.driverVehicleDetails!.isVerified ??
-                                  false;
-                          int? index = userModel!.driverdDocs?.indexWhere(
-                              (element) => element.isVerify == false);
-                          bool isDocumentVerified = index == -1;
-                          if (isUserVerified &&
-                              isVehicleDetailsVerified &&
-                              isDocumentVerified) {
-                            controller.isVerified.value = true;
-                            Preferences.setDocVerifyStatus(true);
-                            bool permissionGiven =
-                                await Constant.isPermissionApplied();
-                            if (permissionGiven) {
-                              Get.offAll(const HomeView());
-                            } else {
-                              Get.offAll(const PermissionView());
-                            }
-                          } else {
-                            controller.isVerified.value = false;
-                            if (!isUserVerified) {
-                              ShowToastDialog.showToast(
-                                  "User disabled by administrator, Please contact to admin");
-                            }
-                          }
+                          // bool isUserVerified = userModel!.isVerified ?? false;
+                          // bool isVehicleDetailsVerified =
+                          //     userModel.driverVehicleDetails!.isVerified ??
+                          //         false;
+                          // int? index = userModel!.driverdDocs?.indexWhere(
+                          //     (element) => element.isVerify == false);
+                          // bool isDocumentVerified = index == -1;
+                          // if (isUserVerified &&
+                          //     isVehicleDetailsVerified &&
+                          //     isDocumentVerified) {
+                          //   controller.isVerified.value = true;
+                          //   Preferences.setDocVerifyStatus(true);
+                          //   bool permissionGiven =
+                          //       await Constant.isPermissionApplied();
+                          //   if (permissionGiven) {
+                          //     Get.offAll(const HomeView());
+                          //   } else {
+                          //     Get.offAll(const PermissionView());
+                          //   }
+                          // } else {
+                          //   controller.isVerified.value = false;
+                          //   if (!isUserVerified) {
+                          //     ShowToastDialog.showToast(
+                          //         "User disabled by administrator, Please contact to admin");
+                          //   }
+                          // }
                           ShowToastDialog.closeLoader();
                         } else {
                           ShowToastDialog.showToast(

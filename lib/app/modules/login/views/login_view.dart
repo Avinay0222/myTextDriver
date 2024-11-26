@@ -1,4 +1,5 @@
 import 'package:driver/app/modules/create_drive_screen/views/create_driver_view.dart';
+import 'package:driver/app/modules/login_owner_screen/views/login_owner_view.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/theme/app_them_data.dart';
@@ -58,6 +59,20 @@ class LoginView extends StatelessWidget {
                               : "assets/images/driver.jpeg",
                           scale: 8,
                         )),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              top: Responsive.height(2, context), bottom: 10),
+                          child: ElevatedButton(
+                              onPressed: () {
+                                Get.to(() => const LoginOwnerView(
+                                      isOwner: false,
+                                    ));
+                              },
+                              child: const Text("Login with Emai")),
+                        ),
                       ),
                       Text(
                         "Login".tr,
@@ -154,15 +169,15 @@ class LoginView extends StatelessWidget {
                       ),
 
                       Center(
-                            child: RoundShapeButton(
-                                size: const Size(200, 45),
-                                title: "Regisrter as an owner".tr,
-                                buttonColor: AppThemData.blueLight01,
-                                buttonTextColor: AppThemData.black,
-                                onTap: () {
-                                  Get.to(() => const CreateDriverView());
-                                }),
-                          ),
+                        child: RoundShapeButton(
+                            size: const Size(200, 45),
+                            title: "Regisrter as an owner".tr,
+                            buttonColor: AppThemData.blueLight01,
+                            buttonTextColor: AppThemData.black,
+                            onTap: () {
+                              Get.to(() => const CreateDriverView());
+                            }),
+                      ),
                       // Padding(
                       //   padding: const EdgeInsets.only(top: 20, bottom: 20),
                       //   child: Row(

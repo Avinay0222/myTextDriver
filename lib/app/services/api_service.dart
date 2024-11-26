@@ -143,6 +143,23 @@ Future<Map<String, dynamic>> loginOnwerAccount(Map<String, dynamic> map) async {
   }
 }
 
+Future<Map<String, dynamic>> loginDriverAccountWithEmailPass(
+    Map<String, dynamic> map) async {
+  final response = await http.post(
+    Uri.parse(baseURL + loginDriverWithEmail),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: jsonEncode(map),
+  );
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw Exception('${jsonDecode(response.body)["msg"]}');
+  }
+}
+
 Future<Map<String, dynamic>> createYourDriverAccount(
     Map<String, dynamic> map) async {
   final response = await http.post(
@@ -157,7 +174,7 @@ Future<Map<String, dynamic>> createYourDriverAccount(
   if (response.statusCode == 200) {
     return jsonDecode(response.body);
   } else {
-    throw Exception('Failed to Create Account: ${response.reasonPhrase}');
+    throw Exception('${jsonDecode(response.body)["msg"]}');
   }
 }
 
@@ -220,9 +237,11 @@ Future<Map<String, dynamic>> uploadVehicleDetails(
     );
 
     if (await Preferences.getUserLoginStatus()) {
-      DriverUserModel? userModel = Preferences.userModel;
-      userModel!.driverVehicleDetails = vehicleDetails;
-      await Preferences.setDriverUserModel(userModel);
+      if (Preferences.userModel != null) {
+        DriverUserModel? userModel = Preferences.userModel;
+        userModel!.driverVehicleDetails = vehicleDetails;
+        await Preferences.setDriverUserModel(userModel);
+      }
     }
 
     return jsonDecode(response.body);
@@ -297,10 +316,12 @@ Future<bool> uploadDriverDocumentImageToStorage(DocsModel model) async {
   if (response.statusCode == 200) {
     if (await Preferences.getUserLoginStatus()) {
       DriverUserModel? userModel = await Preferences.getDriverUserModel();
-      List<DocsModel> list = List.from(userModel?.driverdDocs ?? []);
-      list.add(model);
-      userModel?.driverdDocs = list;
-      await Preferences.setDriverUserModel(userModel!);
+      if (userModel != null) {
+        List<DocsModel> list = List.from(userModel?.driverdDocs ?? []);
+        list.add(model);
+        userModel?.driverdDocs = list;
+        await Preferences.setDriverUserModel(userModel!);
+      }
     }
 
     return true;
