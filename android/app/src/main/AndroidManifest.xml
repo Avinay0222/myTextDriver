@@ -9,11 +9,11 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
-        android:label="MyTaxi Driver"
+        android:label="Travel Teacher - Driver"
         android:name="${applicationName}"
         tools:replace="android:label"
         android:enableOnBackInvokedCallback="false"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@drawable/ic_launcher">
         <activity
             android:name=".MainActivity"
             android:exported="true"
