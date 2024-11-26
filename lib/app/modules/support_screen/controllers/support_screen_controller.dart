@@ -21,7 +21,6 @@ class SupportScreenController extends GetxController {
       supportTicketList.assignAll(tickets
           .map((ticket) => SupportTicketDataModel.fromJson(ticket.toJson()))
           .toList());
-      print(supportTicketList);
     } catch (e) {
       // Handle error
     } finally {

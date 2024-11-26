@@ -61,9 +61,9 @@ class OwnerDrawerView extends StatelessWidget {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(200),
                                     ),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          controller.profilePic.value),
+                                    image: const DecorationImage(
+                                      image: AssetImage(
+                                          "assets/images/driver.png"),
                                       fit: BoxFit.cover,
                                     ),
                                   ),

@@ -58,25 +58,25 @@ class MyRidesView extends GetView<MyRidesController> {
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.only(bottom: 2),
                           children: [
-                            RoundShapeButton(
-                              title: "New Ride".tr,
-                              buttonColor: controller.selectedType.value == 0
-                                  ? AppThemData.primary500
-                                  : themeChange.isDarkTheme()
-                                      ? AppThemData.black
-                                      : AppThemData.white,
-                              buttonTextColor:
-                                  controller.selectedType.value == 0
-                                      ? AppThemData.black
-                                      : themeChange.isDarkTheme()
-                                          ? AppThemData.white
-                                          : AppThemData.black,
-                              onTap: () {
-                                controller.selectedType.value = 0;
-                              },
-                              size: const Size(120, 38),
-                              textSize: 12,
-                            ),
+                            // RoundShapeButton(
+                            //   title: "New Ride".tr,
+                            //   buttonColor: controller.selectedType.value == 0
+                            //       ? AppThemData.primary500
+                            //       : themeChange.isDarkTheme()
+                            //           ? AppThemData.black
+                            //           : AppThemData.white,
+                            //   buttonTextColor:
+                            //       controller.selectedType.value == 0
+                            //           ? AppThemData.black
+                            //           : themeChange.isDarkTheme()
+                            //               ? AppThemData.white
+                            //               : AppThemData.black,
+                            //   onTap: () {
+                            //     controller.selectedType.value = 0;
+                            //   },
+                            //   size: const Size(120, 38),
+                            //   textSize: 12,
+                            // ),
                             const SizedBox(width: 10),
                             RoundShapeButton(
                               title: "Ongoing".tr,
@@ -92,6 +92,7 @@ class MyRidesView extends GetView<MyRidesController> {
                                           ? AppThemData.white
                                           : AppThemData.black,
                               onTap: () {
+                                controller.getOngoingRides();
                                 controller.selectedType.value = 1;
                               },
                               size: const Size(120, 38),
@@ -112,6 +113,7 @@ class MyRidesView extends GetView<MyRidesController> {
                                           ? AppThemData.white
                                           : AppThemData.black),
                               onTap: () {
+                                controller.getCompletedrides();
                                 controller.selectedType.value = 2;
                               },
                               size: const Size(120, 38),
@@ -132,31 +134,32 @@ class MyRidesView extends GetView<MyRidesController> {
                                           ? AppThemData.white
                                           : AppThemData.black,
                               onTap: () {
+                                controller.getCanceledRide();
                                 controller.selectedType.value = 3;
                               },
                               size: const Size(120, 38),
                               textSize: 12,
                             ),
-                            const SizedBox(width: 10),
-                            RoundShapeButton(
-                              title: "Rejected".tr,
-                              buttonColor: controller.selectedType.value == 4
-                                  ? AppThemData.primary500
-                                  : themeChange.isDarkTheme()
-                                      ? AppThemData.black
-                                      : AppThemData.white,
-                              buttonTextColor:
-                                  controller.selectedType.value == 4
-                                      ? AppThemData.black
-                                      : themeChange.isDarkTheme()
-                                          ? AppThemData.white
-                                          : AppThemData.black,
-                              onTap: () {
-                                controller.selectedType.value = 4;
-                              },
-                              size: const Size(120, 38),
-                              textSize: 12,
-                            ),
+                            // const SizedBox(width: 10),
+                            // RoundShapeButton(
+                            //   title: "Rejected".tr,
+                            //   buttonColor: controller.selectedType.value == 4
+                            //       ? AppThemData.primary500
+                            //       : themeChange.isDarkTheme()
+                            //           ? AppThemData.black
+                            //           : AppThemData.white,
+                            //   buttonTextColor:
+                            //       controller.selectedType.value == 4
+                            //           ? AppThemData.black
+                            //           : themeChange.isDarkTheme()
+                            //               ? AppThemData.white
+                            //               : AppThemData.black,
+                            //   onTap: () {
+                            //     controller.selectedType.value = 4;
+                            //   },
+                            //   size: const Size(120, 38),
+                            //   textSize: 12,
+                            // ),
                           ],
                         ),
                       ),
@@ -227,96 +230,50 @@ class MyRidesView extends GetView<MyRidesController> {
                           )),
                     }
                   } else if (controller.selectedType.value == 1) ...{
-                    StreamBuilder<List<BookingModel>>(
-                        stream: FireStoreUtils().getOngoingBookings(),
-                        builder: (context, snapshot) {
-                          log("State Ongoing: ${snapshot.connectionState}");
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Constant.loader();
-                          }
-                          if (!snapshot.hasData ||
-                              (snapshot.data?.isEmpty ?? true)) {
-                            return NoRidesView(themeChange: themeChange);
-                          } else {
-                            return Container(
-                              height: Responsive.height(80, context),
-                              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                              child: ListView.builder(
-                                itemCount: snapshot.data!.length,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  BookingModel bookingModel =
-                                      snapshot.data![index];
-                                  return NewRideView(
-                                    bookingModel: bookingModel,
-                                  );
-                                },
-                              ),
-                            );
-                          }
-                        }),
+                    Obx(() {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: controller.ongoingRideList.length,
+                        itemBuilder: (context, index) {
+                          BookingModel bookingModel =
+                              controller.ongoingRideList[index];
+                          return NewRideView(
+                            bookingModel: bookingModel,
+                          );
+                        },
+                      );
+                    }),
                   } else if (controller.selectedType.value == 2) ...{
-                    StreamBuilder<List<BookingModel>>(
-                        stream: FireStoreUtils().getCompletedBookings(),
-                        builder: (context, snapshot) {
-                          log("State Completed: ${snapshot.connectionState}");
-                          log("State Completed: ${snapshot.data!.length}");
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Constant.loader();
-                          }
-                          if (!snapshot.hasData ||
-                              (snapshot.data?.isEmpty ?? true)) {
-                            return NoRidesView(themeChange: themeChange);
-                          } else {
-                            return Container(
-                              height: Responsive.height(80, context),
-                              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                              child: ListView.builder(
-                                itemCount: snapshot.data!.length,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  BookingModel bookingModel =
-                                      snapshot.data![index];
-                                  return NewRideView(
-                                    bookingModel: bookingModel,
-                                  );
-                                },
-                              ),
-                            );
-                          }
-                        }),
+                    Obx(() {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: controller.completedRideList.length,
+                        itemBuilder: (context, index) {
+                          BookingModel bookingModel =
+                              controller.completedRideList[index];
+                          return NewRideView(
+                            bookingModel: bookingModel,
+                          );
+                        },
+                      );
+                    }),
                   } else if (controller.selectedType.value == 3) ...{
-                    StreamBuilder<List<BookingModel>>(
-                        stream: FireStoreUtils().getCancelledBookings(),
-                        builder: (context, snapshot) {
-                          log("State Cancelled: ${snapshot.connectionState}");
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Constant.loader();
-                          }
-                          if (!snapshot.hasData ||
-                              (snapshot.data?.isEmpty ?? true)) {
-                            return NoRidesView(themeChange: themeChange);
-                          } else {
-                            return Container(
-                              height: Responsive.height(80, context),
-                              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                              child: ListView.builder(
-                                itemCount: snapshot.data!.length,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  BookingModel bookingModel =
-                                      snapshot.data![index];
-                                  return NewRideView(
-                                    bookingModel: bookingModel,
-                                  );
-                                },
-                              ),
-                            );
-                          }
-                        }),
+                    Obx(() {
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: controller.canceledRideList.length,
+                        itemBuilder: (context, index) {
+                          BookingModel bookingModel =
+                              controller.canceledRideList[index];
+                          return NewRideView(
+                            bookingModel: bookingModel,
+                          );
+                        },
+                      );
+                    }),
                   } else if (controller.selectedType.value == 4) ...{
                     StreamBuilder<List<BookingModel>>(
                         stream: FireStoreUtils().getRejectedBookings(),

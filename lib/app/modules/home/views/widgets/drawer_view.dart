@@ -6,7 +6,9 @@ import 'dart:io';
 import 'package:driver/app/modules/create_drive_screen/views/create_driver_view.dart';
 import 'package:driver/app/modules/edit_profile/views/edit_profile_view.dart';
 import 'package:driver/app/modules/home/controllers/home_controller.dart';
+import 'package:driver/app/modules/home/views/home_view.dart';
 import 'package:driver/app/modules/login/views/login_view.dart';
+import 'package:driver/app/modules/my_rides/views/my_rides_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant_widgets/custom_dialog_box.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
@@ -194,7 +196,7 @@ class DrawerView extends StatelessWidget {
                         onTap: () {
                           Get.back();
                           controller.drawerIndex.value = 0;
-                          // Get.to(() => MyRidesView());
+                          // controller.update();
                         },
                       ),
                       const Padding(
@@ -224,7 +226,7 @@ class DrawerView extends StatelessWidget {
                         onTap: () {
                           Get.back();
                           controller.drawerIndex.value = 1;
-
+                          controller.update();
                           // Get.to(() => MyRidesView());
                         },
                       ),
@@ -543,6 +545,7 @@ class DrawerView extends StatelessWidget {
                               positiveClick: () async {
                                 Preferences.setUserLoginStatus(false);
                                 Preferences.setOwnerLoginStatus(false);
+                                Preferences.setDocVerifyStatus(false);
                                 Preferences.setFcmToken("");
                                 await FirebaseAuth.instance.signOut();
                                 Navigator.pop(context);

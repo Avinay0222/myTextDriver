@@ -1,6 +1,7 @@
 import 'package:driver/app/modules/create_own_driver/views/create_driver_view.dart';
 import 'package:driver/app/modules/home/views/widgets/drawer_view.dart';
 import 'package:driver/app/modules/home_owner_screen/controllers/home_owner_controller.dart';
+import 'package:driver/app/modules/home_owner_screen/driver_detail_view.dart';
 import 'package:driver/app/modules/home_owner_screen/views/widget/owner_drawer.dart';
 import 'package:driver/app/modules/html_view_screen/views/html_view_screen_view.dart';
 import 'package:driver/app/modules/language/views/language_view.dart';
@@ -169,75 +170,11 @@ class HomeOwnerView extends GetView<HomeOwnerController> {
                         title: Text(
                             '${index + 1}. ${controller.driverList[index].name ?? 'Unknown'}'),
                         onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('Driver Details'),
-                                content: SingleChildScrollView(
-                                  child: Table(
-                                    border: TableBorder.all(),
-                                    children: [
-                                      TableRow(
-                                        children: [
-                                          const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Text('Name'),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(controller
-                                                    .driverList[index].name ??
-                                                'Unknown'),
-                                          ),
-                                        ],
-                                      ),
-                                      // Add more rows for other details as needed
-                                      TableRow(
-                                        children: [
-                                          const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Text('Email'),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(controller
-                                                    .driverList[index].email ??
-                                                'N/A'),
-                                          ),
-                                        ],
-                                      ),
-                                      TableRow(
-                                        children: [
-                                          const Padding(
-                                            padding: EdgeInsets.all(8.0),
-                                            child: Text('Phone'),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Text(controller
-                                                    .driverList[index].phone ??
-                                                'N/A'),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('Close'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
+                          Get.to(() => DriverDetailsView(
+                              driver: controller.driverList[index]));
                         },
                       ),
-                      const Divider(), // Adds a divider between list items
+                      const Divider(),
                     ],
                   );
                 },

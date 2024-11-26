@@ -73,6 +73,7 @@ class VerifyDocumentsView extends GetView<VerifyDocumentsController> {
                             isVehicleDetailsVerified &&
                             isDocumentVerified) {
                           controller.isVerified.value = true;
+                          Preferences.setDocVerifyStatus(true);
                           bool permissionGiven =
                               await Constant.isPermissionApplied();
                           if (permissionGiven) {
@@ -82,9 +83,10 @@ class VerifyDocumentsView extends GetView<VerifyDocumentsController> {
                           }
                         } else {
                           controller.isVerified.value = false;
-                          if (!isUserVerified)
+                          if (!isUserVerified) {
                             ShowToastDialog.showToast(
                                 "User disabled by administrator, Please contact to admin");
+                          }
                         }
                         ShowToastDialog.closeLoader();
                       } else {

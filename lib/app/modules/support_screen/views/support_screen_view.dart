@@ -19,6 +19,7 @@ class SupportScreenView extends GetView<SupportScreenController> {
         init: SupportScreenController(),
         builder: (controller) {
           return Scaffold(
+              appBar: AppBar(),
               floatingActionButton: FloatingActionButton(
                   elevation: 0,
                   onPressed: () {

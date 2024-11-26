@@ -41,9 +41,9 @@ class ActiveRideView extends StatelessWidget {
         //     Get.put(BookingDetailsController());
         // detailsController.bookingId.value = bookingModel!.id ?? '';
         // detailsController.bookingModel.value = bookingModel!;
-        Get.to(() => BookingDetailsView(
-              rideData: bookingModel!,
-            ));
+        // Get.to(() => BookingDetailsView(
+        //       rideData: bookingModel!,
+        //     ));
       },
       child: Container(
         width: MediaQuery.of(context).size.width - 40,

@@ -61,6 +61,7 @@ class NewRideView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text("- ${bookingModel?.notes ?? " "}"),
             const SizedBox(height: 12),
             PickDropPointView(
                 pickUpAddress: bookingModel == null
