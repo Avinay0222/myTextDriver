@@ -219,10 +219,11 @@ Future<Map<String, dynamic>> uploadVehicleDetails(
       isVerified: true,
     );
 
-    DriverUserModel? userModel = Preferences.userModel;
-    userModel!.driverVehicleDetails = vehicleDetails;
-
-    await Preferences.setDriverUserModel(userModel);
+    if (await Preferences.getUserLoginStatus()) {
+      DriverUserModel? userModel = Preferences.userModel;
+      userModel!.driverVehicleDetails = vehicleDetails;
+      await Preferences.setDriverUserModel(userModel);
+    }
 
     return jsonDecode(response.body);
   } else {
@@ -294,15 +295,13 @@ Future<bool> uploadDriverDocumentImageToStorage(DocsModel model) async {
   );
 
   if (response.statusCode == 200) {
-    DriverUserModel? userModel = await Preferences.getDriverUserModel();
-
-    List<DocsModel> list = List.from(userModel?.driverdDocs ?? []);
-
-    list.add(model);
-
-    userModel?.driverdDocs = list;
-
-    await Preferences.setDriverUserModel(userModel!);
+    if (await Preferences.getUserLoginStatus()) {
+      DriverUserModel? userModel = await Preferences.getDriverUserModel();
+      List<DocsModel> list = List.from(userModel?.driverdDocs ?? []);
+      list.add(model);
+      userModel?.driverdDocs = list;
+      await Preferences.setDriverUserModel(userModel!);
+    }
 
     return true;
   } else {
@@ -370,6 +369,20 @@ Future<DriverUserModel> getOnlineUserModel() async {
     return DriverUserModel();
   } else {
     return DriverUserModel();
+  }
+}
+
+Future<Map<String, dynamic>> getCheckStatusAPi() async {
+  String token = await Preferences.getFcmToken();
+  final response = await http.get(
+    Uri.parse(baseURL + checkDocStatus),
+    headers: {"Content-Type": "application/json", "token": token},
+  );
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw Exception(jsonDecode(response.body)["msg"]);
   }
 }
 

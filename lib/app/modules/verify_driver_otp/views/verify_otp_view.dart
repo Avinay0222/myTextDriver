@@ -4,6 +4,7 @@ import 'package:driver/app/modules/home/views/home_view.dart';
 import 'package:driver/app/modules/home_owner_screen/views/home_owner_view.dart';
 import 'package:driver/app/modules/permission/views/permission_view.dart';
 import 'package:driver/app/modules/signup/views/signup_view.dart';
+import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
@@ -121,7 +122,15 @@ class DriverVerifyOtpView extends StatelessWidget {
                                     '${responseData["msg"]}');
                                 Preferences.setFcmToken(responseData["token"]);
                                 Preferences.setOwnerLoginStatus(true);
-                                Get.offAll(() => const HomeOwnerView());
+                                if (responseData["document_status"] == false) {
+                                  Get.offAll(() => VerifyDocumentsView(
+                                        isFromDrawer: false,
+                                        forOwner: true,
+                                      ));
+                                } else {
+                                  Preferences.setDocVerifyStatus(true);
+                                  Get.offAll(() => const HomeOwnerView());
+                                }
                               } else {
                                 ShowToastDialog.showToast(
                                     'Failed to verify OTP: ${responseData["msg"]}');

@@ -13,19 +13,15 @@ import 'package:get/get.dart';
 
 class UpdateVehicleDetailsController extends GetxController {
   Rx<VehicleTypeModel> vehicleTypeModel = VehicleTypeModel(
-      id: "",
-      image: "",
-      isActive: false,
-      title: "",
-      persons: "0",
-      charges: Charges(
-        fareMinimumChargesWithinKm: "0",
-        farMinimumCharges: "0",
-        farePerKm: "0",
-      )).obs;
+    id: "",
+    image: "",
+    activeStatus: "inactive",
+    name: "",
+    slug: "0",
+  ).obs;
   Rx<VehicleBrandModel> vehicleBrandModel = VehicleBrandModel.empty().obs;
   Rx<VehicleModel> vehicleModel = VehicleModel.empty().obs;
-  List<VehicleTypeModel> vehicleTypeList = Constant.vehicleTypeList ?? [];
+  RxList<VehicleTypeModel> vehicleTypeList = <VehicleTypeModel>[].obs;
   RxList<VehicleBrandModel> vehicleBrandList = <VehicleBrandModel>[].obs;
   RxList<VehicleModel> vehicleModelList = <VehicleModel>[].obs;
   TextEditingController vehicleModelController = TextEditingController();
@@ -34,6 +30,10 @@ class UpdateVehicleDetailsController extends GetxController {
 
   @override
   Future<void> onReady() async {
+    final result = await getVehicleTypeDetail();
+    List<dynamic> listType = (result)["data"] as List;
+    vehicleTypeList.value =
+        listType.map((item) => VehicleTypeModel.fromJson(item)).toList();
     vehicleTypeModel.value = vehicleTypeList[0];
     final response = await getVehicleDetial();
     List<dynamic> list = (response)["data"] as List;
@@ -77,35 +77,40 @@ class UpdateVehicleDetailsController extends GetxController {
   }
 
   saveVehicleDetails() async {
-    ShowToastDialog.showLoader("please_wait".tr);
-    VerifyDocumentsController verifyDocumentsController =
-        Get.find<VerifyDocumentsController>();
-    DriverUserModel? userModel = await Preferences.getDriverUserModel();
-    if (userModel == null) return;
-    DriverVehicleDetails driverVehicleDetails = DriverVehicleDetails(
-      // brandName: vehicleBrandModel.value.title,
-      // brandId: vehicleBrandModel.value.id,
-      modelName: vehicleModel.value.name,
-      modelId: vehicleModel.value.id,
-      vehicleNumber: vehicleNumberController.text,
-      isVerified: false,
-      vehicleTypeName: vehicleTypeModel.value.title,
-      vehicleTypeId: vehicleTypeModel.value.id,
-    );
-    userModel.driverVehicleDetails = driverVehicleDetails;
-    print("==> ${userModel.driverVehicleDetails!.toJson()}");
+    try {
+      ShowToastDialog.showLoader("please_wait".tr);
+      VerifyDocumentsController verifyDocumentsController =
+          Get.find<VerifyDocumentsController>();
+      DriverUserModel? userModel = await Preferences.getDriverUserModel();
+      if (userModel == null) return;
+      DriverVehicleDetails driverVehicleDetails = DriverVehicleDetails(
+        // brandName: vehicleBrandModel.value.title,
+        // brandId: vehicleBrandModel.value.id,
+        modelName: vehicleModel.value.name,
+        modelId: vehicleModel.value.id,
+        vehicleNumber: vehicleNumberController.text,
+        isVerified: false,
+        vehicleTypeName: vehicleTypeModel.value.name,
+        vehicleTypeId: vehicleTypeModel.value.id,
+      );
+      userModel.driverVehicleDetails = driverVehicleDetails;
+      print("==> ${userModel.driverVehicleDetails!.toJson()}");
 
-    bool isUpdated = await FireStoreUtils.updateDriverUser(userModel);
-    ShowToastDialog.closeLoader();
-    if (isUpdated) {
-      ShowToastDialog.showToast(
-          "Vehicle details updated, Please wait for verification.");
-      verifyDocumentsController.getData();
-      Get.back();
-    } else {
-      ShowToastDialog.showToast(
-          "Something went wrong, Please try again later.");
-      Get.back();
+      bool isUpdated = await FireStoreUtils.updateDriverUser(userModel);
+      ShowToastDialog.closeLoader();
+      if (isUpdated) {
+        ShowToastDialog.showToast(
+            "Vehicle details updated, Please wait for verification.");
+        verifyDocumentsController.getData();
+        Get.back();
+      } else {
+        ShowToastDialog.showLoader("please_wait".tr);
+        ShowToastDialog.showToast(
+            "Something went wrong, Please try again later.");
+        Get.back();
+      }
+    } catch (e) {
+      ShowToastDialog.closeLoader();
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:driver/app/models/user_model.dart';
 import 'package:driver/app/models/vehicle_type_model.dart';
 import 'package:driver/app/services/api_service.dart';
+import 'package:driver/constant/api_constant.dart';
 import 'package:driver/constant/custom_search_dialog.dart';
 import 'package:driver/constant_widgets/app_bar_with_border.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
@@ -9,6 +10,7 @@ import 'package:driver/constant_widgets/text_field_with_title.dart';
 import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/theme/responsive.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
+import 'package:driver/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -97,14 +99,14 @@ class UpdateVehicleDetailsView extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       Image.network(
-                                        value.image,
+                                        "$imageBaseURL${value.image}",
                                         height: 42,
                                         width: 42,
                                       ),
                                       const SizedBox(
                                         width: 15,
                                       ),
-                                      Text(value.title),
+                                      Text(value.name),
                                     ],
                                   ),
                                 );
@@ -120,14 +122,14 @@ class UpdateVehicleDetailsView extends StatelessWidget {
                                     Row(
                                       children: [
                                         Image.network(
-                                          value.image,
+                                          "$imageBaseURL${value.image}",
                                           height: 42,
                                           width: 42,
                                         ),
                                         const SizedBox(
                                           width: 15,
                                         ),
-                                        Text(value.title),
+                                        Text(value.name),
                                       ],
                                     ),
                                     const SizedBox(
@@ -231,7 +233,7 @@ class UpdateVehicleDetailsView extends StatelessWidget {
                                   "vehicle_number":
                                       controller.vehicleNumberController.text,
                                   "vehicle_type":
-                                      controller.vehicleTypeModel.value.title,
+                                      controller.vehicleTypeModel.value.name,
                                   "vehicle_color": "Black",
                                   "image": staticImage
                                 };
@@ -246,8 +248,9 @@ class UpdateVehicleDetailsView extends StatelessWidget {
                                 ShowToastDialog.closeLoader();
                                 ShowToastDialog.showToast(e.toString());
                               }
-
-                              controller.saveVehicleDetails();
+                              if (await Preferences.getUserLoginStatus()) {
+                                controller.saveVehicleDetails();
+                              }
                             } else {
                               ShowToastDialog.showToast(
                                   "Please enter a valid details".tr);

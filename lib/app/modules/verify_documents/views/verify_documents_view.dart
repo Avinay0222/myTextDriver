@@ -1,5 +1,6 @@
 import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/modules/home/views/home_view.dart';
+import 'package:driver/app/modules/home_owner_screen/views/home_owner_view.dart';
 import 'package:driver/app/modules/permission/views/permission_view.dart';
 import 'package:driver/app/modules/update_vehicle_details/views/update_vehicle_details_view.dart';
 import 'package:driver/app/modules/upload_documents/views/upload_documents_view.dart';
@@ -14,13 +15,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../utils/fire_store_utils.dart';
 import '../controllers/verify_documents_controller.dart';
 
 class VerifyDocumentsView extends GetView<VerifyDocumentsController> {
   final bool isFromDrawer;
+  final bool forOwner;
 
-  const VerifyDocumentsView({super.key, required this.isFromDrawer});
+  VerifyDocumentsView(
+      {super.key, required this.isFromDrawer, this.forOwner = false});
 
   @override
   Widget build(BuildContext context) {
@@ -57,41 +59,57 @@ class VerifyDocumentsView extends GetView<VerifyDocumentsController> {
                     buttonColor: AppThemData.primary500,
                     buttonTextColor: AppThemData.black,
                     onTap: () async {
-                      DriverUserModel? userModel = await getOnlineUserModel();
-                      if (userModel!.driverVehicleDetails != null &&
-                          userModel.driverVehicleDetails!.modelId!.isNotEmpty) {
-                        ShowToastDialog.showLoader("Please wait");
-                        // await controller.getData();
+                      if (await Preferences.getUserLoginStatus()) {
+                        DriverUserModel? userModel = await getOnlineUserModel();
+                        if (userModel!.driverVehicleDetails != null &&
+                            userModel
+                                .driverVehicleDetails!.modelId!.isNotEmpty) {
+                          ShowToastDialog.showLoader("Please wait");
+                          // await controller.getData();
 
-                        bool isUserVerified = userModel!.isVerified ?? false;
-                        bool isVehicleDetailsVerified =
-                            userModel.driverVehicleDetails!.isVerified ?? false;
-                        int? index = userModel!.driverdDocs?.indexWhere(
-                            (element) => element.isVerify == false);
-                        bool isDocumentVerified = index == -1;
-                        if (isUserVerified &&
-                            isVehicleDetailsVerified &&
-                            isDocumentVerified) {
-                          controller.isVerified.value = true;
-                          Preferences.setDocVerifyStatus(true);
-                          bool permissionGiven =
-                              await Constant.isPermissionApplied();
-                          if (permissionGiven) {
-                            Get.offAll(const HomeView());
+                          bool isUserVerified = userModel!.isVerified ?? false;
+                          bool isVehicleDetailsVerified =
+                              userModel.driverVehicleDetails!.isVerified ??
+                                  false;
+                          int? index = userModel!.driverdDocs?.indexWhere(
+                              (element) => element.isVerify == false);
+                          bool isDocumentVerified = index == -1;
+                          if (isUserVerified &&
+                              isVehicleDetailsVerified &&
+                              isDocumentVerified) {
+                            controller.isVerified.value = true;
+                            Preferences.setDocVerifyStatus(true);
+                            bool permissionGiven =
+                                await Constant.isPermissionApplied();
+                            if (permissionGiven) {
+                              Get.offAll(const HomeView());
+                            } else {
+                              Get.offAll(const PermissionView());
+                            }
                           } else {
-                            Get.offAll(const PermissionView());
+                            controller.isVerified.value = false;
+                            if (!isUserVerified) {
+                              ShowToastDialog.showToast(
+                                  "User disabled by administrator, Please contact to admin");
+                            }
                           }
+                          ShowToastDialog.closeLoader();
                         } else {
-                          controller.isVerified.value = false;
-                          if (!isUserVerified) {
-                            ShowToastDialog.showToast(
-                                "User disabled by administrator, Please contact to admin");
-                          }
+                          ShowToastDialog.showToast(
+                              "Upload all required documents.".tr);
                         }
-                        ShowToastDialog.closeLoader();
                       } else {
-                        ShowToastDialog.showToast(
-                            "Upload all required documents.".tr);
+                        try {
+                          final response = await getCheckStatusAPi();
+                          if (response["status"]) {
+                            Preferences.setDocVerifyStatus(true);
+                            Get.offAll(const HomeOwnerView());
+                          } else {
+                            ShowToastDialog.showToast(response["msg"]);
+                          }
+                        } catch (e) {
+                          ShowToastDialog.showToast(e.toString());
+                        }
                       }
                     },
                   ),

@@ -117,7 +117,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.VERIFY_DOCUMENTS,
-      page: () => const VerifyDocumentsView(isFromDrawer: false),
+      page: () => VerifyDocumentsView(isFromDrawer: false),
       binding: VerifyDocumentsBinding(),
     ),
     GetPage(

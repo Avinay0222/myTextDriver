@@ -302,7 +302,6 @@ class UploadDocumentsView extends StatelessWidget {
                           ),
                           Container(
                             margin: const EdgeInsets.only(left: 10),
-                            width: MediaQuery.of(context).size.width-20,
                             child: Expanded(
                                 child: Text(
                               "${"Ensure that the photo is clear and all details on the ".tr}${document.title} ${"are visible.".tr}",
@@ -398,7 +397,8 @@ class UploadDocumentsView extends StatelessWidget {
                                 controller.dobController.text.isNotEmpty &&
                                 list.isNotEmpty &&
                                 (list.length == (document.side))) {
-                              controller.uploadDocument(document,list,controller);
+                              controller.uploadDocument(
+                                  document, list, controller);
                             } else {
                               controller.verifyDocument.value.documentImage
                                   .add('');
