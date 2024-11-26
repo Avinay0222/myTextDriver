@@ -2,6 +2,7 @@ import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/modules/home/views/home_view.dart';
 import 'package:driver/app/modules/permission/views/permission_view.dart';
 import 'package:driver/app/modules/signup/views/signup_view.dart';
+import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
@@ -226,9 +227,28 @@ class VerifyOtpView extends StatelessWidget {
                                   Get.off(const SignupView(), arguments: {
                                     "userModel": userModel,
                                   });
+                                } else if (responseData['documentVerified'] ==
+                                    false) {
+                                  DriverUserModel userModel = DriverUserModel();
+                                  userModel.id = responseData['id'];
+                                  userModel.countryCode =
+                                      controller.countryCode.value;
+                                  userModel.phoneNumber =
+                                      controller.phoneNumber.value;
+                                  userModel.loginType = Constant.phoneLoginType;
+                                  userModel.fcmToken = responseData['token'];
+                                  ShowToastDialog.closeLoader();
+                                  Get.off(
+                                      const VerifyDocumentsView(
+                                        isFromDrawer: false,
+                                      ),
+                                      arguments: {
+                                        "userModel": userModel,
+                                      });
                                 } else {
                                   bool permissionGiven =
                                       await Constant.isPermissionApplied();
+                                  Preferences.setDocVerifyStatus(true);
                                   if (permissionGiven) {
                                     Get.offAll(const HomeView());
                                   } else {

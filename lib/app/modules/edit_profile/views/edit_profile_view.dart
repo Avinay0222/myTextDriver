@@ -1,9 +1,5 @@
-import 'dart:io';
-
-import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/app_bar_with_border.dart';
 import 'package:driver/constant_widgets/country_code_selector_view.dart';
-import 'package:driver/constant_widgets/network_image_widget.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/text_field_with_title.dart';
 import 'package:driver/theme/app_them_data.dart';
@@ -11,7 +7,6 @@ import 'package:driver/theme/responsive.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -105,7 +100,7 @@ class EditProfileView extends StatelessWidget {
                     Obx(
                       () => Center(
                         child: Text(
-                          "+${controller.phoneNumber.value}",
+                          controller.phoneNumber.value,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.inter(
                             color: themeChange.isDarkTheme()

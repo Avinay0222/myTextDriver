@@ -29,7 +29,7 @@ Future<Map<String, dynamic>> sendOtp(
   if (response.statusCode == 200) {
     return jsonDecode(response.body);
   } else {
-    throw Exception('Failed to send OTP: ${response.reasonPhrase}');
+    throw Exception(jsonDecode(response.body)["msg"]);
   }
 }
 
@@ -247,6 +247,20 @@ Future<Map<String, dynamic>> getVehicleDetial() async {
   }
 }
 
+Future<Map<String, dynamic>> getVehicleTypeDetail() async {
+  String uToken = await Preferences.getFcmToken();
+  final response = await http.get(
+    Uri.parse(baseURL + getVehicleType),
+    headers: {"Content-Type": "application/json", "token": uToken},
+  );
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body);
+  } else {
+    throw Exception('Failed to Create Account: ${response.reasonPhrase}');
+  }
+}
+
 // Future<bool> updateDriverUserOnline(bool isOnline) async {
 //     bool isUpdate = false;
 //     DriverUserModel? userModel = await getDriverUserProfile(getCurrentUid());
@@ -453,6 +467,55 @@ Future<bool> acceptRideAPI(String ride_id) async {
   }
 }
 
+Future<List<BookingModel>> getOngoingRidesList() async {
+  String token = await Preferences.getFcmToken();
+  final Map<String, dynamic> body = {"startValue": 0, "lastValue": 20};
+  final response = await http.post(Uri.parse(baseURL + getOngoingRidesListAPI),
+      headers: {"Content-Type": "application/json", "token": token},
+      body: jsonEncode(body));
+
+  if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
+    List<BookingModel> list = List<BookingModel>.from(
+        jsonDecode(response.body)["data"].map((e) => BookingModel.fromJson(e)));
+    return list;
+  } else {
+    return [];
+  }
+}
+
+Future<List<BookingModel>> getCanceledRidesList() async {
+  String token = await Preferences.getFcmToken();
+  final Map<String, dynamic> body = {"startValue": 0, "lastValue": 20};
+  final response = await http.post(Uri.parse(baseURL + getCanceledRidesListAPI),
+      headers: {"Content-Type": "application/json", "token": token},
+      body: jsonEncode(body));
+
+  if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
+    List<BookingModel> list = List<BookingModel>.from(
+        jsonDecode(response.body)["data"].map((e) => BookingModel.fromJson(e)));
+    return list;
+  } else {
+    return [];
+  }
+}
+
+Future<List<BookingModel>> getCompletedRidesList() async {
+  String token = await Preferences.getFcmToken();
+  final Map<String, dynamic> body = {"startValue": 0, "lastValue": 20};
+  final response = await http.post(
+      Uri.parse(baseURL + getCompletedRidesListAPI),
+      headers: {"Content-Type": "application/json", "token": token},
+      body: jsonEncode(body));
+
+  if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
+    List<BookingModel> list = List<BookingModel>.from(
+        jsonDecode(response.body)["data"].map((e) => BookingModel.fromJson(e)));
+    return list;
+  } else {
+    return [];
+  }
+}
+
 Future<bool> verifyOtpRequest(RideData rideData) async {
   final Map<String, dynamic> body = {
     "ride_id": rideData.id,
@@ -601,12 +664,15 @@ Future<List<MyDriverModel>> getDriverList(int inital, int last) async {
 Future<List<SupportTicketDataModel>> getDriverSupportTickList() async {
   int inital = 0;
   int last = 20;
+  String endPoint = await Preferences.getUserLoginStatus()
+      ? getTicketList
+      : getOwnerTicketList;
   Map<String, dynamic> params = {"startValue": inital, "lastValue": last};
 
   String token = await Preferences.getFcmToken();
 
   final response = await http.post(
-    Uri.parse(baseURL + getOwnerTicketList),
+    Uri.parse(baseURL + endPoint),
     headers: {"Content-Type": "application/json", "token": token},
     body: jsonEncode(params),
   );
@@ -624,10 +690,13 @@ Future<List<SupportTicketDataModel>> getDriverSupportTickList() async {
 
 Future<Map<String, dynamic>> createSupportTicketAPI(
     Map<String, dynamic> params) async {
+  String endPoint = await Preferences.getUserLoginStatus()
+      ? createSupportTicket
+      : createOwnerSupportTicket;
   params["title"] = "I am not getting any responder from customer1";
   String uToken = await Preferences.getFcmToken();
   final response = await http.post(
-    Uri.parse(baseURL + createOwnerSupportTicket),
+    Uri.parse(baseURL + endPoint),
     headers: {
       "Content-Type": "application/json",
       "token": uToken,

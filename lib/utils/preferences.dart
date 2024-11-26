@@ -15,6 +15,7 @@ class Preferences {
   static const isFinishOnBoardingKey = "isFinishOnBoardingKey";
   static const String userLoginStatus = "USER_LOGIN_STATUS";
   static const String ownerLoginStatus = "OWNER_LOGIN_STATUS";
+  static const String docVerifyStatus = "DOC_VERIFY_STATUS";
   static const String fcmToken = "FCM_TOKEN";
   static String globalToken = "";
   static double driverLat = 0, driverLong = 0;
@@ -82,6 +83,16 @@ class Preferences {
   static Future<bool> getUserLoginStatus() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     return pref.getBool(userLoginStatus) ?? false;
+  }
+
+  static Future<void> setDocVerifyStatus(bool value) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setBool(docVerifyStatus, value);
+  }
+
+  static Future<bool> getDocVerifyStatus() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    return pref.getBool(docVerifyStatus) ?? false;
   }
 
   static Future<void> setOwnerLoginStatus(bool value) async {

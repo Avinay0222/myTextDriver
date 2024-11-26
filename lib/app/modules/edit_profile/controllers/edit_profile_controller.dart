@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_overrides
-
 import 'dart:io';
 
 import 'package:driver/app/models/driver_user_model.dart';
@@ -7,7 +5,6 @@ import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/extension/string_extensions.dart';
-import 'package:driver/utils/fire_store_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';

@@ -49,8 +49,10 @@ class SplashScreenController extends GetxController {
 
         if (userModel != null && userModel.isVerified == true) {
           try {
-            bool permissionGiven = await Constant.isPermissionApplied();
-            if (permissionGiven) {
+            if(!await Preferences.getDocVerifyStatus()){
+              Get.offAll(const VerifyDocumentsView(isFromDrawer: false,));
+            }
+            else if (await Constant.isPermissionApplied()) {
               Get.offAll(const HomeView());
             } else {
               Get.offAll(const PermissionView());
