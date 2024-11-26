@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/modules/home_owner_screen/views/home_owner_view.dart';
+import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
 import 'package:driver/app/modules/verify_driver_otp/views/verify_otp_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
@@ -55,7 +56,14 @@ class LoginOnwerController extends GetxController {
       if (responseData["status"] == true) {
         Preferences.setFcmToken(responseData["token"]);
         Preferences.setOwnerLoginStatus(true);
-        Get.offAll(() => const HomeOwnerView());
+        if (responseData["document_status"] == false) {
+          Get.offAll(() => VerifyDocumentsView(
+                isFromDrawer: false,
+              ));
+        } else {
+          Preferences.setDocVerifyStatus(true);
+          Get.offAll(() => const HomeOwnerView());
+        }
       }
 
       ShowToastDialog.closeLoader();

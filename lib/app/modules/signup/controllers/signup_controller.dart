@@ -79,7 +79,7 @@ class SignupController extends GetxController {
         if (userModelData.isVerified == false) {
           // bool permissionGiven = await Constant.isPermissionApplied();
           // if (permissionGiven) {
-          Get.offAll(const VerifyDocumentsView(
+          Get.offAll(VerifyDocumentsView(
             isFromDrawer: false,
           ));
           // ));

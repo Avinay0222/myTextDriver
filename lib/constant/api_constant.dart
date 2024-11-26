@@ -15,6 +15,7 @@ const String getVehicleType = "/driver/vehicle/types"; //GET
 const String getVehicleList = "/driver/vehicles"; //GET
 const String setCurrentLocation = "/driver/current_location"; //POST
 const String getDriveModel = "/driver/preview/vehicle_docs"; //GET
+const String checkDocStatus = "/driver/document/check_status"; //GET
 const String setDriveModel = "/driver/vehicle/docs/save"; //POST
 const String driveOnlineStatus = "/driver/ride_status"; //PUT
 const String getRideRequest = "/driver/passenger/ride/request"; //GET

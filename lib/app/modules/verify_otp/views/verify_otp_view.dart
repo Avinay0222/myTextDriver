@@ -239,7 +239,7 @@ class VerifyOtpView extends StatelessWidget {
                                   userModel.fcmToken = responseData['token'];
                                   ShowToastDialog.closeLoader();
                                   Get.off(
-                                      const VerifyDocumentsView(
+                                      VerifyDocumentsView(
                                         isFromDrawer: false,
                                       ),
                                       arguments: {

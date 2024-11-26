@@ -86,7 +86,7 @@ class HomeView extends GetView<HomeController> {
       case 3:
         return const MyBankView();
       case 4:
-        return const VerifyDocumentsView(isFromDrawer: true);
+        return VerifyDocumentsView(isFromDrawer: true);
       case 5:
         return const SupportScreenView();
       case 6:
