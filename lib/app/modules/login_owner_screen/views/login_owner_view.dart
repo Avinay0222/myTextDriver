@@ -17,7 +17,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class LoginOwnerView extends StatelessWidget {
-  const LoginOwnerView({super.key});
+  final bool isOwner;
+  const LoginOwnerView({super.key, required this.isOwner});
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,7 @@ class LoginOwnerView extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            "Owner Login".tr,
+                            "Login".tr,
                             style: GoogleFonts.inter(
                                 fontSize: 24,
                                 color: themeChange.isDarkTheme()
@@ -124,7 +125,11 @@ class LoginOwnerView extends StatelessWidget {
                                 onTap: () {
                                   if (controller.formKey.value.currentState!
                                       .validate()) {
-                                    controller.loginOwnerAccount();
+                                    if (isOwner) {
+                                      controller.loginOwnerAccount();
+                                    } else {
+                                      controller.loginDriverAccount();
+                                    }
                                   }
                                 }),
                           ),

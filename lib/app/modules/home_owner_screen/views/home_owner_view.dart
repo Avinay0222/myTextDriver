@@ -168,8 +168,17 @@ class HomeOwnerView extends GetView<HomeOwnerController> {
                   return Column(
                     children: [
                       ListTile(
+                        leading: Image.asset(
+                          "assets/images/create_driver.png",
+                          width: 40,
+                          height: 40,
+                        ),
                         title: Text(
-                            '${index + 1}. ${controller.driverList[index].name ?? 'Unknown'}'),
+                          controller.driverList[index].name ?? 'Unknown',
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                        subtitle: Text(controller.driverList[index].phone ?? '',
+                            style: const TextStyle(fontSize: 14)),
                         onTap: () {
                           Get.to(() => DriverDetailsView(
                               driver: controller.driverList[index]));

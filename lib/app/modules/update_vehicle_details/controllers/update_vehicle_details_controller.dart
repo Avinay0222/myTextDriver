@@ -79,10 +79,13 @@ class UpdateVehicleDetailsController extends GetxController {
   saveVehicleDetails() async {
     try {
       ShowToastDialog.showLoader("please_wait".tr);
+      DriverUserModel? userModel = await Preferences.getDriverUserModel();
+      if (userModel == null) {
+        ShowToastDialog.closeLoader();
+        return;
+      }
       VerifyDocumentsController verifyDocumentsController =
           Get.find<VerifyDocumentsController>();
-      DriverUserModel? userModel = await Preferences.getDriverUserModel();
-      if (userModel == null) return;
       DriverVehicleDetails driverVehicleDetails = DriverVehicleDetails(
         // brandName: vehicleBrandModel.value.title,
         // brandId: vehicleBrandModel.value.id,
