@@ -270,75 +270,82 @@ class UploadDocumentsView extends StatelessWidget {
                           ),
                     const SizedBox(height: 16),
                     if (!isUploaded) ...{
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.check,
-                            color: AppThemData.success500,
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            width: Responsive.width(80, context),
-                            child: Expanded(
-                                child: Text(
-                              "${"Upload clear pictures of both sides of ".tr} ${document.title}",
-                              style: GoogleFonts.inter(
-                                color: themeChange.isDarkTheme()
-                                    ? AppThemData.grey25
-                                    : AppThemData.grey950,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
+                      SizedBox(
+                        width: MediaQuery.sizeOf(context).width,
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.check,
+                              color: AppThemData.success500,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              width: MediaQuery.sizeOf(context).width - 80,
+                              child: Text(
+                                "${"Upload clear pictures of both sides of ".tr} ${document.title}",
+                                style: GoogleFonts.inter(
+                                  color: themeChange.isDarkTheme()
+                                      ? AppThemData.grey25
+                                      : AppThemData.grey950,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
-                            )),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.check,
-                            color: AppThemData.success500,
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            child: Expanded(
-                                child: Text(
-                              "${"Ensure that the photo is clear and all details on the ".tr}${document.title} ${"are visible.".tr}",
-                              style: GoogleFonts.inter(
-                                color: themeChange.isDarkTheme()
-                                    ? AppThemData.grey25
-                                    : AppThemData.grey950,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            )),
-                          ),
-                        ],
+                            )
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.check,
-                            color: AppThemData.success500,
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 10),
-                            width: Responsive.width(80, context),
-                            child: Expanded(
-                                child: Text(
-                              "The uploaded image should be in .jpg, .png, or .pdf format.",
-                              style: GoogleFonts.inter(
-                                color: themeChange.isDarkTheme()
-                                    ? AppThemData.grey25
-                                    : AppThemData.grey950,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
+                      SizedBox(
+                        width: MediaQuery.sizeOf(context).width,
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.check,
+                              color: AppThemData.success500,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              width: MediaQuery.sizeOf(context).width - 80,
+                              child: Text(
+                                "${"Ensure that the photo is clear and all details on the ".tr}${document.title} ${"are visible.".tr}",
+                                style: TextStyle(
+                                  color: themeChange.isDarkTheme()
+                                      ? AppThemData.grey25
+                                      : AppThemData.grey950,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
                               ),
-                            )),
-                          )
-                        ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: MediaQuery.sizeOf(context).width,
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.check,
+                              color: AppThemData.success500,
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              width: MediaQuery.sizeOf(context).width - 80,
+                              child: Text(
+                                "The uploaded image should be in .jpg, .png, or .pdf format.",
+                                style: GoogleFonts.inter(
+                                  color: themeChange.isDarkTheme()
+                                      ? AppThemData.grey25
+                                      : AppThemData.grey950,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 22),
                     },
