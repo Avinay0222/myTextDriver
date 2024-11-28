@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:driver/app/models/my_driver_model.dart';
 import 'package:driver/app/services/api_service.dart';
@@ -10,7 +9,6 @@ import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/models/review_customer_model.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/theme/app_them_data.dart';
-import 'package:driver/utils/fire_store_utils.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class HomeOwnerController extends GetxController {
@@ -65,10 +63,6 @@ class HomeOwnerController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {

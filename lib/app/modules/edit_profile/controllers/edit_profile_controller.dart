@@ -31,35 +31,25 @@ class EditProfileController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   getUserData() async {
     DriverUserModel? userModel = await getOnlineUserModel();
-    if (userModel != null) {
-      profileImage.value = (userModel.profilePic ?? "").isNotEmpty
-          ? userModel.profilePic ?? Constant.profileConstant
-          : Constant.profileConstant;
-      name.value = userModel.fullName ?? '';
-      nameController.text = userModel.fullName ?? '';
-      phoneNumber.value =
-          (userModel.countryCode ?? '') + (userModel.phoneNumber ?? '');
-      phoneNumberController.text = (userModel.phoneNumber ?? '');
-      emailController.text = (userModel.email ?? '');
-      selectedGender.value = (userModel.gender ?? '') == "male" ? 1 : 2;
+    profileImage.value = (userModel.profilePic ?? "").isNotEmpty
+        ? userModel.profilePic ?? Constant.profileConstant
+        : Constant.profileConstant;
+    name.value = userModel.fullName ?? '';
+    nameController.text = userModel.fullName ?? '';
+    phoneNumber.value =
+        (userModel.countryCode ?? '') + (userModel.phoneNumber ?? '');
+    phoneNumberController.text = (userModel.phoneNumber ?? '');
+    emailController.text = (userModel.email ?? '');
+    selectedGender.value = (userModel.gender ?? '') == "male" ? 1 : 2;
     }
-  }
 
   saveUserData() async {
     DriverUserModel? userModel = await getOnlineUserModel();
-    userModel!.gender = selectedGender.value == 1 ? "male" : "female";
+    userModel.gender = selectedGender.value == 1 ? "male" : "female";
     userModel.fullName = nameController.text;
     userModel.slug = nameController.text.toSlug(delimiter: "-");
     ShowToastDialog.showLoader("Please wait");

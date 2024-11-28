@@ -33,8 +33,6 @@ import '../modules/my_bank/bindings/my_bank_binding.dart';
 import '../modules/my_bank/views/my_bank_view.dart';
 import '../modules/my_rides/bindings/my_rides_binding.dart';
 import '../modules/my_rides/views/my_rides_view.dart';
-import '../modules/my_wallet/bindings/my_wallet_binding.dart';
-import '../modules/my_wallet/views/my_wallet_view.dart';
 import '../modules/notifications/bindings/notifications_binding.dart';
 import '../modules/notifications/views/notifications_view.dart';
 import '../modules/otp_screen/bindings/otp_screen_binding.dart';
@@ -117,7 +115,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.VERIFY_DOCUMENTS,
-      page: () => VerifyDocumentsView(isFromDrawer: false),
+      page: () => const VerifyDocumentsView(isFromDrawer: false),
       binding: VerifyDocumentsBinding(),
     ),
     GetPage(

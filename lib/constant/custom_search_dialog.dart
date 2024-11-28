@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:driver/app/models/vehicle_brand_model.dart';
-import 'package:driver/app/models/vehicle_model_model.dart';
 import 'package:driver/app/modules/update_vehicle_details/controllers/update_vehicle_details_controller.dart';
 import 'package:driver/theme/responsive.dart';
 import 'package:flutter/cupertino.dart';

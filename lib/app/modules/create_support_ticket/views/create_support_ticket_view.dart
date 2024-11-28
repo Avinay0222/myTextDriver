@@ -1,18 +1,11 @@
-import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:driver/app/models/support_reason_model.dart';
 import 'package:driver/app/modules/create_support_ticket/controllers/create_support_ticket_controller.dart';
-import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/app_bar_with_border.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
-import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/theme/app_them_data.dart';
-import 'package:driver/theme/responsive.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -90,7 +83,7 @@ class CreateSupportTicketView extends GetView<CreateSupportTicketController> {
                           borderType: BorderType.RRect,
                           radius: const Radius.circular(12),
                           dashPattern: const [6, 6, 6, 6],
-                          child: Container(
+                          child: SizedBox(
                             height: 100,
                             width: double.infinity,
                             child: Center(child: Text("Choose Images".tr)),

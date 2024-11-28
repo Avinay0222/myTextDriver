@@ -1,11 +1,9 @@
 import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/modules/home/views/home_view.dart';
 import 'package:driver/app/modules/home_owner_screen/views/home_owner_view.dart';
-import 'package:driver/app/modules/permission/views/permission_view.dart';
 import 'package:driver/app/modules/update_vehicle_details/views/update_vehicle_details_view.dart';
 import 'package:driver/app/modules/upload_documents/views/upload_documents_view.dart';
 import 'package:driver/app/services/api_service.dart';
-import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/theme/app_them_data.dart';
@@ -21,7 +19,7 @@ class VerifyDocumentsView extends GetView<VerifyDocumentsController> {
   final bool isFromDrawer;
   final bool forOwner;
 
-  VerifyDocumentsView(
+  const VerifyDocumentsView(
       {super.key, required this.isFromDrawer, this.forOwner = false});
 
   @override
@@ -73,7 +71,7 @@ class VerifyDocumentsView extends GetView<VerifyDocumentsController> {
                         }
                         
                         DriverUserModel? userModel = await getOnlineUserModel();
-                        if (userModel!.driverVehicleDetails != null &&
+                        if (userModel.driverVehicleDetails != null &&
                             userModel
                                 .driverVehicleDetails!.modelId!.isNotEmpty) {
                           Preferences.setDriverUserModel(userModel);

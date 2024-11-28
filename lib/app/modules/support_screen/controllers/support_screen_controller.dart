@@ -1,5 +1,4 @@
 import 'package:driver/app/models/owner_support_ticket_modal.dart';
-import 'package:driver/app/models/support_ticket_model.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:get/get.dart';
 

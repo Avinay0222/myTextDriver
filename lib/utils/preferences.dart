@@ -138,9 +138,6 @@ class Preferences {
     try {
       if (startLatitude == 0) {
         loc.LocationData? currentLocation = await loc.Location().getLocation();
-        if (currentLocation == null) {
-          throw 'Unable to get current location.';
-        }
 
         startLatitude = currentLocation.latitude!;
         startLongitude = currentLocation.longitude!;

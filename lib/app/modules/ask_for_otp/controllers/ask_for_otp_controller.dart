@@ -2,13 +2,10 @@
 import 'dart:developer';
 import 'dart:typed_data';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/app/models/booking_model.dart';
 import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/constant/booking_status.dart';
-import 'package:driver/constant/collection_name.dart';
 import 'package:driver/constant/constant.dart';
-import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/utils/preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

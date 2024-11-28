@@ -1,14 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/app/models/booking_model.dart';
-import 'package:driver/app/models/tax_model.dart';
 import 'package:driver/app/models/user_model.dart';
-import 'package:driver/app/models/wallet_transaction_model.dart';
-import 'package:driver/app/modules/booking_details/widget/price_row_view.dart';
 import 'package:driver/app/modules/chat_screen/views/chat_screen_view.dart';
-import 'package:driver/app/modules/home/views/home_view.dart';
 import 'package:driver/app/modules/reason_for_cancel/views/reason_for_cancel_view.dart';
 import 'package:driver/app/routes/app_pages.dart';
 import 'package:driver/constant/booking_status.dart';
@@ -20,7 +15,6 @@ import 'package:driver/constant_widgets/pick_drop_point_view.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/constant_widgets/title_view.dart';
-import 'package:driver/extension/date_time_extension.dart';
 import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/theme/responsive.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
@@ -30,7 +24,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/booking_details_controller.dart';

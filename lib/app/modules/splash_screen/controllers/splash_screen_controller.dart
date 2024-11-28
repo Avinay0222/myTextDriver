@@ -43,17 +43,17 @@ class SplashScreenController extends GetxController {
         if (await Preferences.getDocVerifyStatus()) {
           Get.offAll(const HomeOwnerView());
         } else {
-          Get.offAll(VerifyDocumentsView(isFromDrawer: false,));
+          Get.offAll(const VerifyDocumentsView(isFromDrawer: false,));
         }
       } else if (isLogin == true) {
         DriverUserModel? userModel = await getOnlineUserModel();
 
         await Preferences.setDriverUserModel(userModel);
 
-        if (userModel != null && userModel.isVerified == true) {
+        if (userModel.isVerified == true) {
           try {
             if (!await Preferences.getDocVerifyStatus()) {
-              Get.offAll(VerifyDocumentsView(
+              Get.offAll(const VerifyDocumentsView(
                 isFromDrawer: false,
               ));
             } else if (await Constant.isPermissionApplied()) {
@@ -65,10 +65,10 @@ class SplashScreenController extends GetxController {
             Get.offAll(const HomeView());
           }
         } else {
-          if (userModel != null && userModel.fullName == null) {
+          if (userModel.fullName == null) {
             Get.offAll(const LoginView());
           } else {
-            Get.offAll(VerifyDocumentsView(isFromDrawer: false));
+            Get.offAll(const VerifyDocumentsView(isFromDrawer: false));
           }
         }
       } else {

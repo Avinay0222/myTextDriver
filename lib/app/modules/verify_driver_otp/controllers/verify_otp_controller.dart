@@ -1,5 +1,4 @@
 import 'package:driver/app/services/api_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';

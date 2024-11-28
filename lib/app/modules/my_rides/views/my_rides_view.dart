@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:driver/app/models/booking_model.dart';
 import 'package:driver/app/modules/home/controllers/home_controller.dart';
-import 'package:driver/app/modules/home/views/home_view.dart';
 import 'package:driver/app/modules/home/views/widgets/new_ride_view.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/no_rides_view.dart';

@@ -122,14 +122,16 @@ class HomeOwnerView extends GetView<HomeOwnerController> {
 
     if (drawerIndex == 1) return MyRidesView();
     if (drawerIndex == 3) return const MyBankView();
-    if (drawerIndex == 4) return VerifyDocumentsView(isFromDrawer: true);
+    if (drawerIndex == 4) return const VerifyDocumentsView(isFromDrawer: true);
     if (drawerIndex == 5) return const SupportScreenView();
-    if (drawerIndex == 6)
+    if (drawerIndex == 6) {
       return HtmlViewScreenView(
           title: "Privacy & Policy", htmlData: Constant.privacyPolicy);
-    if (drawerIndex == 7)
+    }
+    if (drawerIndex == 7) {
       return HtmlViewScreenView(
           title: "Terms & Condition", htmlData: Constant.termsAndConditions);
+    }
     if (drawerIndex == 8) return const LanguageView();
     if (controller.isLoading.value) return Constant.loader();
 

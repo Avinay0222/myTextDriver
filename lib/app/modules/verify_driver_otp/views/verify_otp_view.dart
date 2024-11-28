@@ -1,24 +1,15 @@
-import 'package:driver/app/models/driver_user_model.dart';
-import 'package:driver/app/modules/create_own_driver/views/create_driver_view.dart';
-import 'package:driver/app/modules/home/views/home_view.dart';
 import 'package:driver/app/modules/home_owner_screen/views/home_owner_view.dart';
-import 'package:driver/app/modules/permission/views/permission_view.dart';
-import 'package:driver/app/modules/signup/views/signup_view.dart';
 import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
 import 'package:driver/app/services/api_service.dart';
-import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/constant_widgets/text_field_with_title.dart';
 import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
 import 'package:driver/utils/preferences.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:otp_text_field/otp_text_field.dart';
-import 'package:otp_text_field/style.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/verify_otp_controller.dart';
@@ -123,7 +114,7 @@ class DriverVerifyOtpView extends StatelessWidget {
                                 Preferences.setFcmToken(responseData["token"]);
                                 Preferences.setOwnerLoginStatus(true);
                                 if (responseData["document_status"] == false) {
-                                  Get.offAll(() => VerifyDocumentsView(
+                                  Get.offAll(() => const VerifyDocumentsView(
                                         isFromDrawer: false,
                                         forOwner: true,
                                       ));

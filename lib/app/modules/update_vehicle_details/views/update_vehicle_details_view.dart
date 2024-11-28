@@ -1,4 +1,3 @@
-import 'package:driver/app/models/user_model.dart';
 import 'package:driver/app/models/vehicle_type_model.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/api_constant.dart';
