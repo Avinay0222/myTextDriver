@@ -160,6 +160,16 @@ class HomeOwnerView extends GetView<HomeOwnerController> {
             ),
             const Divider(),
             Obx(() {
+              if (controller.driverList.isEmpty) {
+                return const Center(
+                  child: Column(
+                    children: [
+                      Icon(Icons.no_accounts_sharp, size: 80),
+                      Text("No driver found"),
+                    ],
+                  ),
+                );
+              }
               return ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),

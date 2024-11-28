@@ -133,8 +133,6 @@ class UploadDocumentsController extends GetxController {
       }
     }
 
-    DriverUserModel? userModel = await Preferences.getDriverUserModel();
-
     DocsModel docsModel = DocsModel(
         type: document.slug,
         document_number: controller.numberController.text,
