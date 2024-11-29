@@ -593,7 +593,7 @@ Stream<List<BookingModel>> getRequest() async* {
       yield []; // {{ edit_2 }}
     }
     await Future.delayed(const Duration(
-        seconds: 5)); // Delay for 5 seconds before making the next request
+        seconds: 2)); // Delay for 5 seconds before making the next request
   }
 }
 
@@ -619,7 +619,7 @@ Stream<List<RideData>> getLiveRidesRequest() async* {
       yield []; // {{ edit_2 }}
     }
     await Future.delayed(const Duration(
-        seconds: 5)); // Delay for 5 seconds before making the next request
+        seconds: 2)); // Delay for 5 seconds before making the next request
   }
 }
 
@@ -645,7 +645,7 @@ Stream<List<RideData>> getInProgressRequest() async* {
       yield []; // {{ edit_2 }}
     }
     await Future.delayed(const Duration(
-        seconds: 5)); // Delay for 5 seconds before making the next request
+        seconds: 2)); // Delay for 5 seconds before making the next request
   }
 }
 
@@ -671,7 +671,7 @@ Stream<List<RideData>> getActiveRidesRequest() async* {
       yield []; // {{ edit_2 }}
     }
     await Future.delayed(const Duration(
-        seconds: 5)); // Delay for 5 seconds before making the next request
+        seconds: 2)); // Delay for 5 seconds before making the next request
   }
 }
 

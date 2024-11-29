@@ -70,7 +70,7 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget _buildBody(HomeController controller, DarkThemeProvider themeChange) {
-    if (controller.isLoading.value) return Constant.loader();
+    // if (controller.isLoading.value) return Constant.loader();
 
     switch (controller.drawerIndex.value) {
       case 1:

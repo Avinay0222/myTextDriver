@@ -2,6 +2,7 @@ import 'package:driver/app/models/booking_model.dart';
 import 'package:driver/app/modules/reason_for_cancel/views/reason_for_cancel_view.dart';
 import 'package:driver/app/routes/app_pages.dart';
 import 'package:driver/app/services/api_service.dart';
+import 'package:driver/chat_page_overview.dart';
 import 'package:driver/constant/booking_status.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/custom_dialog_box.dart';
@@ -9,12 +10,16 @@ import 'package:driver/constant_widgets/pick_drop_point_view.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/theme/app_them_data.dart';
+import 'package:driver/theme/responsive.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
 import 'package:driver/utils/preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 
 class ActiveRideView extends StatelessWidget {
   final RideData? bookingModel;
@@ -49,6 +54,95 @@ class ActiveRideView extends StatelessWidget {
               pickUpAddress: bookingModel?.pickupAddress ?? '',
               dropAddress: bookingModel?.dropoffAddress ?? '',
             ),
+             Container(
+                            width: Responsive.width(100, context),
+                            padding: const EdgeInsets.all(16),
+                            margin: const EdgeInsets.all(16),
+                            decoration: ShapeDecoration(
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    width: 1,
+                                    color: themeChange.isDarkTheme()
+                                        ? AppThemData.grey800
+                                        : AppThemData.grey100),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 44,
+                                  height: 44,
+                                  margin: const EdgeInsets.only(right: 10),
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: ShapeDecoration(
+                                    color: themeChange.isDarkTheme()
+                                        ? AppThemData.grey950
+                                        : Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(200),
+                                    ),
+                                    image: const DecorationImage(
+                                      image: NetworkImage(
+                                          Constant.profileConstant),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        bookingModel?.user.name.toString() ?? '',
+                                        style: GoogleFonts.inter(
+                                          color: themeChange.isDarkTheme()
+                                              ? AppThemData.grey25
+                                              : AppThemData.grey950,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                InkWell(
+                                    onTap: () {
+
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatPageOverview(
+                                          studentId: bookingModel!.user.id.toString(),
+                                          teacherId: bookingModel!.driverId.toString(),
+                                          studentName: bookingModel!.user.name.toString() ?? '',
+                                          teacherName: bookingModel!.driverId.toString() ?? '',
+                                          showAppBar: true,
+                                        ),
+                                      ),
+                                    );  
+
+                                    },
+                                    child: SvgPicture.asset(
+                                        "assets/icon/ic_message.svg")),
+                                const SizedBox(width: 12),
+                                InkWell(
+                                    onTap: () {
+                                      Constant().launchCall(
+                                          "${bookingModel?.user?.countryCode}${bookingModel?.user?.phone}");
+                                    },
+                                    child: SvgPicture.asset(
+                                        "assets/icon/ic_phone.svg"))
+                              ],
+                            ),
+                          ),
+                         
             ElevatedButton(
               onPressed: () {
                 Preferences.openMapWithDirections(
