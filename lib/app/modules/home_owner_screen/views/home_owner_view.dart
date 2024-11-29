@@ -1,5 +1,4 @@
 import 'package:driver/app/modules/create_own_driver/views/create_driver_view.dart';
-import 'package:driver/app/modules/home/views/widgets/drawer_view.dart';
 import 'package:driver/app/modules/home_owner_screen/controllers/home_owner_controller.dart';
 import 'package:driver/app/modules/home_owner_screen/driver_detail_view.dart';
 import 'package:driver/app/modules/home_owner_screen/views/widget/owner_drawer.dart';

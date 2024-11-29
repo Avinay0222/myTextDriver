@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:driver/app/modules/home_owner_screen/views/home_owner_view.dart';
-import 'package:driver/app/modules/signup/views/signup_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:get/get.dart';
 import 'package:driver/app/models/driver_user_model.dart';
@@ -13,7 +12,6 @@ import 'package:driver/app/modules/login/views/login_view.dart';
 import 'package:driver/app/modules/permission/views/permission_view.dart';
 import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
 import 'package:driver/constant/constant.dart';
-import 'package:driver/utils/fire_store_utils.dart';
 import 'package:driver/utils/preferences.dart';
 
 class SplashScreenController extends GetxController {
