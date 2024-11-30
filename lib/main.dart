@@ -1,5 +1,7 @@
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:driver/utils/my_notification_handler.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -13,6 +15,13 @@ import 'package:driver/theme/styles.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
 import 'package:driver/utils/fire_store_utils.dart';
 import 'package:provider/provider.dart';
+
+
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  MyNotificationHandler().showNotification(message);
+}
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

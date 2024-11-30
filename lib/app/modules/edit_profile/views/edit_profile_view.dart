@@ -394,7 +394,7 @@ class EditProfileView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             IconButton(
-                                onPressed: () => controller.pickFile(
+                                onPressed: () => controller.pickImage(
                                     source: ImageSource.camera),
                                 icon: const Icon(
                                   Icons.camera_alt,

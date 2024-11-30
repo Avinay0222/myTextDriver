@@ -31,8 +31,6 @@ class EditProfileController extends GetxController {
     super.onInit();
   }
 
-
-
   getUserData() async {
     Map<String, dynamic> userModel = await getProfile();
     if (userModel.isNotEmpty) {
@@ -46,53 +44,55 @@ class EditProfileController extends GetxController {
       selectedGender.value = (userModel["gender"] ?? '') == "male" ? 1 : 2;
     }
 
-  saveUserData() async {
-    DriverUserModel? userModel = await getOnlineUserModel();
-    userModel.gender = selectedGender.value == 1 ? "male" : "female";
-    userModel.fullName = nameController.text;
-    userModel.slug = nameController.text.toSlug(delimiter: "-");
-    ShowToastDialog.showLoader("Please wait");
-    // if (profileImage.value.isNotEmpty &&
-    //     Constant.hasValidUrl(profileImage.value) == false) {
-    // profileImage.value = await Constant.uploadUserImageToFireStorage(
-    //   File(profileImage.value),
-    //   "profileImage/${FireStoreUtils.getCurrentUid()}",
-    //   File(profileImage.value).path.split('/').last,
-    // );
-    //}
-    // userModel.profilePic = profileImage.value;
-    Map<String, dynamic> params = {
-      "name": nameController.text,
-      "date_of_birth": userModel.dateOfBirth,
-      "email": emailController.text,
-      "gender": selectedGender.value == 1 ? "Male" : "Female"
-    };
-    await updateOnlineUserModel(params);
-    ShowToastDialog.closeLoader();
-    Get.back(result: true);
-  }
+    saveUserData() async {
+      DriverUserModel? userModel = await getOnlineUserModel();
+      userModel.gender = selectedGender.value == 1 ? "male" : "female";
+      userModel.fullName = nameController.text;
+      userModel.slug = nameController.text.toSlug(delimiter: "-");
+      ShowToastDialog.showLoader("Please wait");
+      // if (profileImage.value.isNotEmpty &&
+      //     Constant.hasValidUrl(profileImage.value) == false) {
+      // profileImage.value = await Constant.uploadUserImageToFireStorage(
+      //   File(profileImage.value),
+      //   "profileImage/${FireStoreUtils.getCurrentUid()}",
+      //   File(profileImage.value).path.split('/').last,
+      // );
+      //}
+      // userModel.profilePic = profileImage.value;
+      Map<String, dynamic> params = {
+        "name": nameController.text,
+        "date_of_birth": userModel.dateOfBirth,
+        "email": emailController.text,
+        "gender": selectedGender.value == 1 ? "Male" : "Female"
+      };
+      await updateOnlineUserModel(params);
+      ShowToastDialog.closeLoader();
+      Get.back(result: true);
+    }
 
-  Future<void> pickFile({required ImageSource source}) async {
-    try {
-      XFile? image =
-          await imagePicker.pickImage(source: source, imageQuality: 100);
-      if (image == null) return;
+    Future<void> pickFile({required ImageSource source}) async {
+      try {
+        XFile? image =
+            await imagePicker.pickImage(source: source, imageQuality: 100);
+        if (image == null) return;
 
-      Get.back();
+        Get.back();
 
-      // Compress the image using flutter_image_compress
-      Uint8List? compressedBytes = await FlutterImageCompress.compressWithFile(
-        image.path,
-        quality: 50,
-      );
+        // Compress the image using flutter_image_compress
+        Uint8List? compressedBytes =
+            await FlutterImageCompress.compressWithFile(
+          image.path,
+          quality: 50,
+        );
 
       // Save the compressed image to a new file
       File compressedFile = File(image.path);
       await compressedFile.writeAsBytes(compressedBytes!);
 
-      profileImage.value = compressedFile.path;
-    } on PlatformException catch (e) {
-      ShowToastDialog.showToast("${"failed_to_pick".tr} : \n $e");
+        profileImage.value = compressedFile.path;
+      } on PlatformException catch (e) {
+        ShowToastDialog.showToast("${"failed_to_pick".tr} : \n $e");
+      }
     }
   }
 }
