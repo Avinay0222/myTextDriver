@@ -72,7 +72,7 @@ class HomeController extends GetxController {
     getUserData();
     getChartData();
     updateCurrentLocation();
-    // getRideRequestt();
+    getRideRequestt();
 
     //  _timer = Timer.periodic(Duration(seconds: 5), (timer) {
     //   getRequest();
@@ -85,15 +85,16 @@ class HomeController extends GetxController {
 
   @override
   void onClose() {
-    socket.disconnect();
     super.onClose();
   }
 
   Future<void> getRideRequestt() async {
-    DriverUserModel model =
-        await Preferences.getDriverUserModel() ?? DriverUserModel();
-    name.value = model.fullName ?? "";
-    phoneNumber.value = model.phoneNumber ?? "";
+    Map<String, dynamic> userModel = await getProfile();
+    if (userModel.isNotEmpty) {
+      name.value = userModel["name"] ?? '';
+      phoneNumber.value =
+          (userModel["country_code"] ?? '') + (userModel["phone"] ?? '');
+    }
   }
 
   getUserData() async {
@@ -260,35 +261,6 @@ class HomeController extends GetxController {
     }
     update();
     log("=======> Update Location");
-  }
-
-  void initializeSocket() {
-    // Configure the socket
-    socket = IO.io('http://172.93.54.177:3002', <String, dynamic>{
-      'transports': ['websocket'],
-      'autoConnect': false,
-    });
-
-    // Connect to the socket
-    socket.connect();
-
-    // Listen for responses from the server
-    socket.on('/driver/passenger/ride/request', (data) {
-      // Handle the response data
-      print('Received ride request response: $data');
-      // You can update your state or perform actions based on the response
-    });
-
-    // Optionally, handle connection events
-    socket.onConnect((_) {
-      print('Connected to socket');
-      // Emit a request to get ride requests
-      socket.emit('getRideRequest');
-    });
-
-    socket.onDisconnect((_) {
-      print('Disconnected from socket');
-    });
   }
 
   void setLocation() async {

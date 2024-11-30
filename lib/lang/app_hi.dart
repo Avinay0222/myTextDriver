@@ -127,7 +127,7 @@ const Map<String, String> hiIN = {
   "Browse": "ब्राउज़ करें",
   "Back Side": "पीछे का हिस्सा",
   "Upload clear pictures of both sides of": "दोनों पक्षों की स्पष्ट तस्वीरें अपलोड करें",
-  "The uploaded image should be in .jpg, .png, or .pdf format.": "अपलोड की गई छवि .jpg, .png, या .pdf प्रारूप में होनी चाहिए।",
+  "The uploaded image should be in .jpg, .png": "अपलोड की गई छवि .jpg, .png प्रारूप में होनी चाहिए।",
   "Date of Birth": "जन्म तिथि",
   "Enter Date of Birth": "जन्म तिथि दर्ज करें",
   "camera": "कैमरा",

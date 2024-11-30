@@ -170,7 +170,7 @@ class LoginView extends StatelessWidget {
                       Center(
                         child: RoundShapeButton(
                             size: const Size(200, 45),
-                            title: "Regisrter as an owner".tr,
+                            title: "Register as an owner".tr,
                             buttonColor: AppThemData.blueLight01,
                             buttonTextColor: AppThemData.black,
                             onTap: () {

@@ -34,17 +34,16 @@ class EditProfileController extends GetxController {
 
 
   getUserData() async {
-    DriverUserModel? userModel = await getOnlineUserModel();
-    profileImage.value = (userModel.profilePic ?? "").isNotEmpty
-        ? userModel.profilePic ?? Constant.profileConstant
-        : Constant.profileConstant;
-    name.value = userModel.fullName ?? '';
-    nameController.text = userModel.fullName ?? '';
-    phoneNumber.value =
-        (userModel.countryCode ?? '') + (userModel.phoneNumber ?? '');
-    phoneNumberController.text = (userModel.phoneNumber ?? '');
-    emailController.text = (userModel.email ?? '');
-    selectedGender.value = (userModel.gender ?? '') == "male" ? 1 : 2;
+    Map<String, dynamic> userModel = await getProfile();
+    if (userModel.isNotEmpty) {
+      profileImage.value = "";
+      name.value = userModel["name"] ?? '';
+      nameController.text = userModel["name"] ?? '';
+      phoneNumber.value =
+          (userModel["country_code"] ?? '') + (userModel["phone"] ?? '');
+      phoneNumberController.text = (userModel["phone"] ?? '');
+      emailController.text = (userModel["email"] ?? '');
+      selectedGender.value = (userModel["gender"] ?? '') == "male" ? 1 : 2;
     }
 
   saveUserData() async {
