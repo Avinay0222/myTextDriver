@@ -18,8 +18,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 
 class ActiveRideView extends StatelessWidget {
   final RideData? bookingModel;
@@ -135,7 +133,7 @@ class ActiveRideView extends StatelessWidget {
                                 InkWell(
                                     onTap: () {
                                       Constant().launchCall(
-                                          "${bookingModel?.user?.countryCode}${bookingModel?.user?.phone}");
+                                          "${bookingModel?.user.countryCode}${bookingModel?.user.phone}");
                                     },
                                     child: SvgPicture.asset(
                                         "assets/icon/ic_phone.svg"))

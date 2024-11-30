@@ -183,7 +183,7 @@ class _AppBarTitle extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         Text(
-          'MyTaxi'.tr,
+          'Travel Teacher'.tr,
           style: GoogleFonts.inter(
             color: themeChange.isDarkTheme()
                 ? AppThemData.white
