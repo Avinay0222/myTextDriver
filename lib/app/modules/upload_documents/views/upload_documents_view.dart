@@ -334,7 +334,7 @@ class UploadDocumentsView extends StatelessWidget {
                               margin: const EdgeInsets.only(left: 10),
                               width: MediaQuery.sizeOf(context).width - 80,
                               child: Text(
-                                "The uploaded image should be in .jpg, .png, or .pdf format.",
+                                "The uploaded image should be in .jpg, .png",
                                 style: GoogleFonts.inter(
                                   color: themeChange.isDarkTheme()
                                       ? AppThemData.grey25

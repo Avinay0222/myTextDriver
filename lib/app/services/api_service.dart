@@ -393,6 +393,24 @@ Future<DriverUserModel> getOnlineUserModel() async {
   }
 }
 
+Future<Map<String, dynamic>> getProfile({bool isOwner = false}) async {
+  String endpoint = isOwner ? getOwnerPofileEndpoint : getUserPofileEndpoint;
+  String token = await Preferences.getFcmToken();
+  final response = await http.get(
+    Uri.parse(baseURL + endpoint),
+    headers: {"Content-Type": "application/json", "token": token},
+  );
+
+  if (response.statusCode == 200) {
+    if (jsonDecode(response.body)["status"]) {
+      return jsonDecode(response.body)["data"];
+    }
+    return {};
+  } else {
+    return {};
+  }
+}
+
 Future<Map<String, dynamic>> getCheckStatusAPi() async {
   String token = await Preferences.getFcmToken();
   final response = await http.get(

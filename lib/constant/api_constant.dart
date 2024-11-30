@@ -7,6 +7,7 @@ const String loginDriverWithEmail = "/driver/login_with_password"; //POST
 const String complpeteSignUpEndpoint = "/driver/complete"; //POST
 const String logOutEndpoint = "/driver/logout"; //POST
 const String getUserPofileEndpoint = "/driver/profile/preview"; //GET
+const String getOwnerPofileEndpoint = "/driver/owner/profile/preview"; //GET
 const String updatePofileEndpoint = "/driver/profile/update"; //PUT
 const String updloadProfileImageEndpoint = "/driver/profile/upload"; //PUT
 const String updloadDocumentEndpoint = "/driver/document/upload"; //PUT
