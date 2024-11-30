@@ -5,7 +5,6 @@ import 'package:driver/app/models/support_ticket_model.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/utils/fire_store_utils.dart';
-import 'package:driver/utils/preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';

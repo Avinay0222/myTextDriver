@@ -36,8 +36,8 @@ class AskForOtpView extends StatelessWidget {
                   child: GoogleMap(
                     initialCameraPosition: CameraPosition(
                       target: LatLng(
-                          rideData.pickupLocation?.coordinates?[1] ?? 0.0,
-                          rideData.pickupLocation?.coordinates?[0] ?? 0.0),
+                          rideData.pickupLocation.coordinates?[1] ?? 0.0,
+                          rideData.pickupLocation.coordinates?[0] ?? 0.0),
                       zoom: 5,
                     ),
                     padding: const EdgeInsets.only(
@@ -155,7 +155,7 @@ class AskForOtpView extends StatelessWidget {
                                               positiveClick: () async {
                                                 Navigator.pop(context);
                                                 bool value = await cancelRide(
-                                                    rideData.id!);
+                                                    rideData.id);
 
                                                 if (value == true) {
                                                   ShowToastDialog.showToast(

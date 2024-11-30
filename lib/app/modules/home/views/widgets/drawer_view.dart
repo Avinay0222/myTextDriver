@@ -1,29 +1,21 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:developer';
-import 'dart:io';
 
-import 'package:driver/app/modules/create_drive_screen/views/create_driver_view.dart';
 import 'package:driver/app/modules/edit_profile/views/edit_profile_view.dart';
 import 'package:driver/app/modules/home/controllers/home_controller.dart';
-import 'package:driver/app/modules/home/views/home_view.dart';
 import 'package:driver/app/modules/login/views/login_view.dart';
-import 'package:driver/app/modules/my_rides/views/my_rides_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant_widgets/custom_dialog_box.dart';
-import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
-import 'package:driver/utils/fire_store_utils.dart';
 import 'package:driver/utils/preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DrawerView extends StatelessWidget {
   const DrawerView({super.key});

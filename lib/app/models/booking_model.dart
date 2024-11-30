@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 class BookingModel {
   String? id; // Corresponds to _id
@@ -443,7 +442,7 @@ class RideData {
       'dropoff_location': dropoffLocation.toJson(),
       'dropoff_address': dropoffAddress,
       'distance': distance,
-      'duration_in_minutes': durationInMinutes!,
+      'duration_in_minutes': durationInMinutes,
       'status': status,
       'coupon_id': couponId,
       'otp': otp,

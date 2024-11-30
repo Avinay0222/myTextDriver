@@ -154,7 +154,7 @@ class SupportScreenView extends GetView<SupportScreenController> {
                                           Row(
                                             children: [
                                               Text(
-                                                "${Constant.timestampToDate(Timestamp.fromMillisecondsSinceEpoch(controller.supportTicketList[index].createdAt!))}, ",
+                                                "${Constant.timestampToDate(Timestamp.fromMillisecondsSinceEpoch(controller.supportTicketList[index].createdAt))}, ",
                                                 style: GoogleFonts.inter(
                                                     fontSize: 12,
                                                     fontWeight: FontWeight.w400,
@@ -170,7 +170,7 @@ class SupportScreenView extends GetView<SupportScreenController> {
                                                             controller
                                                                 .supportTicketList[
                                                                     index]
-                                                                .createdAt!)),
+                                                                .createdAt)),
                                                 style: GoogleFonts.inter(
                                                     fontSize: 12,
                                                     fontWeight: FontWeight.w400,

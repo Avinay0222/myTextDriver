@@ -31,15 +31,7 @@ class EditProfileController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   getUserData() async {
     Map<String, dynamic> userModel = await getProfile();
@@ -53,11 +45,10 @@ class EditProfileController extends GetxController {
       emailController.text = (userModel["email"] ?? '');
       selectedGender.value = (userModel["gender"] ?? '') == "male" ? 1 : 2;
     }
-  }
 
   saveUserData() async {
     DriverUserModel? userModel = await getOnlineUserModel();
-    userModel!.gender = selectedGender.value == 1 ? "male" : "female";
+    userModel.gender = selectedGender.value == 1 ? "male" : "female";
     userModel.fullName = nameController.text;
     userModel.slug = nameController.text.toSlug(delimiter: "-");
     ShowToastDialog.showLoader("Please wait");

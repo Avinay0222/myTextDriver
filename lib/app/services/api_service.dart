@@ -7,7 +7,6 @@ import 'package:driver/app/models/owner_support_ticket_modal.dart';
 import 'package:driver/constant/api_constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/utils/preferences.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 
 String staticImage =
@@ -317,10 +316,10 @@ Future<bool> uploadDriverDocumentImageToStorage(DocsModel model) async {
     if (await Preferences.getUserLoginStatus()) {
       DriverUserModel? userModel = await Preferences.getDriverUserModel();
       if (userModel != null) {
-        List<DocsModel> list = List.from(userModel?.driverdDocs ?? []);
+        List<DocsModel> list = List.from(userModel.driverdDocs ?? []);
         list.add(model);
-        userModel?.driverdDocs = list;
-        await Preferences.setDriverUserModel(userModel!);
+        userModel.driverdDocs = list;
+        await Preferences.setDriverUserModel(userModel);
       }
     }
 
@@ -504,9 +503,9 @@ Future<bool> getDriverOnlineStatus() async {
   }
 }
 
-Future<bool> acceptRideAPI(String ride_id) async {
+Future<bool> acceptRideAPI(String rideId) async {
   String token = await Preferences.getFcmToken();
-  Map<String, dynamic> map = {"ride_id": ride_id};
+  Map<String, dynamic> map = {"ride_id": rideId};
   final response = await http.put(Uri.parse(baseURL + acceptRide),
       headers: {"Content-Type": "application/json", "token": token},
       body: jsonEncode(map));
@@ -611,8 +610,8 @@ Stream<List<BookingModel>> getRequest() async* {
     } else {
       yield []; // {{ edit_2 }}
     }
-    await Future.delayed(Duration(
-        seconds: 5)); // Delay for 5 seconds before making the next request
+    await Future.delayed(const Duration(
+        seconds: 2)); // Delay for 5 seconds before making the next request
   }
 }
 
@@ -637,8 +636,8 @@ Stream<List<RideData>> getLiveRidesRequest() async* {
     } else {
       yield []; // {{ edit_2 }}
     }
-    await Future.delayed(Duration(
-        seconds: 5)); // Delay for 5 seconds before making the next request
+    await Future.delayed(const Duration(
+        seconds: 2)); // Delay for 5 seconds before making the next request
   }
 }
 
@@ -663,8 +662,8 @@ Stream<List<RideData>> getInProgressRequest() async* {
     } else {
       yield []; // {{ edit_2 }}
     }
-    await Future.delayed(Duration(
-        seconds: 5)); // Delay for 5 seconds before making the next request
+    await Future.delayed(const Duration(
+        seconds: 2)); // Delay for 5 seconds before making the next request
   }
 }
 
@@ -690,7 +689,7 @@ Stream<List<RideData>> getActiveRidesRequest() async* {
       yield []; // {{ edit_2 }}
     }
     await Future.delayed(const Duration(
-        seconds: 5)); // Delay for 5 seconds before making the next request
+        seconds: 2)); // Delay for 5 seconds before making the next request
   }
 }
 

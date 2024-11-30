@@ -1,10 +1,8 @@
-import 'dart:convert';
 
 import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/modules/home/views/home_view.dart';
 import 'package:driver/app/modules/home_owner_screen/views/home_owner_view.dart';
 import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
-import 'package:driver/app/modules/verify_driver_otp/views/verify_otp_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
@@ -58,7 +56,7 @@ class LoginOnwerController extends GetxController {
         Preferences.setFcmToken(responseData["token"]);
         Preferences.setOwnerLoginStatus(true);
         if (responseData["document_status"] == false) {
-          Get.offAll(() => VerifyDocumentsView(
+          Get.offAll(() => const VerifyDocumentsView(
                 isFromDrawer: false,
               ));
         } else {
@@ -95,7 +93,7 @@ class LoginOnwerController extends GetxController {
         Preferences.setFcmToken(responseData["token"]);
         Preferences.setUserLoginStatus(true);
         if (responseData["document_status"] == false) {
-          Get.offAll(() => VerifyDocumentsView(
+          Get.offAll(() => const VerifyDocumentsView(
                 isFromDrawer: false,
               ));
         } else {

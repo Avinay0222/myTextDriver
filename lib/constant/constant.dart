@@ -15,7 +15,6 @@ import 'package:driver/app/models/map_model.dart';
 import 'package:driver/app/models/payment_method_model.dart';
 import 'package:driver/app/models/tax_model.dart';
 import 'package:driver/app/models/vehicle_type_model.dart';
-import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/api_constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/extension/string_extensions.dart';
@@ -23,7 +22,6 @@ import 'package:driver/theme/app_them_data.dart';
 // import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -343,7 +341,7 @@ class Constant {
       Uri.parse(baseURL + updloadDocumentEndpoint),
       headers: {
         "Content-Type": "application/json",
-        "token": await Preferences.fcmToken
+        "token": Preferences.fcmToken
       },
       body: jsonEncode(
         {
@@ -491,7 +489,7 @@ class Constant {
         initialDate: DateTime(2000),
         //get today's date
         firstDate: DateTime(1950), // Set the minimum year to 1950
-        lastDate: DateTime.now().subtract(Duration(days: 365 * 18)));
+        lastDate: DateTime.now().subtract(const Duration(days: 365 * 18)));
     return pickedDate;
   }
 

@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:driver/app/models/documents_model.dart';
 import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/models/verify_driver_model.dart';
-import 'package:driver/utils/fire_store_utils.dart';
 
 class VerifyDocumentsController extends GetxController {
   RxList<DocumentsModel> documentList = <DocumentsModel>[].obs;

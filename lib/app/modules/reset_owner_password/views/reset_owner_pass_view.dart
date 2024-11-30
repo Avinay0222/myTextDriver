@@ -1,4 +1,3 @@
-import 'package:driver/app/modules/create_own_driver/views/create_driver_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
