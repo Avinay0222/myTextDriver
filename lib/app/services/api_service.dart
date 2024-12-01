@@ -178,8 +178,11 @@ Future<Map<String, dynamic>> createYourDriverAccount(
 }
 
 Future<Map<String, dynamic>> getListOfUploadDocument() async {
+  final endPoint = await Preferences.isOwnerLogin()
+      ? listOfOwnerUploadDocument
+      : listOfUploadDocument;
   final response = await http.get(
-    Uri.parse(baseURL + listOfUploadDocument),
+    Uri.parse(baseURL + endPoint),
     headers: {
       "Content-Type": "application/json",
       "token": await Preferences.getFcmToken()
@@ -300,9 +303,12 @@ Future<Map<String, dynamic>> getVehicleTypeDetail() async {
 //   }
 
 Future<bool> uploadDriverDocumentImageToStorage(DocsModel model) async {
+  final endPoint = await Preferences.isOwnerLogin()
+      ? updloadOwnerDocumentEndpoint
+      : updloadDocumentEndpoint;
   // Convert image to base64
   final response = await http.put(
-    Uri.parse(baseURL + updloadDocumentEndpoint),
+    Uri.parse(baseURL + endPoint),
     headers: {
       "Content-Type": "application/json",
       "token": await Preferences.getFcmToken()

@@ -45,6 +45,7 @@ class EditProfileController extends GetxController {
       emailController.text = (userModel["email"] ?? '');
       selectedGender.value = (userModel["gender"] ?? '') == "male" ? 1 : 2;
     }
+  }
 
   saveUserData() async {
     DriverUserModel? userModel = await getOnlineUserModel();
