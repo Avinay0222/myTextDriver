@@ -681,9 +681,12 @@ Stream<List<RideData>> getActiveRidesRequest() async* {
     );
 
     if (response.statusCode == 200 && jsonDecode(response.body)["status"]) {
-      List<RideData> listModel = (jsonDecode(response.body)["data"] as List)
-          .map((e) => RideData.fromJson(e))
-          .toList();
+      List<RideData> listModel = [];
+      if (jsonDecode(response.body)["data"] != null) {
+        listModel = (jsonDecode(response.body)["data"] as List)
+            .map((e) => RideData.fromJson(e))
+            .toList();
+      }
       yield listModel; // {{ edit_1 }}
     } else {
       yield []; // {{ edit_2 }}
