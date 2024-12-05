@@ -82,7 +82,8 @@ class Preferences {
 
   static Future<bool> getUserLoginStatus() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    return pref.getBool(userLoginStatus) ?? false;
+    bool value = pref.getBool(userLoginStatus) ?? false;
+    return value;
   }
 
   static Future<void> setDocVerifyStatus(bool value) async {

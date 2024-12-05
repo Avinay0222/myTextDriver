@@ -13,9 +13,11 @@ class VerifyDocumentsController extends GetxController {
   Rx<VerifyDriverModel> verifyDriverModel = VerifyDriverModel().obs;
   Rx<DriverUserModel> userModel = DriverUserModel().obs;
   RxBool isVerified = false.obs;
+  RxBool isOwner = false.obs;
 
   @override
   void onInit() {
+    
     getData();
     super.onInit();
   }
@@ -32,6 +34,7 @@ class VerifyDocumentsController extends GetxController {
 
   getData() async {
     documentList.clear();
+    isOwner.value = await Preferences.isOwnerLogin();
     // verifyDriverModel.value = await FireStoreUtils.getVerifyDriver(FireStoreUtils.getCurrentUid()) ?? VerifyDriverModel();
     final response = await getListOfUploadDocument();
     List<DocumentsModel> documentListL = List.from([]);

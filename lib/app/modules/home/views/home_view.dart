@@ -96,6 +96,7 @@ class HomeView extends GetView<HomeController> {
       default:
         return _buildMainContent(controller, themeChange);
     }
+    
   }
 
   Widget _buildMainContent(
