@@ -161,169 +161,172 @@ class VerifyDocumentsView extends GetView<VerifyDocumentsController> {
                       ),
                     ),
                     const SizedBox(height: 28),
-                    InkWell(
-                      onTap: () {
-                        Get.to(UpdateVehicleDetailsView(
-                          isUploaded:
-                              controller.userModel.value.driverVehicleDetails !=
-                                  null,
-                        ));
-                      },
-                      child: Obx(
-                        () => Container(
-                          padding:
-                              controller.userModel.value.driverVehicleDetails !=
-                                      null
-                                  ? const EdgeInsets.all(16)
-                                  : EdgeInsets.zero,
-                          decoration: ShapeDecoration(
-                            color: controller
-                                        .userModel.value.driverVehicleDetails !=
-                                    null
-                                ? AppThemData.primary50
-                                : AppThemData.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: controller.userModel.value
-                                            .driverVehicleDetails ==
+                    Obx(
+                      () => (!controller.isOwner.value)
+                          ? InkWell(
+                              onTap: () {
+                                Get.to(UpdateVehicleDetailsView(
+                            isUploaded:
+                                controller.userModel.value.driverVehicleDetails !=
+                                    null,
+                          ));
+                        },
+                        child: Obx(
+                          () => Container(
+                            padding:
+                                controller.userModel.value.driverVehicleDetails !=
                                         null
-                                    ? const EdgeInsets.only(top: 16, bottom: 16)
+                                    ? const EdgeInsets.all(16)
                                     : EdgeInsets.zero,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    controller.userModel.value
-                                                .driverVehicleDetails !=
-                                            null
-                                        ? SvgPicture.asset(
-                                            "assets/icon/ic_vehicle_details.svg")
-                                        : Icon(
-                                            Icons.add,
-                                            color: AppThemData.primary500,
-                                          ),
-                                    const SizedBox(width: 18),
-                                    Expanded(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            controller.userModel.value
-                                                        .driverVehicleDetails !=
-                                                    null
-                                                ? 'Vehicle Details'.tr
-                                                : 'Add Your Vehicle Details'.tr,
-                                            style: GoogleFonts.inter(
-                                              color: AppThemData.grey950,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                          if (controller.userModel.value
+                            decoration: ShapeDecoration(
+                              color: controller
+                                          .userModel.value.driverVehicleDetails !=
+                                      null
+                                  ? AppThemData.primary50
+                                  : AppThemData.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: controller.userModel.value
+                                              .driverVehicleDetails ==
+                                          null
+                                      ? const EdgeInsets.only(top: 16, bottom: 16)
+                                      : EdgeInsets.zero,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      controller.userModel.value
                                                   .driverVehicleDetails !=
-                                              null) ...{
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  (controller
-                                                              .userModel
-                                                              .value
-                                                              .driverVehicleDetails!
-                                                              .isVerified ??
-                                                          false)
-                                                      ? 'Verified'.tr
-                                                      : 'Not Verified'.tr,
-                                                  style: GoogleFonts.inter(
-                                                    color: (controller
+                                              null
+                                          ? SvgPicture.asset(
+                                              "assets/icon/ic_vehicle_details.svg")
+                                          : Icon(
+                                              Icons.add,
+                                              color: AppThemData.primary500,
+                                            ),
+                                      const SizedBox(width: 18),
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              controller.userModel.value
+                                                          .driverVehicleDetails !=
+                                                      null
+                                                  ? 'Vehicle Details'.tr
+                                                  : 'Add Your Vehicle Details'.tr,
+                                              style: GoogleFonts.inter(
+                                                color: AppThemData.grey950,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            if (controller.userModel.value
+                                                    .driverVehicleDetails !=
+                                                null) ...{
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    (controller
                                                                 .userModel
                                                                 .value
                                                                 .driverVehicleDetails!
                                                                 .isVerified ??
                                                             false)
-                                                        ? AppThemData.success500
-                                                        : AppThemData.danger500,
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
-                                                ),
-                                                Container(
-                                                    width: 16,
-                                                    height: 16,
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            left: 7),
-                                                    clipBehavior:
-                                                        Clip.antiAlias,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              16),
+                                                        ? 'Verified'.tr
+                                                        : 'Not Verified'.tr,
+                                                    style: GoogleFonts.inter(
                                                       color: (controller
                                                                   .userModel
                                                                   .value
                                                                   .driverVehicleDetails!
                                                                   .isVerified ??
                                                               false)
-                                                          ? AppThemData
-                                                              .success500
-                                                          : AppThemData
-                                                              .danger500,
+                                                          ? AppThemData.success500
+                                                          : AppThemData.danger500,
+                                                      fontSize: 14,
+                                                      fontWeight: FontWeight.w400,
                                                     ),
-                                                    child: Icon(
-                                                      (controller
-                                                                  .userModel
-                                                                  .value
-                                                                  .driverVehicleDetails!
-                                                                  .isVerified ??
-                                                              false)
-                                                          ? Icons.check
-                                                          : Icons.close,
-                                                      size: 12,
-                                                      color: AppThemData.white,
-                                                    ))
-                                              ],
-                                            )
-                                          },
-                                        ],
+                                                  ),
+                                                  Container(
+                                                      width: 16,
+                                                      height: 16,
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 7),
+                                                      clipBehavior:
+                                                          Clip.antiAlias,
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                16),
+                                                        color: (controller
+                                                                    .userModel
+                                                                    .value
+                                                                    .driverVehicleDetails!
+                                                                    .isVerified ??
+                                                                false)
+                                                            ? AppThemData
+                                                                .success500
+                                                            : AppThemData
+                                                                .danger500,
+                                                      ),
+                                                      child: Icon(
+                                                        (controller
+                                                                    .userModel
+                                                                    .value
+                                                                    .driverVehicleDetails!
+                                                                    .isVerified ??
+                                                                false)
+                                                            ? Icons.check
+                                                            : Icons.close,
+                                                        size: 12,
+                                                        color: AppThemData.white,
+                                                      ))
+                                                ],
+                                              )
+                                            },
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                    if (controller.userModel.value
-                                            .driverVehicleDetails !=
-                                        null) ...{
-                                      const Icon(
-                                        Icons.arrow_forward_ios_rounded,
-                                        size: 20,
-                                        color: AppThemData.grey500,
-                                      )
-                                    }
-                                  ],
-                                ),
-                              ),
-                              if (controller
-                                      .userModel.value.driverVehicleDetails ==
-                                  null) ...{
-                                const Padding(
-                                  padding: EdgeInsets.only(left: 40),
-                                  child: Divider(
-                                    color: AppThemData.grey100,
+                                      if (controller.userModel.value
+                                              .driverVehicleDetails !=
+                                          null) ...{
+                                        const Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          size: 20,
+                                          color: AppThemData.grey500,
+                                        )
+                                      }
+                                    ],
                                   ),
-                                )
-                              }
-                            ],
+                                ),
+                                if (controller
+                                        .userModel.value.driverVehicleDetails ==
+                                    null) ...{
+                                  const Padding(
+                                    padding: EdgeInsets.only(left: 40),
+                                    child: Divider(
+                                      color: AppThemData.grey100,
+                                    ),
+                                  )
+                                }
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+                      ):Container(),
                     ),
                     const SizedBox(height: 12),
                     Obx(
