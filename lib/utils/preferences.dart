@@ -82,7 +82,8 @@ class Preferences {
 
   static Future<bool> getUserLoginStatus() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    return pref.getBool(userLoginStatus) ?? false;
+    bool value = pref.getBool(userLoginStatus) ?? false;
+    return value;
   }
 
   static Future<void> setDocVerifyStatus(bool value) async {
@@ -118,8 +119,13 @@ class Preferences {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? jsonString = pref.getString('driverUserModel');
     if (jsonString != null) {
-      Preferences.userModel = DriverUserModel.fromJson(json.decode(jsonString));
-      return userModel;
+      try {
+        Preferences.userModel =
+            DriverUserModel.fromJson(json.decode(jsonString));
+        return userModel;
+      } catch (e) {
+        return null;
+      }
     }
     return null;
   }
@@ -133,9 +139,6 @@ class Preferences {
     try {
       if (startLatitude == 0) {
         loc.LocationData? currentLocation = await loc.Location().getLocation();
-        if (currentLocation == null) {
-          throw 'Unable to get current location.';
-        }
 
         startLatitude = currentLocation.latitude!;
         startLongitude = currentLocation.longitude!;

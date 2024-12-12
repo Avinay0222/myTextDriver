@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CollectMoneyPopup extends StatelessWidget {
   final String amount;
 
-  const CollectMoneyPopup({Key? key, required this.amount}) : super(key: key);
+  const CollectMoneyPopup({super.key, required this.amount});
 
   @override
   Widget build(BuildContext context) {
@@ -15,14 +15,14 @@ class CollectMoneyPopup extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
+          const Text(
             'Please collect the following amount:',
             style: TextStyle(fontSize: 16),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Text(
-            '${amount}',
-            style: TextStyle(
+            amount,
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.green,

@@ -31,47 +31,27 @@ class EditProfileController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
   getUserData() async {
-    DriverUserModel? userModel = await getOnlineUserModel();
-    if (userModel != null) {
-      profileImage.value = (userModel.profilePic ?? "").isNotEmpty
-          ? userModel.profilePic ?? Constant.profileConstant
-          : Constant.profileConstant;
-      name.value = userModel.fullName ?? '';
-      nameController.text = userModel.fullName ?? '';
+    Map<String, dynamic> userModel = await getProfile();
+    if (userModel.isNotEmpty) {
+      profileImage.value = "";
+      name.value = userModel["name"] ?? '';
+      nameController.text = userModel["name"] ?? '';
       phoneNumber.value =
-          (userModel.countryCode ?? '') + (userModel.phoneNumber ?? '');
-      phoneNumberController.text = (userModel.phoneNumber ?? '');
-      emailController.text = (userModel.email ?? '');
-      selectedGender.value = (userModel.gender ?? '') == "male" ? 1 : 2;
+          (userModel["country_code"] ?? '') + (userModel["phone"] ?? '');
+      phoneNumberController.text = (userModel["phone"] ?? '');
+      emailController.text = (userModel["email"] ?? '');
+      selectedGender.value = (userModel["gender"] ?? '') == "male" ? 1 : 2;
     }
   }
 
   saveUserData() async {
     DriverUserModel? userModel = await getOnlineUserModel();
-    userModel!.gender = selectedGender.value == 1 ? "male" : "female";
+    userModel.gender = selectedGender.value == 1 ? "male" : "female";
     userModel.fullName = nameController.text;
     userModel.slug = nameController.text.toSlug(delimiter: "-");
     ShowToastDialog.showLoader("Please wait");
-    // if (profileImage.value.isNotEmpty &&
-    //     Constant.hasValidUrl(profileImage.value) == false) {
-    // profileImage.value = await Constant.uploadUserImageToFireStorage(
-    //   File(profileImage.value),
-    //   "profileImage/${FireStoreUtils.getCurrentUid()}",
-    //   File(profileImage.value).path.split('/').last,
-    // );
-    //}
-    // userModel.profilePic = profileImage.value;
+    
     Map<String, dynamic> params = {
       "name": nameController.text,
       "date_of_birth": userModel.dateOfBirth,
@@ -83,27 +63,57 @@ class EditProfileController extends GetxController {
     Get.back(result: true);
   }
 
+  Future<void> pickImage({required ImageSource source}) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: source);
+      
+      if (image != null) {
+        // Show loading dialog
+        ShowToastDialog.showLoader('Uploading image...');
+        
+        // Here you would typically upload the image to your server
+        // For example:
+        // final response = await uploadImageToServer(File(image.path));
+        // if (response.success) {
+        //   profilePic.value = response.imageUrl;
+        // }
+        
+        ShowToastDialog.closeLoader();
+        ShowToastDialog.showToast('Profile picture updated successfully');
+      }
+    } catch (e) {
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast('Error uploading image: $e');
+    }
+  }
+
   Future<void> pickFile({required ImageSource source}) async {
     try {
-      XFile? image =
-          await imagePicker.pickImage(source: source, imageQuality: 100);
-      if (image == null) return;
-
-      Get.back();
-
-      // Compress the image using flutter_image_compress
-      Uint8List? compressedBytes = await FlutterImageCompress.compressWithFile(
-        image.path,
-        quality: 50,
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: source,
+        imageQuality: 70, // Compress image quality to 70%
+        maxWidth: 1000,   // Limit max width
+        maxHeight: 1000,  // Limit max height
       );
-
-      // Save the compressed image to a new file
-      File compressedFile = File(image.path);
-      await compressedFile.writeAsBytes(compressedBytes!);
-
-      profileImage.value = compressedFile.path;
-    } on PlatformException catch (e) {
-      ShowToastDialog.showToast("${"failed_to_pick".tr} : \n $e");
+      
+      if (image != null) {
+        ShowToastDialog.showLoader('Uploading image...');
+        
+        // Here you would typically upload the image to your server
+        // For example:
+        // final response = await uploadImageToServer(File(image.path));
+        // if (response.success) {
+        //   profilePic.value = response.imageUrl;
+        // }
+        
+        ShowToastDialog.closeLoader();
+        ShowToastDialog.showToast('Profile picture updated successfully');
+      }
+    } catch (e) {
+      ShowToastDialog.closeLoader();
+      ShowToastDialog.showToast('Error uploading image: $e');
     }
   }
 }

@@ -5,18 +5,14 @@ import 'package:driver/constant_widgets/country_code_selector_view.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/constant_widgets/text_field_with_title.dart';
-import 'package:driver/extension/date_time_extension.dart';
 import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/theme/responsive.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
 import 'package:driver/utils/validate_mobile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class CreateDriverView extends StatelessWidget {

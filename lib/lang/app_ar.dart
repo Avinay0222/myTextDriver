@@ -125,7 +125,7 @@ const Map<String, String> lnAr = {
   "Browse": "تصفح",
   "Back Side": "الجانب الخلفي",
   "Upload clear pictures of both sides of": "قم بتحميل صور واضحة لكلا الجانبين من",
-  "The uploaded image should be in .jpg, .png, or .pdf format.": "يجب أن تكون الصورة المحملة بتنسيق .jpg أو .png أو .pdf.",
+  "The uploaded image should be in .jpg, .png.": "يجب أن تكون الصورة المحملة بتنسيق .jpg أو .png",
   "Date of Birth": "تاريخ الميلاد",
   "Enter Date of Birth": "أدخل تاريخ الميلاد",
   "camera": "كاميرا",

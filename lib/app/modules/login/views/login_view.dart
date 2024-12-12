@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:driver/app/modules/create_drive_screen/views/create_driver_view.dart';
 import '../../../../theme/responsive.dart';
 import '../controllers/login_controller.dart';
 
@@ -171,7 +170,7 @@ class LoginView extends StatelessWidget {
                       Center(
                         child: RoundShapeButton(
                             size: const Size(200, 45),
-                            title: "Regisrter as an owner".tr,
+                            title: "Register as an owner".tr,
                             buttonColor: AppThemData.blueLight01,
                             buttonTextColor: AppThemData.black,
                             onTap: () {

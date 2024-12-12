@@ -1,11 +1,9 @@
 // ignore_for_file: unnecessary_overrides
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:get/get.dart';
 import 'package:driver/app/models/booking_model.dart';
 import 'package:driver/app/models/user_model.dart';
-import 'package:driver/constant/booking_status.dart';
 import 'package:driver/constant/send_notification.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/utils/fire_store_utils.dart';

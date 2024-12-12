@@ -15,7 +15,6 @@ import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/utils/fire_store_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -74,7 +73,7 @@ class LoginController extends GetxController {
         print('Extracted OTP: $otp');
         // Navigate to OTP verification screen with the phone number and OTP
         Get.to(
-          () => VerifyOtpView(
+          () => const VerifyOtpView(
               // oTP: otp,
               // phoneNumder: phoneNumberController.text,
 

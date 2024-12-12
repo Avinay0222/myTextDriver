@@ -1,17 +1,12 @@
-import 'package:driver/app/modules/create_drive_screen/views/create_driver_view.dart';
 import 'package:driver/app/modules/login_owner_screen/controllers/login_owner_controller.dart';
 import 'package:driver/app/modules/reset_owner_password/views/reset_owner_pass_view.dart';
 import 'package:driver/constant/constant.dart';
-import 'package:driver/constant_widgets/country_code_selector_view.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
-import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/constant_widgets/text_field_with_title.dart';
 import 'package:driver/theme/app_them_data.dart';
 import 'package:driver/theme/responsive.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
-import 'package:driver/utils/validate_mobile.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';

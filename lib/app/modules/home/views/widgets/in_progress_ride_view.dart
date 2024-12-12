@@ -1,29 +1,18 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/app/models/booking_model.dart';
-import 'package:driver/app/models/driver_user_model.dart';
-import 'package:driver/app/models/user_model.dart';
-import 'package:driver/app/modules/booking_details/controllers/booking_details_controller.dart';
-import 'package:driver/app/modules/booking_details/views/booking_details_view.dart';
 import 'package:driver/app/modules/home/views/widgets/collect_money_popup.dart';
 import 'package:driver/app/modules/reason_for_cancel/views/reason_for_cancel_view.dart';
 import 'package:driver/app/routes/app_pages.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/booking_status.dart';
 import 'package:driver/constant/constant.dart';
-import 'package:driver/constant/send_notification.dart';
 import 'package:driver/constant_widgets/custom_dialog_box.dart';
 import 'package:driver/constant_widgets/pick_drop_point_view.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
-import 'package:driver/extension/date_time_extension.dart';
 import 'package:driver/theme/app_them_data.dart';
-import 'package:driver/theme/responsive.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
-import 'package:driver/utils/fire_store_utils.dart';
 import 'package:driver/utils/preferences.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -87,7 +76,7 @@ class InProgressRideView extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          bookingModel?.createdAt?.toString() ?? "",
+          bookingModel?.createdAt.toString() ?? "",
           style: GoogleFonts.inter(
             color: themeChange.isDarkTheme()
                 ? AppThemData.grey400
@@ -101,7 +90,7 @@ class InProgressRideView extends StatelessWidget {
         const SizedBox(width: 8),
         Expanded(
           child: Text(
-            bookingModel?.createdAt?.toString() ?? "",
+            bookingModel?.createdAt.toString() ?? "",
             style: GoogleFonts.inter(
               color: themeChange.isDarkTheme()
                   ? AppThemData.grey400

@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:driver/app/modules/home_owner_screen/views/home_owner_view.dart';
-import 'package:driver/app/modules/signup/views/signup_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:get/get.dart';
 import 'package:driver/app/models/driver_user_model.dart';
@@ -13,7 +12,6 @@ import 'package:driver/app/modules/login/views/login_view.dart';
 import 'package:driver/app/modules/permission/views/permission_view.dart';
 import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
 import 'package:driver/constant/constant.dart';
-import 'package:driver/utils/fire_store_utils.dart';
 import 'package:driver/utils/preferences.dart';
 
 class SplashScreenController extends GetxController {
@@ -43,17 +41,17 @@ class SplashScreenController extends GetxController {
         if (await Preferences.getDocVerifyStatus()) {
           Get.offAll(const HomeOwnerView());
         } else {
-          Get.offAll(VerifyDocumentsView(isFromDrawer: false,));
+          Get.offAll(const VerifyDocumentsView(isFromDrawer: false,));
         }
       } else if (isLogin == true) {
         DriverUserModel? userModel = await getOnlineUserModel();
 
         await Preferences.setDriverUserModel(userModel);
 
-        if (userModel != null && userModel.isVerified == true) {
+        if (userModel.isVerified == true) {
           try {
             if (!await Preferences.getDocVerifyStatus()) {
-              Get.offAll(VerifyDocumentsView(
+              Get.offAll(const VerifyDocumentsView(
                 isFromDrawer: false,
               ));
             } else if (await Constant.isPermissionApplied()) {
@@ -65,10 +63,10 @@ class SplashScreenController extends GetxController {
             Get.offAll(const HomeView());
           }
         } else {
-          if (userModel != null && userModel.fullName == null) {
+          if (userModel.fullName == null) {
             Get.offAll(const LoginView());
           } else {
-            Get.offAll(VerifyDocumentsView(isFromDrawer: false));
+            Get.offAll(const VerifyDocumentsView(isFromDrawer: false));
           }
         }
       } else {

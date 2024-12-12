@@ -7,10 +7,14 @@ const String loginDriverWithEmail = "/driver/login_with_password"; //POST
 const String complpeteSignUpEndpoint = "/driver/complete"; //POST
 const String logOutEndpoint = "/driver/logout"; //POST
 const String getUserPofileEndpoint = "/driver/profile/preview"; //GET
+const String getOwnerPofileEndpoint = "/driver/owner/profile/preview"; //GET
 const String updatePofileEndpoint = "/driver/profile/update"; //PUT
 const String updloadProfileImageEndpoint = "/driver/profile/upload"; //PUT
 const String updloadDocumentEndpoint = "/driver/document/upload"; //PUT
+const String updloadOwnerDocumentEndpoint =
+    "/driver/owner/upload/document"; //PUT
 const String listOfUploadDocument = "/driver/list_of_upload_documents"; //GET
+const String listOfOwnerUploadDocument = "driver/owner/list_of_document"; //GET
 const String cancelRideReson = "/driver/ride/reason_list"; //GET
 const String addVehicleDetail = "/driver/vehicle/add"; //POST
 const String getVehicleType = "/driver/vehicle/types"; //GET

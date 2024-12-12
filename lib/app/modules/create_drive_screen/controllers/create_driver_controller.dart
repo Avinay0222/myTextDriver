@@ -1,18 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/app/models/driver_user_model.dart';
-import 'package:driver/app/modules/create_own_driver/views/create_driver_view.dart';
-import 'package:driver/app/modules/home/views/home_view.dart';
-import 'package:driver/app/modules/permission/views/permission_view.dart';
-import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
 import 'package:driver/app/modules/verify_driver_otp/views/verify_otp_view.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
-import 'package:driver/extension/string_extensions.dart';
-import 'package:driver/utils/fire_store_utils.dart';
-import 'package:driver/utils/notification_service.dart';
-import 'package:driver/utils/preferences.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 

@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 // Flutter & Dart packages
 import 'package:driver/app/modules/home/views/widgets/drawer_view.dart';
@@ -6,14 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 // Third-party packages
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 // Project modules
-import 'package:driver/app/models/booking_model.dart';
-import 'package:driver/app/models/user_model.dart';
 import 'package:driver/app/modules/home/views/widgets/active_ride_view.dart';
 import 'package:driver/app/modules/home/views/widgets/in_progress_ride_view.dart';
 import 'package:driver/app/modules/home/views/widgets/new_ride_view.dart';
@@ -21,16 +17,12 @@ import 'package:driver/app/modules/html_view_screen/views/html_view_screen_view.
 import 'package:driver/app/modules/language/views/language_view.dart';
 import 'package:driver/app/modules/my_bank/views/my_bank_view.dart';
 import 'package:driver/app/modules/my_rides/views/my_rides_view.dart';
-import 'package:driver/app/modules/my_wallet/views/my_wallet_view.dart';
 import 'package:driver/app/modules/notifications/views/notifications_view.dart';
 import 'package:driver/app/modules/support_screen/views/support_screen_view.dart';
 import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
-import 'package:driver/app/routes/app_pages.dart';
 import 'package:driver/app/services/api_service.dart';
-import 'package:driver/constant/api_constant.dart';
 import 'package:driver/constant/constant.dart';
 import 'package:driver/theme/app_them_data.dart';
-import 'package:driver/theme/responsive.dart';
 import 'package:driver/utils/dark_theme_provider.dart';
 import 'package:driver/utils/fire_store_utils.dart';
 
@@ -78,7 +70,7 @@ class HomeView extends GetView<HomeController> {
   }
 
   Widget _buildBody(HomeController controller, DarkThemeProvider themeChange) {
-    if (controller.isLoading.value) return Constant.loader();
+    // if (controller.isLoading.value) return Constant.loader();
 
     switch (controller.drawerIndex.value) {
       case 1:
@@ -86,7 +78,7 @@ class HomeView extends GetView<HomeController> {
       case 3:
         return const MyBankView();
       case 4:
-        return VerifyDocumentsView(isFromDrawer: true);
+        return const VerifyDocumentsView(isFromDrawer: true);
       case 5:
         return const SupportScreenView();
       case 6:
@@ -104,6 +96,7 @@ class HomeView extends GetView<HomeController> {
       default:
         return _buildMainContent(controller, themeChange);
     }
+    
   }
 
   Widget _buildMainContent(
@@ -149,9 +142,9 @@ class HomeView extends GetView<HomeController> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
-            if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            }
+            // if (snapshot.hasError) {
+            //   return Center(child: Text('Error: ${snapshot.error}'));
+            // }
             if (snapshot.hasData && snapshot.data!.isNotEmpty) {
               return Column(
                 children: [
@@ -191,13 +184,29 @@ class _AppBarTitle extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         Text(
-          'MyTaxi'.tr,
+          'Travel Teacher'.tr,
           style: GoogleFonts.inter(
             color: themeChange.isDarkTheme()
                 ? AppThemData.white
                 : AppThemData.black,
             fontSize: 20,
             fontWeight: FontWeight.w700,
+          ),
+        ),
+        SizedBox(
+          height: 20,
+          child: Align(
+            alignment: Alignment.bottomLeft,
+            child: Text(
+              " as driver",
+              style: GoogleFonts.inter(
+                color: themeChange.isDarkTheme()
+                    ? AppThemData.white
+                    : AppThemData.black,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
         ),
       ],

@@ -72,7 +72,7 @@ class HomeController extends GetxController {
     getUserData();
     getChartData();
     updateCurrentLocation();
-    // getRideRequestt();
+    getRideRequestt();
 
     //  _timer = Timer.periodic(Duration(seconds: 5), (timer) {
     //   getRequest();
@@ -82,22 +82,19 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
   @override
   void onClose() {
-    socket.disconnect();
     super.onClose();
   }
 
   Future<void> getRideRequestt() async {
-    DriverUserModel model =
-        await Preferences.getDriverUserModel() ?? DriverUserModel();
-    name.value = model.fullName ?? "";
-    phoneNumber.value = model.phoneNumber ?? "";
+    Map<String, dynamic> userModel = await getProfile();
+    if (userModel.isNotEmpty) {
+      name.value = userModel["name"] ?? '';
+      phoneNumber.value =
+          (userModel["country_code"] ?? '') + (userModel["phone"] ?? '');
+    }
   }
 
   getUserData() async {

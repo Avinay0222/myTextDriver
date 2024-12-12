@@ -4,23 +4,18 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:driver/app/models/docsModel.dart';
 import 'package:driver/app/services/api_service.dart';
-import 'package:driver/utils/preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:driver/app/models/documents_model.dart';
-import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/models/verify_driver_model.dart';
 import 'package:driver/app/modules/verify_documents/controllers/verify_documents_controller.dart';
-import 'package:driver/constant/constant.dart';
 import 'package:driver/constant_widgets/network_image_widget.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/theme/responsive.dart';
-import 'package:driver/utils/fire_store_utils.dart';
 import 'package:image_picker/image_picker.dart';
 
 class UploadDocumentsController extends GetxController {
@@ -132,8 +127,6 @@ class UploadDocumentsController extends GetxController {
         }
       }
     }
-
-    DriverUserModel? userModel = await Preferences.getDriverUserModel();
 
     DocsModel docsModel = DocsModel(
         type: document.slug,

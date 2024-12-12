@@ -1,5 +1,4 @@
 import 'package:driver/app/modules/create_own_driver/views/create_driver_view.dart';
-import 'package:driver/app/modules/home/views/widgets/drawer_view.dart';
 import 'package:driver/app/modules/home_owner_screen/controllers/home_owner_controller.dart';
 import 'package:driver/app/modules/home_owner_screen/driver_detail_view.dart';
 import 'package:driver/app/modules/home_owner_screen/views/widget/owner_drawer.dart';
@@ -122,14 +121,16 @@ class HomeOwnerView extends GetView<HomeOwnerController> {
 
     if (drawerIndex == 1) return MyRidesView();
     if (drawerIndex == 3) return const MyBankView();
-    if (drawerIndex == 4) return VerifyDocumentsView(isFromDrawer: true);
+    if (drawerIndex == 4) return const VerifyDocumentsView(isFromDrawer: true);
     if (drawerIndex == 5) return const SupportScreenView();
-    if (drawerIndex == 6)
+    if (drawerIndex == 6) {
       return HtmlViewScreenView(
           title: "Privacy & Policy", htmlData: Constant.privacyPolicy);
-    if (drawerIndex == 7)
+    }
+    if (drawerIndex == 7) {
       return HtmlViewScreenView(
           title: "Terms & Condition", htmlData: Constant.termsAndConditions);
+    }
     if (drawerIndex == 8) return const LanguageView();
     if (controller.isLoading.value) return Constant.loader();
 
@@ -160,6 +161,16 @@ class HomeOwnerView extends GetView<HomeOwnerController> {
             ),
             const Divider(),
             Obx(() {
+              if (controller.driverList.isEmpty) {
+                return const Center(
+                  child: Column(
+                    children: [
+                      Icon(Icons.no_accounts_sharp, size: 80),
+                      Text("No driver found"),
+                    ],
+                  ),
+                );
+              }
               return ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),

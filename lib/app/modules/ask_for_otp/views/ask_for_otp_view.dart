@@ -36,8 +36,8 @@ class AskForOtpView extends StatelessWidget {
                   child: GoogleMap(
                     initialCameraPosition: CameraPosition(
                       target: LatLng(
-                          rideData.pickupLocation?.coordinates?[1] ?? 0.0,
-                          rideData.pickupLocation?.coordinates?[0] ?? 0.0),
+                          rideData.pickupLocation.coordinates?[1] ?? 0.0,
+                          rideData.pickupLocation.coordinates?[0] ?? 0.0),
                       zoom: 5,
                     ),
                     padding: const EdgeInsets.only(
