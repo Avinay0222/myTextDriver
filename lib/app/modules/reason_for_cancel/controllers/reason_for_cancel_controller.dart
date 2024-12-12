@@ -1,5 +1,7 @@
 // ignore_for_file: unnecessary_overrides
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:driver/app/models/ride_reason_list.dart';
+import 'package:driver/app/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:driver/app/models/booking_model.dart';
@@ -10,10 +12,12 @@ import 'package:driver/utils/fire_store_utils.dart';
 class ReasonForCancelController extends GetxController {
   Rx<BookingModel> bookingModel = BookingModel().obs;
   Rx<TextEditingController> otherReasonController = TextEditingController().obs;
+  RxList<RideCancelResaons> reasons = <RideCancelResaons>[].obs;
 
   @override
   void onInit() {
     super.onInit();
+    getReasonList();
   }
 
   @override
@@ -27,8 +31,6 @@ class ReasonForCancelController extends GetxController {
   }
 
   RxInt selectedIndex = 0.obs;
-
-  List<dynamic> reasons = Constant.cancellationReason;
 
   Future<bool> cancelBooking(BookingModel bookingModels) async {
     BookingModel bookingModel = bookingModels;
@@ -44,6 +46,10 @@ class ReasonForCancelController extends GetxController {
     bookingModel.updatedAt = Timestamp.now().toString();
     bool? isCancelled = await FireStoreUtils.setBooking(bookingModel);
     return (isCancelled ?? false);
+  }
+  
+  void getReasonList() async {
+    reasons.value = await getCancelReasonsList();
   }
 
   // sendCancelRideNotification() async {

@@ -15,10 +15,10 @@ class SplashScreenView extends StatelessWidget {
           return Scaffold(
             backgroundColor: AppThemData.black,
             body: Container(
-              decoration: const BoxDecoration(image: DecorationImage(opacity: 0.12, image: AssetImage("assets/images/splash_background.jpeg"), fit: BoxFit.fill)),
-              child: Center(
-                child: SvgPicture.asset("assets/icon/splash_logo.svg"),
-              ),
+              decoration: const BoxDecoration(image: DecorationImage(image: AssetImage("assets/images/splash_background.png"), fit: BoxFit.fill)),
+              // child: Center(
+              //   child: SvgPicture.asset("assets/icon/splash_logo.svg"),
+              // ),
             ),
           );
         });

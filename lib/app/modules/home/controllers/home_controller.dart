@@ -268,7 +268,7 @@ class HomeController extends GetxController {
 
   void initializeSocket() {
     // Configure the socket
-    socket = IO.io('http://172.93.54.177:3002', <String, dynamic>{
+    socket = IO.io('https://travelteachergroup.com:8081', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });

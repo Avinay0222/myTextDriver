@@ -71,7 +71,7 @@ class LoginView extends StatelessWidget {
                                       isOwner: false,
                                     ));
                               },
-                              child: const Text("Login with Emai")),
+                              child: const Text("Login with Email")),
                         ),
                       ),
                       Text(

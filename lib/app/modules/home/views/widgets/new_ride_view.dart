@@ -124,7 +124,7 @@ class NewRideView extends StatelessWidget {
                                 positiveClick: () async {
                                   Navigator.pop(context);
                                   bool value =
-                                      await cancelRide(bookingModel!.rideId!);
+                                      await cancelRide(bookingModel!.rideId!,"");
 
                                   if (value == true) {
                                     // ShowToastDialog.showToast(

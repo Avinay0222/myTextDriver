@@ -363,7 +363,7 @@ class ActiveRideView extends StatelessWidget {
               negativeString: "Cancel".tr,
               positiveClick: () async {
                 Navigator.pop(context);
-                bool value = await cancelRide(bookingModel!.id!);
+                bool value = await cancelRide(bookingModel!.id!,"");
 
                 if (value == true) {
                   ShowToastDialog.showToast("Ride cancelled successfully!");

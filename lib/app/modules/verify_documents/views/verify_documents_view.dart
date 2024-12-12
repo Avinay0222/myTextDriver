@@ -71,7 +71,7 @@ class VerifyDocumentsView extends GetView<VerifyDocumentsController> {
                         } catch (e) {
                           ShowToastDialog.showToast(e.toString());
                         }
-                        
+
                         DriverUserModel? userModel = await getOnlineUserModel();
                         if (userModel!.driverVehicleDetails != null &&
                             userModel

@@ -4,6 +4,7 @@ import 'package:driver/app/models/docsModel.dart';
 import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/models/my_driver_model.dart';
 import 'package:driver/app/models/owner_support_ticket_modal.dart';
+import 'package:driver/app/models/ride_reason_list.dart';
 import 'package:driver/constant/api_constant.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/utils/preferences.dart';
@@ -191,6 +192,27 @@ Future<Map<String, dynamic>> getListOfUploadDocument() async {
     return jsonDecode(response.body);
   } else {
     throw Exception('Failed to Create Account: ${response.reasonPhrase}');
+  }
+}
+
+Future<List<RideCancelResaons>> getCancelReasonsList() async {
+  final response = await http.get(
+    Uri.parse(baseURL + cancelRideReson),
+    headers: {
+      "Content-Type": "application/json",
+      "token": await Preferences.getFcmToken()
+    },
+  );
+
+  if (response.statusCode == 200 &&
+      jsonDecode(response.body)["status"] == true) {
+    List<RideCancelResaons> rides = [];
+    for (var ride in jsonDecode(response.body)["data"]) {
+      rides.add(RideCancelResaons.fromJson(ride));
+    }
+    return rides;
+  } else {
+    return [];
   }
 }
 
@@ -424,9 +446,10 @@ Future<DriverUserModel> updateOnlineUserModel(
   }
 }
 
-Future<bool> cancelRide(String rideId) async {
+Future<bool> cancelRide(String rideId, String? reason) async {
   final Map<String, dynamic> body = {
     "ride_id": rideId,
+    "reason":reason
   };
 
   final response = await http.put(

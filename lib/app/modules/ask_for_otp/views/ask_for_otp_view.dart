@@ -155,7 +155,7 @@ class AskForOtpView extends StatelessWidget {
                                               positiveClick: () async {
                                                 Navigator.pop(context);
                                                 bool value = await cancelRide(
-                                                    rideData.id!);
+                                                    rideData.id!,"");
 
                                                 if (value == true) {
                                                   ShowToastDialog.showToast(

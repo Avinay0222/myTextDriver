@@ -54,7 +54,11 @@ class ReasonForCancelView extends StatelessWidget {
                     buttonColor: AppThemData.primary500,
                     buttonTextColor: AppThemData.black,
                     onTap: () async {
-                      bool isCancelled = await cancelRide(bookingModel.id);
+                      bool isCancelled = await cancelRide(
+                          bookingModel.id,
+                          controller.reasons[controller.selectedIndex.value]
+                                  .reason ??
+                              "");
                       if (isCancelled) {
                         showDialog(
                           context: context,
@@ -98,76 +102,86 @@ class ReasonForCancelView extends StatelessWidget {
               ),
             ),
             body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Obx(
-                          () => Column(
-                            children: [
-                              RadioListTile(
-                                value: index,
-                                contentPadding: EdgeInsets.zero,
-                                groupValue: controller.selectedIndex.value,
-                                controlAffinity:
-                                    ListTileControlAffinity.trailing,
-                                activeColor: AppThemData.primary500,
-                                onChanged: (ind) {
-                                  controller.selectedIndex.value = ind ?? 0;
-                                },
-                                title: Text(
-                                  controller.reasons[index],
-                                  style: GoogleFonts.inter(
-                                    color: themeChange.isDarkTheme()
-                                        ? AppThemData.grey25
-                                        : AppThemData.grey950,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
+              child: Obx(
+                () => Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: (controller.reasons.isNotEmpty)
+                      ? Column(
+                          children: [
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Obx(
+                                  () => Column(
+                                    children: [
+                                      RadioListTile(
+                                        value: index,
+                                        contentPadding: EdgeInsets.zero,
+                                        groupValue:
+                                            controller.selectedIndex.value,
+                                        controlAffinity:
+                                            ListTileControlAffinity.trailing,
+                                        activeColor: AppThemData.primary500,
+                                        onChanged: (ind) {
+                                          controller.selectedIndex.value =
+                                              ind ?? 0;
+                                        },
+                                        title: Text(
+                                          controller.reasons[index].reason ??
+                                              "",
+                                          style: GoogleFonts.inter(
+                                            color: themeChange.isDarkTheme()
+                                                ? AppThemData.grey25
+                                                : AppThemData.grey950,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ),
+                                      if (index !=
+                                          (controller.reasons.length - 1))
+                                        const Divider()
+                                    ],
                                   ),
+                                );
+                              },
+                              itemCount: controller.reasons.length,
+                            ),
+                            Obx(
+                              () => Visibility(
+                                visible: controller.reasons[
+                                        controller.selectedIndex.value] ==
+                                    "Other",
+                                child: TextFormField(
+                                  enabled: controller.reasons[
+                                          controller.selectedIndex.value] ==
+                                      "Other",
+                                  textAlign: TextAlign.start,
+                                  minLines: 3,
+                                  maxLines: 5,
+                                  controller:
+                                      controller.otherReasonController.value,
+                                  decoration: InputDecoration(
+                                      filled: true,
+                                      hintText: 'Type here...'.tr,
+                                      fillColor: themeChange.isDarkTheme()
+                                          ? AppThemData.grey900
+                                          : AppThemData.grey50,
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          borderSide: BorderSide(
+                                              color: themeChange.isDarkTheme()
+                                                  ? AppThemData.grey800
+                                                  : AppThemData.grey100,
+                                              width: 1))),
                                 ),
                               ),
-                              if (index != (controller.reasons.length - 1))
-                                const Divider()
-                            ],
-                          ),
-                        );
-                      },
-                      itemCount: controller.reasons.length,
-                    ),
-                    Obx(
-                      () => Visibility(
-                        visible: controller
-                                .reasons[controller.selectedIndex.value] ==
-                            "Other",
-                        child: TextFormField(
-                          enabled: controller
-                                  .reasons[controller.selectedIndex.value] ==
-                              "Other",
-                          textAlign: TextAlign.start,
-                          minLines: 3,
-                          maxLines: 5,
-                          controller: controller.otherReasonController.value,
-                          decoration: InputDecoration(
-                              filled: true,
-                              hintText: 'Type here...'.tr,
-                              fillColor: themeChange.isDarkTheme()
-                                  ? AppThemData.grey900
-                                  : AppThemData.grey50,
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                      color: themeChange.isDarkTheme()
-                                          ? AppThemData.grey800
-                                          : AppThemData.grey100,
-                                      width: 1))),
-                        ),
-                      ),
-                    )
-                  ],
+                            )
+                          ],
+                        )
+                      : Container(),
                 ),
               ),
             ),
