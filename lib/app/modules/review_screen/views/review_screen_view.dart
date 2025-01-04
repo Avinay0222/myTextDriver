@@ -21,10 +21,13 @@ class ReviewScreenView extends GetView<HomeController> {
       init: HomeController(),
       builder: (controller) {
         return Scaffold(
-          backgroundColor: themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
+          backgroundColor:
+              themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
           appBar: AppBarWithBorder(
             title: "Customer Reviews".tr,
-            bgColor: themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
+            bgColor: themeChange.isDarkTheme()
+                ? AppThemData.black
+                : AppThemData.white,
           ),
           body: controller.isLoading.value
               ? Constant.loader()
@@ -36,9 +39,12 @@ class ReviewScreenView extends GetView<HomeController> {
                       return Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(16),
-                        margin: const EdgeInsets.only(left: 16, right: 16, top: 16),
+                        margin:
+                            const EdgeInsets.only(left: 16, right: 16, top: 16),
                         decoration: ShapeDecoration(
-                          color: themeChange.isDarkTheme() ? controller.colorDark[index % 4] : controller.color[index % 4],
+                          color: themeChange.isDarkTheme()
+                              ? controller.colorDark[index % 4]
+                              : controller.color[index % 4],
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -50,8 +56,11 @@ class ReviewScreenView extends GetView<HomeController> {
                             Row(
                               children: [
                                 FutureBuilder<UserModel?>(
-                                  future: FireStoreUtils.getUserProfile(controller.reviewList[index].customerId.toString()),
-                                  builder: (BuildContext context, AsyncSnapshot<UserModel?> snapshot) {
+                                  future: FireStoreUtils.getUserProfile(
+                                      controller.reviewList[index].customerId
+                                          .toString()),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<UserModel?> snapshot) {
                                     switch (snapshot.connectionState) {
                                       case ConnectionState.waiting:
                                         return const SizedBox();
@@ -63,11 +72,13 @@ class ReviewScreenView extends GetView<HomeController> {
                                             clipBehavior: Clip.antiAlias,
                                             decoration: ShapeDecoration(
                                               shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(200),
+                                                borderRadius:
+                                                    BorderRadius.circular(200),
                                               ),
                                               color: AppThemData.white,
                                               image: const DecorationImage(
-                                                image: NetworkImage(Constant.profileConstant),
+                                                image: NetworkImage(
+                                                    Constant.profileConstant),
                                                 fit: BoxFit.fill,
                                               ),
                                             ),
@@ -75,24 +86,33 @@ class ReviewScreenView extends GetView<HomeController> {
                                         } else {
                                           UserModel? userModel = snapshot.data;
                                           return ClipRRect(
-                                            borderRadius: BorderRadius.circular(20),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                             child: CachedNetworkImage(
                                               height: 40,
                                               width: 40,
                                               fit: BoxFit.cover,
-                                              imageUrl: userModel!.profilePic.toString(),
-                                              errorWidget: (context, url, error) {
+                                              imageUrl: userModel!.profilePic
+                                                  .toString(),
+                                              errorWidget:
+                                                  (context, url, error) {
                                                 return Container(
                                                   width: 40,
                                                   height: 40,
                                                   clipBehavior: Clip.antiAlias,
                                                   decoration: ShapeDecoration(
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(200),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              200),
                                                     ),
                                                     color: AppThemData.white,
-                                                    image: const DecorationImage(
-                                                      image: NetworkImage(Constant.profileConstant),
+                                                    image:
+                                                        const DecorationImage(
+                                                      image: NetworkImage(
+                                                          Constant
+                                                              .profileConstant),
                                                       fit: BoxFit.fill,
                                                     ),
                                                   ),
@@ -107,8 +127,12 @@ class ReviewScreenView extends GetView<HomeController> {
                                 Column(
                                   children: [
                                     FutureBuilder<UserModel?>(
-                                      future: FireStoreUtils.getUserProfile(controller.reviewList[index].customerId.toString()),
-                                      builder: (BuildContext context, AsyncSnapshot<UserModel?> snapshot) {
+                                      future: FireStoreUtils.getUserProfile(
+                                          controller
+                                              .reviewList[index].customerId
+                                              .toString()),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<UserModel?> snapshot) {
                                         switch (snapshot.connectionState) {
                                           case ConnectionState.waiting:
                                             return const SizedBox();
@@ -118,11 +142,15 @@ class ReviewScreenView extends GetView<HomeController> {
                                                 'Error: ${snapshot.error}',
                                               );
                                             } else {
-                                              UserModel? userModel = snapshot.data;
+                                              UserModel? userModel =
+                                                  snapshot.data;
                                               return Text(
                                                 userModel!.fullName.toString(),
                                                 style: GoogleFonts.inter(
-                                                  color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                                                  color:
+                                                      themeChange.isDarkTheme()
+                                                          ? AppThemData.grey25
+                                                          : AppThemData.grey950,
                                                   fontSize: 14,
                                                   fontWeight: FontWeight.w600,
                                                 ),
@@ -136,7 +164,9 @@ class ReviewScreenView extends GetView<HomeController> {
                                       onRatingChanged: (rating) {},
                                       color: AppThemData.warning500,
                                       starCount: 5,
-                                      rating: double.parse(controller.reviewList[index].rating.toString()),
+                                      rating: double.parse(controller
+                                          .reviewList[index].rating
+                                          .toString()),
                                     ),
                                   ],
                                 )
@@ -146,7 +176,9 @@ class ReviewScreenView extends GetView<HomeController> {
                             Text(
                               controller.reviewList[index].comment.toString(),
                               style: GoogleFonts.inter(
-                                color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                                color: themeChange.isDarkTheme()
+                                    ? AppThemData.grey25
+                                    : AppThemData.grey950,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w400,
                               ),

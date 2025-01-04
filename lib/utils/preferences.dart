@@ -118,14 +118,12 @@ class Preferences {
   static Future<DriverUserModel?> getDriverUserModel() async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     String? jsonString = pref.getString('driverUserModel');
-    if (jsonString != null) {
-      try {
-        Preferences.userModel =
-            DriverUserModel.fromJson(json.decode(jsonString));
-        return userModel;
-      } catch (e) {
-        return null;
-      }
+    try {
+      Preferences.userModel =
+          DriverUserModel.fromJson(json.decode(jsonString!));
+      return userModel;
+    } catch (e) {
+      return null;
     }
     return null;
   }
