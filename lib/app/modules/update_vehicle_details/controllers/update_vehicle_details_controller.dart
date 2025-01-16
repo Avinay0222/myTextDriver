@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/models/vehicle_brand_model.dart';
 import 'package:driver/app/models/vehicle_type_model.dart';
@@ -7,7 +10,10 @@ import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/utils/fire_store_utils.dart';
 import 'package:driver/utils/preferences.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UpdateVehicleDetailsController extends GetxController {
   Rx<VehicleTypeModel> vehicleTypeModel = VehicleTypeModel(
@@ -19,12 +25,14 @@ class UpdateVehicleDetailsController extends GetxController {
   ).obs;
   Rx<VehicleBrandModel> vehicleBrandModel = VehicleBrandModel.empty().obs;
   Rx<VehicleModel> vehicleModel = VehicleModel.empty().obs;
+  Rx<String> imagePath = "".obs;
   RxList<VehicleTypeModel> vehicleTypeList = <VehicleTypeModel>[].obs;
   RxList<VehicleBrandModel> vehicleBrandList = <VehicleBrandModel>[].obs;
   RxList<VehicleModel> vehicleModelList = <VehicleModel>[].obs;
   TextEditingController vehicleModelController = TextEditingController();
   TextEditingController vehicleBrandController = TextEditingController();
   TextEditingController vehicleNumberController = TextEditingController();
+  final ImagePicker imagePicker = ImagePicker();
 
   @override
   Future<void> onReady() async {
@@ -112,6 +120,27 @@ class UpdateVehicleDetailsController extends GetxController {
       }
     } catch (e) {
       ShowToastDialog.closeLoader();
+    }
+  }
+
+  Future<void> pickFile({
+    required ImageSource source,
+    required int index,
+  }) async {
+    try {
+      XFile? image =
+          await imagePicker.pickImage(source: source, imageQuality: 60);
+      if (image == null) return;
+      Get.back();
+      Uint8List? compressedBytes = await FlutterImageCompress.compressWithFile(
+        image.path,
+        quality: 50,
+      );
+      File compressedFile = File(image.path);
+      await compressedFile.writeAsBytes(compressedBytes!);
+      imagePath.value = compressedFile.path;
+    } on PlatformException {
+      ShowToastDialog.showToast("Failed to pick");
     }
   }
 }

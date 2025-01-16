@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:driver/app/models/vehicle_type_model.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/api_constant.dart';
@@ -13,6 +16,7 @@ import 'package:driver/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/update_vehicle_details_controller.dart';
@@ -207,6 +211,79 @@ class UpdateVehicleDetailsView extends StatelessWidget {
                       controller: controller.vehicleNumberController,
                       isEnable: !isUploaded,
                     ),
+                    const SizedBox(height: 16),
+                    InkWell(
+                      onTap: () {
+                        buildBottomSheet(context, controller, 0);
+                      },
+                      child: Obx(
+                        () => Container(
+                          width: Responsive.width(42, context),
+                          height: 200,
+                          padding: const EdgeInsets.all(20),
+                          decoration: ShapeDecoration(
+                            color: themeChange.isDarkTheme()
+                                ? AppThemData.primary950
+                                : AppThemData.primary50,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            image: controller.imagePath.value.isNotEmpty
+                                ? DecorationImage(
+                                    image: FileImage(
+                                      File(controller.imagePath.value),
+                                    ),
+                                    fit: BoxFit.cover)
+                                : null,
+                          ),
+                          child: Visibility(
+                            visible: controller.imagePath.value.isEmpty,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.cloud_upload_outlined,
+                                  color: AppThemData.primary500,
+                                ),
+                                const SizedBox(height: 14),
+                                Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Upload Vehicle Image",
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.inter(
+                                        color: themeChange.isDarkTheme()
+                                            ? AppThemData.grey25
+                                            : AppThemData.grey950,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 2),
+                                    Text(
+                                      'Browse'.tr,
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.inter(
+                                        color: AppThemData.primary500,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: AppThemData.primary500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 32),
                     Visibility(
                       visible: !isUploaded,
@@ -224,6 +301,15 @@ class UpdateVehicleDetailsView extends StatelessWidget {
                               ShowToastDialog.showLoader("Please wait...");
 
                               try {
+                                if (controller.imagePath.value.isEmpty) {
+                                  ShowToastDialog.showToast(
+                                      "Please upload vehicle image");
+                                  return;
+                                }
+                                String base64Image = base64Encode(
+                                    await File(controller.imagePath.value)
+                                        .readAsBytes());
+
                                 Map<String, String> params = {
                                   "brand_name":
                                       controller.vehicleBrandController.text,
@@ -234,11 +320,17 @@ class UpdateVehicleDetailsView extends StatelessWidget {
                                   "vehicle_type":
                                       controller.vehicleTypeModel.value.name,
                                   "vehicle_color": "Black",
-                                  "image": staticImage
+                                  "image": "data:image/png;base64,$base64Image"
                                 };
 
                                 final response =
                                     await uploadVehicleDetails(params);
+
+                                if (response['status'] == false) {
+                                  ShowToastDialog.closeLoader();
+                                  ShowToastDialog.showToast(
+                                      response['message']);
+                                }
 
                                 ShowToastDialog.closeLoader();
 
@@ -250,7 +342,9 @@ class UpdateVehicleDetailsView extends StatelessWidget {
                               if (await Preferences.getUserLoginStatus()) {
                                 controller.saveVehicleDetails();
                               }
+                              ShowToastDialog.closeLoader();
                             } else {
+                              ShowToastDialog.closeLoader();
                               ShowToastDialog.showToast(
                                   "Please enter a valid details".tr);
                             }
@@ -264,6 +358,62 @@ class UpdateVehicleDetailsView extends StatelessWidget {
               ),
             ),
           );
+        });
+  }
+
+  buildBottomSheet(BuildContext context,
+      UpdateVehicleDetailsController controller, int index) {
+    return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, setState) {
+            return SizedBox(
+              height: Responsive.height(22, context),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: Text(
+                      "please_select".tr,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                                onPressed: () => controller.pickFile(
+                                    source: ImageSource.camera, index: index),
+                                icon: const Icon(
+                                  Icons.camera_alt,
+                                  size: 32,
+                                )),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 3),
+                              child: Text(
+                                "camera".tr,
+                                style: const TextStyle(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          });
         });
   }
 }

@@ -101,6 +101,9 @@ class VerifyOtpView extends StatelessWidget {
                         enabledBorderColor: AppThemData.grey100,
                       ),
                       fieldStyle: FieldStyle.underline,
+                      onChanged: (pin) {
+                        controller.verificationId.value = pin;
+                      },
                       onCompleted: (pin) async {
                         // if (pin.length == 6) {
                         //   ShowToastDialog.showLoader("verify_OTP".tr);
@@ -265,10 +268,10 @@ class VerifyOtpView extends StatelessWidget {
                               // log(e.toString());
                               ShowToastDialog.closeLoader();
                               ShowToastDialog.showToast(
-                                  "something went wrong!".tr);
+                                  e.toString().replaceAll("Exception: ", ""));
                             }
                           } else {
-                            ShowToastDialog.showToast("enter_valid_otp".tr);
+                            ShowToastDialog.showToast("Enter Valid OTP");
                           }
                         }),
                     const SizedBox(height: 24),

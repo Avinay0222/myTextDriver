@@ -14,7 +14,7 @@ const String updloadDocumentEndpoint = "/driver/document/upload"; //PUT
 const String updloadOwnerDocumentEndpoint =
     "/driver/owner/upload/document"; //PUT
 const String listOfUploadDocument = "/driver/list_of_upload_documents"; //GET
-const String listOfOwnerUploadDocument = "driver/owner/list_of_document"; //GET
+const String listOfOwnerUploadDocument = "/driver/owner/list_of_document"; //GET
 const String cancelRideReson = "/driver/ride/reason_list"; //GET
 const String addVehicleDetail = "/driver/vehicle/add"; //POST
 const String getVehicleType = "/driver/vehicle/types"; //GET

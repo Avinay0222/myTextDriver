@@ -17,7 +17,6 @@ class VerifyDocumentsController extends GetxController {
 
   @override
   void onInit() {
-    
     getData();
     super.onInit();
   }
@@ -75,7 +74,6 @@ class VerifyDocumentsController extends GetxController {
     // }
 
     DriverUserModel? userModel = Preferences.userModel;
-
 
     List<DocsModel> list = List.from(userModel?.driverdDocs ?? []);
 
