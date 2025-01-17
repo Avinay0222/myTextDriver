@@ -1,7 +1,5 @@
-import 'package:driver/app/models/verify_driver_model.dart';
 import 'package:driver/app/modules/create_drive_screen/views/create_driver_view.dart';
 import 'package:driver/app/modules/login_owner_screen/views/login_owner_view.dart';
-import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
 import 'package:driver/constant_widgets/country_code_selector_view.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';

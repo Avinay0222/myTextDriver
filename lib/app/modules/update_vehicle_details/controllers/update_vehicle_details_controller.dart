@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:driver/app/models/driver_user_model.dart';
 import 'package:driver/app/models/vehicle_brand_model.dart';

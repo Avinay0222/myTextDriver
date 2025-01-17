@@ -1,4 +1,6 @@
 import 'package:driver/app/models/booking_model.dart';
+import 'package:driver/app/modules/booking_details/controllers/booking_details_controller.dart';
+import 'package:driver/app/modules/booking_details/views/booking_details_view.dart';
 import 'package:driver/app/routes/app_pages.dart';
 import 'package:driver/app/services/api_service.dart';
 import 'package:driver/constant/booking_status.dart';
@@ -13,6 +15,7 @@ import 'package:driver/utils/fire_store_utils.dart';
 import 'package:driver/utils/preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class NewRideView extends StatelessWidget {
@@ -25,11 +28,56 @@ class NewRideView extends StatelessWidget {
     final themeChange = Provider.of<DarkThemeProvider>(context);
     return InkWell(
       onTap: () {
-        // BookingDetailsController detailsController =
-        //     Get.put(BookingDetailsController());
-        // detailsController.bookingId.value = bookingModel!.id ?? '';
-        // detailsController.bookingModel.value = bookingModel!;
-        // Get.to(() => const BookingDetailsView());
+        BookingDetailsController detailsController =
+            Get.put(BookingDetailsController());
+        detailsController.bookingId.value = bookingModel!.id ?? '';
+        detailsController.bookingModel.value = bookingModel!;
+        RideData rideData = RideData(
+            id: bookingModel!.ride!.id!,
+            passengerId: bookingModel!.passengers!.id!,
+            driverId: bookingModel!.driverId ?? '',
+            vehicleId: bookingModel!.ride!.vehicleId ?? '',
+            vehicleTypeId: bookingModel!.ride!.vehicleTypeId ?? '',
+            distance: bookingModel!.ride!.distance!,
+            fareAmount: bookingModel!.ride!.fareAmount!,
+            durationInMinutes: bookingModel!.ride!.durationInMinutes!,
+            status: bookingModel!.status!,
+            otp: bookingModel!.ride!.otp!,
+            paymentMode: bookingModel!.ride!.paymentMode!,
+            startTime: DateTime.fromMillisecondsSinceEpoch(
+                int.parse(bookingModel!.ride!.createdAt!)),
+            createdAt: int.parse(bookingModel!.ride!.createdAt!),
+            updatedAt: int.parse(bookingModel!.ride!.createdAt!),
+            user: User(
+              id: bookingModel!.passengers!.id ?? '',
+              name: bookingModel!.passengers!.name ?? '',
+              phone: bookingModel!.passengers!.phone ?? '',
+              countryCode: bookingModel!.passengers!.countryCode ?? '',
+              referralCode: bookingModel!.passengers!.referralCode ?? '',
+              referralCodeBy: bookingModel!.passengers!.referralCodeBy ?? '',
+              verified: bookingModel!.passengers!.verified ?? false,
+              role: bookingModel!.passengers!.role ?? '',
+              languages: '',
+              location: bookingModel!.passengers!.location ?? Location(),
+              createdAt: int.parse(bookingModel!.passengers!.createdAt ?? '0'),
+              updatedAt: int.parse(bookingModel!.passengers!.createdAt ?? '0'),
+              gender: bookingModel!.passengers!.gender ?? '',
+              otp: '',
+              otpForgetPassword: '',
+              rideStatus: '',
+              profile: '',
+              token: '',
+              pushNotification: '',
+              status: '',
+              suspend: '',
+              yearOfExperience: 2,
+              education: '',
+            ),
+            pickupAddress: bookingModel!.ride!.pickupAddress!,
+            dropoffAddress: bookingModel!.ride!.dropoffAddress!,
+            pickupLocation: bookingModel!.ride!.pickupLocation!,
+            dropoffLocation: bookingModel!.ride!.dropoffLocation!);
+        Get.to(() => BookingDetailsView(rideData: rideData));
       },
       child: Container(
         // width: Responsive.width(100, context),
@@ -50,7 +98,7 @@ class NewRideView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("- ${bookingModel?.notes ?? " "}"),
+            Text('Passenger: ${bookingModel?.passengers?.name ?? " "}'),
             const SizedBox(height: 12),
             PickDropPointView(
                 pickUpAddress: bookingModel == null
@@ -112,8 +160,8 @@ class NewRideView extends StatelessWidget {
                                 negativeString: "Cancel".tr,
                                 positiveClick: () async {
                                   Navigator.pop(context);
-                                  bool value =
-                                      await cancelRide(bookingModel!.rideId!,"");
+                                  bool value = await cancelRide(
+                                      bookingModel!.rideId!, "");
 
                                   if (value == true) {
                                     // ShowToastDialog.showToast(

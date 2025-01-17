@@ -10,7 +10,12 @@ class CountryCodeSelectorView extends StatelessWidget {
   final TextEditingController countryCodeController;
   final bool isEnable;
   final bool isCountryNameShow;
-  const CountryCodeSelectorView({super.key, required this.onChanged, required this.countryCodeController, required this.isEnable, required this.isCountryNameShow});
+  const CountryCodeSelectorView(
+      {super.key,
+      required this.onChanged,
+      required this.countryCodeController,
+      required this.isEnable,
+      required this.isCountryNameShow});
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +23,10 @@ class CountryCodeSelectorView extends StatelessWidget {
     return CountryCodePicker(
       onChanged: onChanged,
       enabled: isEnable,
-      dialogTextStyle: GoogleFonts.inter(color: AppThemData.grey08, fontWeight: FontWeight.w500),
-      dialogBackgroundColor: themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
+      dialogTextStyle: GoogleFonts.inter(
+          color: AppThemData.grey08, fontWeight: FontWeight.w500),
+      dialogBackgroundColor:
+          themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
       initialSelection: countryCodeController.text,
       comparator: (a, b) => b.name!.compareTo(a.name.toString()),
       flagDecoration: const BoxDecoration(
@@ -28,7 +35,8 @@ class CountryCodeSelectorView extends StatelessWidget {
       showFlag: true,
       showCountryOnly: true,
       showDropDownButton: false,
-      backgroundColor: themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
+      backgroundColor:
+          themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
       builder: (p0) {
         return Row(
           mainAxisSize: MainAxisSize.min,
@@ -51,17 +59,30 @@ class CountryCodeSelectorView extends StatelessWidget {
               style: GoogleFonts.poppins(
                 fontWeight: FontWeight.w500,
                 fontSize: 14,
-                color: themeChange.isDarkTheme() ? AppThemData.white : AppThemData.grey950,
+                color: themeChange.isDarkTheme()
+                    ? AppThemData.white
+                    : AppThemData.grey950,
               ),
             ),
             const SizedBox(width: 4),
-            const Icon(Icons.keyboard_arrow_down_rounded)
+            // const Icon(Icons.keyboard_arrow_down_rounded)
           ],
         );
       },
-      textStyle: GoogleFonts.inter(color: themeChange.isDarkTheme() ? AppThemData.white :AppThemData.grey08, fontWeight: FontWeight.w500),
-      searchDecoration:  InputDecoration(iconColor:themeChange.isDarkTheme() ? AppThemData.white : AppThemData.grey08),
-      searchStyle: GoogleFonts.inter(color: themeChange.isDarkTheme() ? AppThemData.white :AppThemData.grey08, fontWeight: FontWeight.w500),
+      textStyle: GoogleFonts.inter(
+          color: themeChange.isDarkTheme()
+              ? AppThemData.white
+              : AppThemData.grey08,
+          fontWeight: FontWeight.w500),
+      searchDecoration: InputDecoration(
+          iconColor: themeChange.isDarkTheme()
+              ? AppThemData.white
+              : AppThemData.grey08),
+      searchStyle: GoogleFonts.inter(
+          color: themeChange.isDarkTheme()
+              ? AppThemData.white
+              : AppThemData.grey08,
+          fontWeight: FontWeight.w500),
     );
   }
 }

@@ -141,6 +141,8 @@ class Ride {
       updatedAt: json["updatedAt"].toString(),
       version: 0);
 
+  get startTime => null;
+
   Map<String, dynamic> toJson() => {
         "_id": id,
         "passenger_id": passengerId,
