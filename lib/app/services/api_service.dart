@@ -330,7 +330,7 @@ Future<Map<String, dynamic>> getVehicleTypeDetail() async {
 //     return isUpdate;
 //   }
 
-Future<bool> uploadDriverDocumentImageToStorage(DocsModel model) async {
+Future<String> uploadDriverDocumentImageToStorage(DocsModel model) async {
   final endPoint = await Preferences.isOwnerLogin()
       ? updloadOwnerDocumentEndpoint
       : updloadDocumentEndpoint;
@@ -357,9 +357,9 @@ Future<bool> uploadDriverDocumentImageToStorage(DocsModel model) async {
       }
     }
 
-    return true;
+    return jsonDecode(response.body)["msg"];
   } else {
-    return false;
+    return jsonDecode(response.body)["msg"];
   }
 }
 
@@ -387,6 +387,22 @@ Future<bool> updateCurrentLocationAPI(String latitude, String longitude) async {
   } else {
     return false;
   }
+}
+
+Future<Map<String, dynamic>> uploadProfilePicture(String image) async {
+  Map<String, dynamic> map = {
+    "profile": image,
+  };
+
+  String token = await Preferences.getFcmToken();
+
+  final response = await http.put(
+    Uri.parse(baseURL + updloadProfileImageEndpoint),
+    headers: {"Content-Type": "application/json", "token": token},
+    body: jsonEncode(map),
+  );
+
+  return jsonDecode(response.body);
 }
 
 Future<bool> saveUserModelOnline(DriverUserModel model) async {

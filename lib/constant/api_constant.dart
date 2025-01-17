@@ -20,6 +20,7 @@ const String addVehicleDetail = "/driver/vehicle/add"; //POST
 const String getVehicleType = "/driver/vehicle/types"; //GET
 const String getVehicleList = "/driver/vehicles"; //GET
 const String setCurrentLocation = "/driver/current_location"; //POST
+const String uploadProfilePicture = "/driver/profile/upload"; //POST
 const String getDriveModel = "/driver/preview/vehicle_docs"; //GET
 const String checkDocStatus = "/driver/document/check_status"; //GET
 const String setDriveModel = "/driver/vehicle/docs/save"; //POST
