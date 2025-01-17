@@ -180,7 +180,10 @@ class _AppBarTitle extends StatelessWidget {
       children: [
         InkWell(
           onTap: () {}, // Placeholder for action
-          child: SvgPicture.asset("assets/icon/logo_only.svg"),
+          child: SizedBox(
+              height: 30,
+              width: 30,
+              child: Image.asset("assets/icon/app_icon.png")),
         ),
         const SizedBox(width: 10),
         Text(

@@ -56,7 +56,9 @@ class CreateDriverView extends StatelessWidget {
                                   bottom: 10),
                               child: ElevatedButton(
                                   onPressed: () {
-                                    Get.to(() => const LoginOwnerView(isOwner: true,));
+                                    Get.to(() => const LoginOwnerView(
+                                          isOwner: true,
+                                        ));
                                   },
                                   child: const Text("Login")),
                             ),

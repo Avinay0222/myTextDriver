@@ -1,4 +1,3 @@
-
 import 'package:dotted_border/dotted_border.dart';
 import 'package:driver/app/modules/create_support_ticket/controllers/create_support_ticket_controller.dart';
 import 'package:driver/constant_widgets/app_bar_with_border.dart';
@@ -20,10 +19,14 @@ class CreateSupportTicketView extends GetView<CreateSupportTicketController> {
         init: CreateSupportTicketController(),
         builder: (controller) {
           return Scaffold(
-            backgroundColor: themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
+            backgroundColor: themeChange.isDarkTheme()
+                ? AppThemData.black
+                : AppThemData.white,
             appBar: AppBarWithBorder(
               title: "Create Ticket".tr,
-              bgColor: themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
+              bgColor: themeChange.isDarkTheme()
+                  ? AppThemData.black
+                  : AppThemData.white,
             ),
             body: Form(
               key: controller.formKey.value,
@@ -37,44 +40,55 @@ class CreateSupportTicketView extends GetView<CreateSupportTicketController> {
                         "Title".tr,
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                            color: themeChange.isDarkTheme()
+                                ? AppThemData.grey25
+                                : AppThemData.grey950,
                             fontWeight: FontWeight.w500),
                       ),
                       TextFormField(
                         controller: controller.titleController.value,
-                        validator: (value) => value != null && value.isNotEmpty ? null : 'This field required'.tr,
+                        validator: (value) => value != null && value.isNotEmpty
+                            ? null
+                            : 'This field required'.tr,
                         decoration: InputDecoration(hintText: "Enter Title".tr),
                       ),
                       const SizedBox(height: 20),
-
                       Text(
                         "Subject".tr,
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                            color: themeChange.isDarkTheme()
+                                ? AppThemData.grey25
+                                : AppThemData.grey950,
                             fontWeight: FontWeight.w500),
                       ),
                       TextFormField(
                         controller: controller.subjectController.value,
-                        validator: (value) => value != null && value.isNotEmpty ? null : 'This field required'.tr,
-                        decoration: InputDecoration(hintText: "Enter Subject".tr),
+                        validator: (value) => value != null && value.isNotEmpty
+                            ? null
+                            : 'This field required'.tr,
+                        decoration:
+                            InputDecoration(hintText: "Enter Subject".tr),
                       ),
                       const SizedBox(height: 20),
-
                       Text(
                         "Description".tr,
                         style: GoogleFonts.inter(
                             fontSize: 14,
-                            color: themeChange.isDarkTheme() ? AppThemData.grey25 : AppThemData.grey950,
+                            color: themeChange.isDarkTheme()
+                                ? AppThemData.grey25
+                                : AppThemData.grey950,
                             fontWeight: FontWeight.w500),
                       ),
                       TextFormField(
                         controller: controller.descriptionController.value,
-                        validator: (value) => value != null && value.isNotEmpty ? null : 'This field required'.tr,
-                        decoration: InputDecoration(hintText: "Enter Description".tr),
+                        validator: (value) => value != null && value.isNotEmpty
+                            ? null
+                            : 'This field required'.tr,
+                        decoration:
+                            InputDecoration(hintText: "Enter Description".tr),
                       ),
                       const SizedBox(height: 20),
-
                       InkWell(
                         onTap: () {
                           controller.pickMultipleImages();
@@ -91,17 +105,19 @@ class CreateSupportTicketView extends GetView<CreateSupportTicketController> {
                         ),
                       ),
                       const SizedBox(height: 20),
-
-                      RoundShapeButton(
-                        title: "Submit".tr,
-                        buttonColor: AppThemData.primary500,
-                        size: const Size(100, 50),
-                        buttonTextColor: AppThemData.black,
-                        onTap: () {
-                          if (controller.formKey.value.currentState!.validate()) {
-                            controller.createSupportTicket();
-                          }
-                        },
+                      Center(
+                        child: RoundShapeButton(
+                          title: "Submit".tr,
+                          buttonColor: AppThemData.primary500,
+                          size: const Size(100, 50),
+                          buttonTextColor: AppThemData.black,
+                          onTap: () {
+                            if (controller.formKey.value.currentState!
+                                .validate()) {
+                              controller.createSupportTicket();
+                            }
+                          },
+                        ),
                       ),
                     ],
                   ),

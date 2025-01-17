@@ -60,7 +60,7 @@ class CreateOwnDriver extends StatelessWidget {
                                         : "assets/icon/taxi.png")),
                           ),
                           Text(
-                            "Create a new Driver".tr,
+                            "Add Driver".tr,
                             style: GoogleFonts.inter(
                                 fontSize: 24,
                                 color: themeChange.isDarkTheme()
@@ -79,7 +79,7 @@ class CreateOwnDriver extends StatelessWidget {
                           ),
                           const SizedBox(height: 36),
                           TextFieldWithTitle(
-                            title: "Driverl Name".tr,
+                            title: "Driver Name".tr,
                             hintText: "Enter driver full name".tr,
                             prefixIcon:
                                 const Icon(Icons.person_outline_rounded),
@@ -153,8 +153,9 @@ class CreateOwnDriver extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           TextFieldWithTitle(
-                            title: "Password",
+                            title: "Password".tr,
                             hintText: "Enter Password".tr,
+                            obscureText: true,
                             prefixIcon:
                                 const Icon(Icons.person_outline_rounded),
                             controller: controller.passwordController,
@@ -167,6 +168,7 @@ class CreateOwnDriver extends StatelessWidget {
                           TextFieldWithTitle(
                             title: "Confirm Password",
                             hintText: "Confirm your password",
+                            obscureText: true,
                             prefixIcon:
                                 const Icon(Icons.person_outline_rounded),
                             controller: controller.confirmPassController,
