@@ -83,10 +83,6 @@ class HomeController extends GetxController {
   }
 
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   Future<void> getRideRequestt() async {
     Map<String, dynamic> userModel = await getProfile();
