@@ -24,7 +24,6 @@ class VerifyOtpController extends GetxController {
     if (argumentData != null) {
       countryCode.value = argumentData['countryCode'];
       phoneNumber.value = argumentData['phoneNumber'];
-      verificationId.value = argumentData['verificationId'];
     }
     isLoading.value = false;
     update();
@@ -43,7 +42,7 @@ class VerifyOtpController extends GetxController {
       ShowToastDialog.closeLoader();
 
       if (responseData["status"] == true) {
-        ShowToastDialog.showToast(responseData['msg'].toString().split(",")[0]);
+        ShowToastDialog.showToast("OTP sent successfully");
       } else {
         ShowToastDialog.showToast('Failed to send OTP: ${responseData["msg"]}');
       }

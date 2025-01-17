@@ -1,4 +1,3 @@
-
 // Flutter & Dart packages
 import 'package:driver/app/modules/home/views/widgets/drawer_view.dart';
 import 'package:flutter/material.dart';
@@ -96,7 +95,6 @@ class HomeView extends GetView<HomeController> {
       default:
         return _buildMainContent(controller, themeChange);
     }
-    
   }
 
   Widget _buildMainContent(
@@ -193,22 +191,22 @@ class _AppBarTitle extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
         ),
-        SizedBox(
-          height: 20,
-          child: Align(
-            alignment: Alignment.bottomLeft,
-            child: Text(
-              " as driver",
-              style: GoogleFonts.inter(
-                color: themeChange.isDarkTheme()
-                    ? AppThemData.white
-                    : AppThemData.black,
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ),
+        // SizedBox(
+        //   height: 20,
+        //   child: Align(
+        //     alignment: Alignment.bottomLeft,
+        //     child: Text(
+        //       " as driver",
+        //       style: GoogleFonts.inter(
+        //         color: themeChange.isDarkTheme()
+        //             ? AppThemData.white
+        //             : AppThemData.black,
+        //         fontSize: 12,
+        //         fontWeight: FontWeight.w700,
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

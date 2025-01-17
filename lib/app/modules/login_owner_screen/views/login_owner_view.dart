@@ -55,7 +55,7 @@ class LoginOwnerView extends StatelessWidget {
                                   onPressed: () {
                                     Get.back();
                                   },
-                                  child: const Text("Register")),
+                                  child: const Text("Back")),
                             ),
                           ),
                           Text(

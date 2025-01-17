@@ -27,6 +27,7 @@ class CountryCodeSelectorView extends StatelessWidget {
       ),
       showFlag: true,
       showCountryOnly: true,
+      showDropDownButton: false,
       backgroundColor: themeChange.isDarkTheme() ? AppThemData.black : AppThemData.white,
       builder: (p0) {
         return Row(

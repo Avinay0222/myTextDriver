@@ -47,6 +47,8 @@ Future<Map<String, dynamic>> verifyOtp(String otp, String mobileNumber) async {
 
   if (response.statusCode == 200) {
     return jsonDecode(response.body);
+  } else if (jsonDecode(response.body)["status"] == false) {
+    throw Exception(jsonDecode(response.body)["msg"]);
   } else {
     throw Exception('Failed to verify OTP: ${response.reasonPhrase}');
   }
@@ -249,6 +251,10 @@ Future<Map<String, dynamic>> uploadVehicleDetails(
   );
 
   if (response.statusCode == 200) {
+    if (!jsonDecode(response.body)["status"]) {
+      throw Exception(jsonDecode(response.body)["msg"]);
+    }
+
     DriverVehicleDetails vehicleDetails = DriverVehicleDetails(
       vehicleTypeName: payload['vehicle_type'],
       vehicleTypeId: payload['vehicle_type'],
@@ -273,7 +279,7 @@ Future<Map<String, dynamic>> uploadVehicleDetails(
     ShowToastDialog.closeLoader();
     ShowToastDialog.showToast(
         'Failed to Create Account: ${response.reasonPhrase}');
-    throw Exception('Failed to Create Account: ${response.reasonPhrase}');
+    return jsonDecode(response.body);
   }
 }
 
@@ -470,10 +476,7 @@ Future<DriverUserModel> updateOnlineUserModel(
 }
 
 Future<bool> cancelRide(String rideId, String? reason) async {
-  final Map<String, dynamic> body = {
-    "ride_id": rideId,
-    "reason":reason
-  };
+  final Map<String, dynamic> body = {"ride_id": rideId, "reason": reason};
 
   final response = await http.put(
     Uri.parse(baseURL + rideCancel),

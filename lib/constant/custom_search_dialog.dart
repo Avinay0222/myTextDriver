@@ -67,7 +67,7 @@ class CustomSearchDialog {
                                     onTap: () async {
                                       controller.vehicleBrandModel.value = e;
                                       controller.vehicleBrandController.text =
-                                          e.name;
+                                          e.slug;
                                       await controller.getVehicleModel(e.id);
                                       Navigator.pop(context);
                                     },
@@ -143,7 +143,7 @@ class CustomSearchDialog {
                                     onTap: () async {
                                       controller.vehicleModel.value = e;
                                       controller.vehicleModelController.text =
-                                          e.name;
+                                          e.slug;
                                       Navigator.pop(context);
                                     },
                                     child: ListTile(

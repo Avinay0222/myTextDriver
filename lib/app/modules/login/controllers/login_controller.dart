@@ -118,14 +118,15 @@ class LoginController extends GetxController {
 
       ShowToastDialog.closeLoader();
 
+      print("OTP--->${responseData["msg"]}");
+
       if (responseData["status"] == true) {
         Get.to(() => const VerifyOtpView(), arguments: {
           "countryCode": countryCodeController.value.text,
           "phoneNumber": phoneNumberController.value.text,
-          "verificationId": responseData['msg'].toString().split(",")[0],
         });
 
-        ShowToastDialog.showToast(responseData['msg'].toString().split(",")[0]);
+        ShowToastDialog.showToast("OTP sent successfully");
       } else {
         ShowToastDialog.showToast('Failed to send OTP: ${responseData["msg"]}');
       }
