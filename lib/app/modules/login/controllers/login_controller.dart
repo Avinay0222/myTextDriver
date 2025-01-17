@@ -118,6 +118,8 @@ class LoginController extends GetxController {
 
       ShowToastDialog.closeLoader();
 
+      print("OTP--->${responseData["msg"]}");
+
       if (responseData["status"] == true) {
         Get.to(() => const VerifyOtpView(), arguments: {
           "countryCode": countryCodeController.value.text,

@@ -408,6 +408,29 @@ class UpdateVehicleDetailsView extends StatelessWidget {
                           ],
                         ),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                                onPressed: () => controller.pickFile(
+                                    source: ImageSource.gallery, index: index),
+                                icon: const Icon(
+                                  Icons.photo_library_sharp,
+                                  size: 32,
+                                )),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 3),
+                              child: Text(
+                                "gallery".tr,
+                                style: const TextStyle(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ],

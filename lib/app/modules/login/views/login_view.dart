@@ -1,5 +1,8 @@
+import 'package:driver/app/models/verify_driver_model.dart';
 import 'package:driver/app/modules/create_drive_screen/views/create_driver_view.dart';
 import 'package:driver/app/modules/login_owner_screen/views/login_owner_view.dart';
+import 'package:driver/app/modules/verify_documents/views/verify_documents_view.dart';
+import 'package:driver/constant_widgets/country_code_selector_view.dart';
 import 'package:driver/constant_widgets/round_shape_button.dart';
 import 'package:driver/constant_widgets/show_toast_dialog.dart';
 import 'package:driver/theme/app_them_data.dart';
@@ -54,8 +57,8 @@ class LoginView extends StatelessWidget {
                         child: Center(
                             child: Image.asset(
                           themeChange.isDarkTheme()
-                              ? "assets/images/driver.jpeg"
-                              : "assets/images/driver.jpeg",
+                              ? "assets/icon/app_icon.png"
+                              : "assets/icon/app_icon.png",
                           scale: 8,
                         )),
                       ),
@@ -92,7 +95,6 @@ class LoginView extends StatelessWidget {
                             fontWeight: FontWeight.w400),
                       ),
                       Container(
-                        height: 50,
                         width: Responsive.width(100, context),
                         margin: const EdgeInsets.only(top: 36, bottom: 48),
                         decoration: BoxDecoration(
@@ -104,19 +106,21 @@ class LoginView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Container(
-                              //   height: 45,
-                              //   padding: const EdgeInsets.all(8.0),
-                              //   child: CountryCodeSelectorView(
-                              //     isCountryNameShow: true,
-                              //     countryCodeController: controller.countryCodeController,
-                              //     isEnable: true,
-                              //     onChanged: (value) {
-                              //       controller.countryCodeController.text = value.dialCode.toString();
-                              //     },
-                              //   ),
-                              // ),
-                              // const Divider(color: AppThemData.grey100),
+                              Container(
+                                height: 45,
+                                padding: const EdgeInsets.all(8.0),
+                                child: CountryCodeSelectorView(
+                                  isCountryNameShow: true,
+                                  countryCodeController:
+                                      controller.countryCodeController,
+                                  isEnable: false,
+                                  onChanged: (value) {
+                                    controller.countryCodeController.text =
+                                        value.dialCode.toString();
+                                  },
+                                ),
+                              ),
+                              const Divider(color: AppThemData.grey100),
                               SizedBox(
                                 height: 45,
                                 child: TextFormField(
